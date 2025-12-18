@@ -68,14 +68,42 @@ const Breadcrumbs = ({ paths }: { paths: { label: string, href: string }[] }) =>
     </nav>
 );
 
-const AdPlaceholder = ({ type }: { type: 'top' | 'mid' | 'bottom' }) => (
-    <div className={`my-8 bg-slate-900/50 border border-slate-800 rounded-xl flex flex-col items-center justify-center p-4 min-h-[100px] group transition-all hover:bg-slate-900/80`}>
-        <span className="text-[10px] text-slate-600 font-bold uppercase mb-2">Publicidad / Ads</span>
-        <div className="w-full text-center py-4 border-2 border-dashed border-slate-800 rounded group-hover:border-brand-500/30">
-            <p className="text-xs text-slate-500">Espacio disponible para {type === 'top' ? 'AdSense Header' : type === 'mid' ? 'Contenido' : 'Footer Ads'}</p>
+const AdPlaceholder = ({ type }: { type: 'top' | 'mid' | 'bottom' }) => {
+    // Adsterra Configuration
+    const adConfig = type === 'bottom' ? {
+        key: '1d49c2cf37f3fc004bea0a51a80f402f',
+        format: 'iframe',
+        height: 300,
+        width: 160
+    } : {
+        key: '066098c9c4d080b859d6302fa8c1da13',
+        format: 'iframe',
+        height: 250,
+        width: 300
+    };
+
+    return (
+        <div className={`my-8 bg-slate-900/50 border border-slate-800 rounded-xl flex flex-col items-center justify-center p-4 min-h-[100px] group transition-all hover:bg-slate-900/80`}>
+            <span className="text-[10px] text-slate-600 font-bold uppercase mb-2">Publicidad</span>
+            <div className="w-full flex justify-center py-4 overflow-hidden">
+                <div id={`ad-container-${adConfig.key}`} className="relative">
+                    <script type="text/javascript" dangerouslySetInnerHTML={{
+                        __html: `
+                            atOptions = {
+                                'key' : '${adConfig.key}',
+                                'format' : '${adConfig.format}',
+                                'height' : ${adConfig.height},
+                                'width' : ${adConfig.width},
+                                'params' : {}
+                            };
+                        `
+                    }} />
+                    <script type="text/javascript" src={`https://www.highperformanceformat.com/${adConfig.key}/invoke.js`} async />
+                </div>
+            </div>
         </div>
-    </div>
-);
+    );
+};
 
 const getImage = (cat: keyof typeof IMAGES | string, seed: number) => {
     // 1. Try to find specific coin image if 'cat' matches a coin name
