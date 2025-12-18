@@ -68,14 +68,46 @@ const Breadcrumbs = ({ paths }: { paths: { label: string, href: string }[] }) =>
     </nav>
 );
 
-const AdPlaceholder = ({ type }: { type: 'top' | 'mid' | 'bottom' }) => (
-    <div className={`my-8 bg-slate-900/50 border border-slate-800 rounded-xl flex flex-col items-center justify-center p-4 min-h-[100px] group transition-all hover:bg-slate-900/80`}>
-        <span className="text-[10px] text-slate-600 font-bold uppercase mb-2">Publicidad</span>
-        <div className="w-full text-center py-4 border-2 border-dashed border-slate-800 rounded group-hover:border-brand-500/30">
-            <p className="text-xs text-slate-500">Espacio reservado para {type === 'top' ? 'AdSense Header' : type === 'mid' ? 'Contenido' : 'Footer Ads'}</p>
+const AdPlaceholder = ({ type }: { type: 'top' | 'mid' | 'bottom' }) => {
+    const bannerId = type === 'top' ? '066098c9c4d080b859d6302fa8c1da13' : '1d49c2cf37f3fc004bea0a51a80f402f';
+    const containerRef = React.useRef<HTMLDivElement>(null);
+
+    React.useEffect(() => {
+        if (typeof window !== 'undefined' && containerRef.current) {
+            // Clear previous ads in this slot if any
+            containerRef.current.innerHTML = '';
+
+            const scriptAt = document.createElement('script');
+            scriptAt.type = 'text/javascript';
+            scriptAt.innerHTML = `
+                atOptions = {
+                    'key' : '${bannerId}',
+                    'format' : 'iframe',
+                    'height' : ${type === 'top' ? 250 : 300},
+                    'width' : ${type === 'top' ? 300 : 160},
+                    'params' : {}
+                };
+            `;
+
+            const scriptInvoke = document.createElement('script');
+            scriptInvoke.type = 'text/javascript';
+            scriptInvoke.src = `//www.highperformanceformat.com/${bannerId}/invoke.js`;
+
+            containerRef.current.appendChild(scriptAt);
+            containerRef.current.appendChild(scriptInvoke);
+        }
+    }, [type, bannerId]);
+
+    return (
+        <div className="my-12 flex flex-col items-center justify-center">
+            <span className="text-[10px] text-slate-600 font-black uppercase tracking-widest mb-4">Anuncio Publicitario</span>
+            <div
+                ref={containerRef}
+                className="min-h-[250px] min-w-[300px] bg-slate-900/40 rounded-xl border border-white/5 flex items-center justify-center overflow-hidden"
+            />
         </div>
-    </div>
-);
+    );
+};
 
 const getImage = (cat: keyof typeof IMAGES | string, seed: number) => {
     // 1. Try to find specific coin image if 'cat' matches a coin name

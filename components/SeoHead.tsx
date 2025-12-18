@@ -59,6 +59,9 @@ export default function SeoHead({
                     dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
                 />
             )}
+
+            {/* Adsterra Global Script */}
+            <script type='text/javascript' src='//pl28286231.effectivegatecpm.com/e4/66/b3/e466b34eb771d131ac9e61eb44015230.js'></script>
         </Head>
     );
 }
