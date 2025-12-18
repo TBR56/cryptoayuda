@@ -59,12 +59,6 @@ export default function SeoHead({
                     dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
                 />
             )}
-            {/* Adsterra Popunder */}
-            <script
-                type="text/javascript"
-                src="https://pl28286231.effectivegatecpm.com/e4/66/b3/e466b34eb771d131ac9e61eb44015230.js"
-                async
-            />
         </Head>
     );
 }
