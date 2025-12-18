@@ -241,177 +241,6 @@ function generateScamPage(topic: string) {
     };
 }
 
-// ==========================================
-// 5. NEXT.JS STATIC METHODS
-// ==========================================
-
-export const getStaticPaths: GetStaticPaths = async () => {
-    // Only pre-build top 5 exchanges to save time
-    const top5 = EXCHANGES_LIST.slice(0, 5);
-    const paths = top5.map(ex => ({ params: { slug: ['reviews', slugify(ex)] } }));
-    paths.push(
-        { params: { slug: ['servicios'] } },
-        { params: { slug: ['estafas'] } },
-        { params: { slug: [] } } // Home
-    );
-    return { paths, fallback: 'blocking' };
-};
-
-export const getStaticProps: GetStaticProps = async ({ params }) => {
-    const slug = params?.slug as string[] || [];
-
-    // ROUTING LOGIC (10K Scale)
-    let pageData = null;
-
-    if (slug.length === 0) {
-        // HOME UPDATE: Include News Feed
-        pageData = { type: 'home', exchanges: EXCHANGES_LIST.slice(0, 12), coins: COINS.slice(0, 6) };
-    } else {
-        const [section, p1, p2] = slug;
-
-        // Hubs
-        if (!p1) {
-            if (section === 'reviews') pageData = { type: 'hub_reviews', exchanges: EXCHANGES_LIST };
-            if (section === 'comparar') pageData = { type: 'hub_compare', exchanges: EXCHANGES_LIST };
-            if (section === 'noticias') pageData = { type: 'hub_news', coins: COINS, topics: TOPICS };
-            if (section === 'guias') pageData = { type: 'hub_guides', coins: COINS, guides: GUIAS_TITLES };
-            if (section === 'estafas') pageData = { type: 'hub_scams', scams: SCAM_TOPICS, guides: SECURITY_GUIDES };
-            if (section === 'seguridad') pageData = { type: 'hub_security', guides: SECURITY_GUIDES };
-            if (section === 'wallets') pageData = { type: 'hub_wallets', coins: COINS };
-            if (section === 'comparativas') pageData = { type: 'hub_compare_all', exchanges: EXCHANGES_LIST };
-            if (section === 'faq') pageData = { type: 'hub_faq' };
-            if (section === 'contacto') pageData = { type: 'static_contact' };
-            if (section === 'sobre-nosotros') pageData = { type: 'static_about' };
-            if (section === 'privacidad') pageData = { type: 'static_legal', title: 'Política de Privacidad' };
-            if (section === 'terminos') pageData = { type: 'static_legal', title: 'Términos y Condiciones' };
-            if (section === 'disclaimer') pageData = { type: 'static_legal', title: 'Descargo de Responsabilidad' };
-        }
-        else if (section === 'reviews') {
-            const ex = EXCHANGES_LIST.find(e => slugify(e) === p1);
-            if (ex) pageData = generateReviewPage(getExchangeData(ex));
-        }
-        else if (section === 'comparar') {
-            const parts = p1.split('-vs-');
-            if (parts.length === 2) {
-                const ex1 = EXCHANGES_LIST.find(e => slugify(e) === parts[0]);
-                const ex2 = EXCHANGES_LIST.find(e => slugify(e) === parts[1]);
-                if (ex1 && ex2) pageData = generateComparisonPage(getExchangeData(ex1), getExchangeData(ex2));
-            }
-        }
-        else if (section === 'opiniones') {
-            const ex = EXCHANGES_LIST.find(e => slugify(e) === p1);
-            const pais = PAISES.find(p => slugify(p) === p2);
-            if (ex && pais) pageData = generateOpinionPage(getExchangeData(ex), pais);
-        }
-        else if (section === 'problemas') {
-            const ex = EXCHANGES_LIST.find(e => slugify(e) === p1);
-            const prob = PROBLEMAS.find(p => p.slug === p2);
-            if (ex && prob) pageData = generateProblemPage(getExchangeData(ex), prob);
-        }
-        if (slug[0] === 'servicios') {
-            return {
-                props: {
-                    data: {
-                        meta: { title: "Servicios Premium de Asesoría Crypto", desc: "Consultoría experta, auditorías de seguridad y soporte técnico urgente." },
-                        hero: { title: "Servicios Pro", subtitle: "Tu seguridad, nuestra prioridad" }
-                    }
-                },
-                revalidate: 120
-            };
-        }
-        // NEW ROUTES
-        else if (section === 'noticias') {
-            // /noticias/bitcoin/halving
-            const coin = COINS.find(c => slugify(c.name) === p1);
-            const topic = TOPICS.find(t => slugify(t) === p2);
-            if (coin && topic) pageData = generateNewsPage(coin, topic);
-        }
-        else if (section === 'guias') {
-            // /guias/como-comprar/bitcoin/argentina
-            const guideTitle = GUIAS_TITLES.find(g => slugify(g) === p1);
-            const coin = COINS.find(c => slugify(c.name) === p2);
-            const country = slug[3] ? PAISES.find(p => slugify(p) === slug[3]) : undefined;
-            if (guideTitle && coin) pageData = generateGuidePage(coin, guideTitle, country);
-        }
-        else if (section === 'estafas') {
-            // /estafas/esquemas-ponzi
-            const topic = SCAM_TOPICS.find(t => slugify(t) === p1);
-            if (topic) pageData = generateScamPage(topic);
-        }
-    }
-
-    if (!pageData) return { notFound: true };
-
-    return { props: { data: pageData }, revalidate: 3600 };
-};
-
-// Duplicates removed
-
-// ==========================================
-// 6. MAIN COMPONENT (THE PREMUIUM UI)
-// ==========================================
-
-export default function Page({ data }: { data: any }) {
-    if (!data) return null;
-    const slug = data.slug || []; // Assuming slug is passed or derived
-
-    return (
-        <div className="min-h-screen bg-slate-950 text-slate-200 font-sans selection:bg-brand-500 selection:text-white">
-            <SeoHead
-                title={data.meta?.title || 'CryptoAyuda'}
-                description={data.meta?.desc}
-                type={data.type === 'news' || data.type === 'guide' ? 'article' : 'website'}
-                image={data.hero?.image}
-            />
-
-            <PriceTicker />
-            <Navbar />
-
-            {/* DYNAMIC CONTENT SWITCHER */}
-            <main className="relative">
-                {/* GLOBAL TOP AD */}
-                <div className="max-w-7xl mx-auto px-4 mt-8">
-                    <AdPlaceholder type="top" />
-                </div>
-
-                {data.type === 'home' && <HomeView data={data} />}
-
-                {/* WRAPPER FOR CONTENT PAGES (BREADCRUMBS) */}
-                {data.type !== 'home' && (
-                    <div className="max-w-7xl mx-auto px-4 pt-12">
-                        <Breadcrumbs paths={getBreadcrumbs(data)} />
-                    </div>
-                )}
-
-                {data.type === 'hub_news' && <HubNewsView data={data} />}
-                {data.type === 'hub_guides' && <HubGuidesView data={data} />}
-                {data.type === 'hub_scams' && <HubScamsView data={data} />}
-                {data.type === 'hub_security' && <HubSecurityView data={data} />}
-                {data.type === 'hub_wallets' && <HubWalletsView data={data} />}
-                {data.type === 'hub_compare_all' && <HubCompareView data={data} />}
-                {data.type === 'hub_faq' && <HubFaqView data={data} />}
-                {data.type === 'static_contact' && <ContactView />}
-                {data.type === 'static_about' && <AboutView />}
-                {data.type === 'static_legal' && <LegalView data={data} />}
-                {data.type === 'review' && <ReviewView data={data} />}
-                {data.type === 'comparison' && <ComparisonView data={data} />}
-                {data.type === 'opinion' && <OpinionView data={data} />}
-                {data.type === 'scam' && <ScamView data={data} />}
-                {data.type === 'problem' && <ProblemView data={data} />}
-                {(data.type === 'news' || data.type === 'guide') && <ArticleView data={data} />}
-
-                {/* BOTTOM AD */}
-                {data.type !== 'home' && (
-                    <div className="max-w-4xl mx-auto px-4 pb-20">
-                        <AdPlaceholder type="bottom" />
-                    </div>
-                )}
-            </main>
-
-            <Footer />
-        </div>
-    );
-}
 
 // ... SUB VIEWS
 const ArticleView = ({ data }: any) => (
@@ -458,13 +287,16 @@ const ArticleView = ({ data }: any) => (
         {/* Post-Article Engagement */}
         <div className="mt-20 pt-12 border-t border-white/10">
             <h3 className="text-2xl font-bold mb-6 text-center">¿Te fue útil este artículo?</h3>
-            <div className="flex justify-center gap-4">
+            <div className="flex justify-center flex-wrap gap-4">
                 <button
                     onClick={() => alert('¡Gracias por tu feedback!')}
                     className="flex items-center gap-2 px-6 py-3 bg-white/5 hover:bg-white/10 rounded-full transition-colors font-bold cursor-pointer hover:scale-105 active:scale-95"
                 >
                     👍 Sí, gracias
                 </button>
+                <Link href="/servicios" className="flex items-center gap-2 px-8 py-3 bg-brand-600 hover:bg-brand-500 rounded-full transition-all font-black text-white shadow-lg shadow-brand-500/20 hover:scale-105 active:scale-95">
+                    💎 Necesito Ayuda Personalizada
+                </Link>
                 <button
                     onClick={() => {
                         if (navigator.share) {
@@ -550,6 +382,24 @@ const HomeView = ({ data }: any) => (
                 <Link href="/reviews" className="inline-flex items-center gap-2 text-brand-400 font-bold hover:text-brand-300 transition-colors">
                     Ver todos los exchanges &rarr;
                 </Link>
+            </div>
+
+            {/* SERVICES PRESTIGE CTA */}
+            <div className="mt-24 p-12 rounded-[40px] bg-gradient-to-br from-brand-900/40 via-slate-900 to-slate-950 border border-white/5 relative overflow-hidden group max-w-5xl mx-auto shadow-2xl">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-brand-500/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2"></div>
+                <div className="relative z-10 flex flex-col md:flex-row items-center gap-12 text-left">
+                    <div className="flex-grow">
+                        <div className="inline-block px-4 py-1 rounded-full bg-brand-500 text-slate-950 text-[10px] font-black uppercase tracking-[0.2em] mb-6 shadow-xl shadow-brand-500/20">Acceso VIP 2025</div>
+                        <h2 className="text-4xl md:text-5xl font-display font-black text-white mb-6 leading-tight">¿Necesitas Asesoría Real? <br /><span className="text-brand-400 font-black">Evita Estafas y Errores.</span></h2>
+                        <p className="text-slate-400 text-lg max-w-xl leading-relaxed">No pongas en riesgo tus ahorros. Ofrecemos auditorías de seguridad, recuperación de fondos y mentoría 1-a-1 personalizada.</p>
+                    </div>
+                    <div className="shrink-0 flex flex-col items-center">
+                        <Link href="/servicios" className="bg-white text-slate-950 hover:bg-slate-200 px-10 py-5 rounded-2xl text-lg font-black uppercase tracking-widest transition-all hover:scale-105 shadow-[0_0_30px_rgba(255,255,255,0.4)] mb-4 w-full text-center">
+                            VER SERVICIOS PRO
+                        </Link>
+                        <p className="text-[10px] text-slate-500 uppercase font-black tracking-widest">Garantía de Confidencialidad</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
