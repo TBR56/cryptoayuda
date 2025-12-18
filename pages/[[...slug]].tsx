@@ -849,56 +849,77 @@ const HubWalletsView = ({ data }: any) => (
 const ServicesView = ({ data }: any) => (
     <div className="max-w-7xl mx-auto px-4 py-12">
         <div className="text-center mb-16">
-            <h1 className="font-display font-black text-6xl md:text-8xl mb-6 bg-gradient-to-r from-brand-400 to-accent-400 bg-clip-text text-transparent">Servicios Premium</h1>
-            <p className="text-xl text-slate-400 max-w-2xl mx-auto italic">“Soluciones reales en un mundo digital complejo. Garantía de seguridad y confidencialidad.”</p>
+            <h1 className="font-display font-black text-6xl md:text-8xl mb-6 bg-gradient-to-r from-brand-400 to-accent-400 bg-clip-text text-transparent">Ingresos Pasivos VIP</h1>
+            <p className="text-xl text-slate-400 max-w-2xl mx-auto italic">“Sistemas automatizados que trabajan para ti. Sin esperas, sin links externos, directo a tu billetera.”</p>
         </div>
 
         <div className="grid md:grid-cols-3 gap-8">
             <div className="glass-card p-10 rounded-3xl border border-white/5 hover:border-brand-500/50 transition-all group flex flex-col h-full bg-gradient-to-b from-slate-900 to-slate-950 shadow-2xl">
-                <div className="w-16 h-16 bg-brand-500/20 rounded-2xl flex items-center justify-center text-4xl mb-6 group-hover:scale-110 transition-transform">🎓</div>
-                <h3 className="text-3xl font-black mb-4 text-white uppercase tracking-tight">Asesoría 1-a-1</h3>
-                <p className="text-slate-400 mb-8 flex-grow">Sesión privada de 40 min por Zoom/Google Meet. Configuración de wallets, seguridad de exchanges y resolución de dudas técnicas en vivo.</p>
-                <div className="text-4xl font-black text-brand-400 mb-8">$15.000 <span className="text-sm font-normal text-slate-500 italic">/ sesión</span></div>
+                <div className="w-16 h-16 bg-brand-500/20 rounded-2xl flex items-center justify-center text-4xl mb-6 group-hover:scale-110 transition-transform">🤖</div>
+                <h3 className="text-3xl font-black mb-4 text-white uppercase tracking-tight">Pack Auto-Seguridad</h3>
+                <p className="text-slate-400 mb-8 flex-grow">Guía digital interactiva y scripts de configuración automática para blindar tus wallets. Lo compras, lo descargas y te olvidas.</p>
+                <div className="text-4xl font-black text-brand-400 mb-8">$5.000 <span className="text-sm font-normal text-slate-500 italic">/ instantáneo</span></div>
                 <ul className="space-y-4 mb-10 text-sm text-slate-300">
-                    <li><span className="text-brand-500 font-bold">✓</span> Soporte directo por WhatsApp</li>
-                    <li><span className="text-brand-500 font-bold">✓</span> Protocolo de Seguridad VIP</li>
+                    <li className="flex items-center gap-2"><span className="text-brand-500">✓</span> 100% Automatizado</li>
+                    <li className="flex items-center gap-2"><span className="text-brand-500">✓</span> Entrega vía Correo</li>
                 </ul>
-                <a href="https://link.mercadopago.com.ar/brunsss" target="_blank" className="block text-center bg-brand-600 hover:bg-brand-500 text-white font-black py-4 rounded-xl transition-all shadow-lg shadow-brand-500/20 hover:-translate-y-1">RESERVAR AHORA</a>
+                <div className="block text-center bg-slate-800 text-white font-black py-4 rounded-xl border-2 border-brand-500/50">PASOS DE PAGO ABAJO</div>
             </div>
 
             <div className="glass-card p-10 rounded-3xl border-2 border-brand-500 hover:border-brand-400 transition-all group flex flex-col h-full bg-slate-950 relative shadow-2xl scale-105 z-10">
-                <div className="absolute top-0 right-0 bg-brand-500 text-slate-950 text-[10px] font-black px-4 py-1 rounded-bl-xl uppercase tracking-widest">Lo Más Pedido</div>
-                <div className="w-16 h-16 bg-brand-500/30 rounded-2xl flex items-center justify-center text-4xl mb-6 group-hover:scale-110 transition-transform">🛡️</div>
-                <h3 className="text-3xl font-black mb-4 text-white uppercase tracking-tight">Auditoría Total</h3>
-                <p className="text-slate-400 mb-8 flex-grow">Blindaje completo de tu vida digital. Auditoría de 2FA, resguardo de claves privadas, verificación de dispositivos y limpieza de software.</p>
-                <div className="text-4xl font-black text-brand-400 mb-8">$25.000 <span className="text-sm font-normal text-slate-500 italic">/ pago único</span></div>
+                <div className="absolute top-0 right-0 bg-brand-500 text-slate-950 text-[10px] font-black px-4 py-1 rounded-bl-xl uppercase tracking-widest">Inversión Inteligente</div>
+                <div className="w-16 h-16 bg-brand-500/30 rounded-2xl flex items-center justify-center text-4xl mb-6 group-hover:scale-110 transition-transform">📊</div>
+                <h3 className="text-3xl font-black mb-4 text-white uppercase tracking-tight">Bot de Alertas VIP</h3>
+                <p className="text-slate-400 mb-8 flex-grow">Acceso de por vida a nuestro canal de señales automatizado. Sin mantenimiento manual, el sistema envía las alertas por ti.</p>
+                <div className="text-4xl font-black text-brand-400 mb-8">$12.000 <span className="text-sm font-normal text-slate-500 italic">/ acceso vitalicio</span></div>
                 <ul className="space-y-4 mb-10 text-sm text-slate-200">
-                    <li><span className="text-brand-500 font-bold">✓</span> Configuración de Cold Wallets</li>
-                    <li><span className="text-brand-500 font-bold">✓</span> Informe Reporte de Riesgos</li>
-                    <li><span className="text-brand-500 font-bold">✓</span> Soporte prioritario 7 días</li>
+                    <li className="flex items-center gap-2"><span className="text-brand-500">✓</span> Cero Mantenimiento</li>
+                    <li className="flex items-center gap-2"><span className="text-brand-500">✓</span> Configuración en 1 Min</li>
                 </ul>
-                <a href="https://link.mercadopago.com.ar/brunsss" target="_blank" className="block text-center bg-white text-slate-950 hover:bg-slate-200 font-black py-4 rounded-xl transition-all shadow-lg shadow-white/20 hover:-translate-y-1">CONTRATAR PROTECCIÓN</a>
+                <div className="block text-center bg-brand-600 text-white font-black py-4 rounded-xl shadow-lg shadow-brand-500/30">PASOS DE PAGO ABAJO</div>
             </div>
 
             <div className="glass-card p-10 rounded-3xl border border-white/5 hover:border-accent-500/50 transition-all group flex flex-col h-full bg-gradient-to-b from-slate-900 to-slate-950 shadow-2xl">
-                <div className="w-16 h-16 bg-accent-500/20 rounded-2xl flex items-center justify-center text-4xl mb-6 group-hover:scale-110 transition-transform">🩹</div>
-                <h3 className="text-3xl font-black mb-4 text-white uppercase tracking-tight">Soporte Urgente</h3>
-                <p className="text-slate-400 mb-8 flex-grow">¿Fondos trabados? ¿Error en la red? ¿Exchange bloqueado? Te ayudamos a gestionar el reclamo técnico en menos de 12hs.</p>
-                <div className="text-4xl font-black text-accent-400 mb-8">$10.000 <span className="text-sm font-normal text-slate-500 italic">/ incidencia</span></div>
+                <div className="w-16 h-16 bg-accent-500/20 rounded-2xl flex items-center justify-center text-4xl mb-6 group-hover:scale-110 transition-transform">📦</div>
+                <h3 className="text-3xl font-black mb-4 text-white uppercase tracking-tight">Bundle de Recuperación</h3>
+                <p className="text-slate-400 mb-8 flex-grow">Kit de herramientas digitales y plantillas de reclamo legal automatizadas para desbloqueo de fondos. Sin intervención humana.</p>
+                <div className="text-4xl font-black text-accent-400 mb-8">$8.500 <span className="text-sm font-normal text-slate-500 italic">/ descarga</span></div>
                 <ul className="space-y-4 mb-10 text-sm text-slate-300">
-                    <li><span className="text-accent-500 font-bold">✓</span> Diagnóstico Técnico Rápido</li>
-                    <li><span className="text-accent-500 font-bold">✓</span> Gestión de Tickets Oficiales</li>
+                    <li className="flex items-center gap-2"><span className="text-accent-500">✓</span> Solución Inmediata</li>
+                    <li className="flex items-center gap-2"><span className="text-accent-500">✓</span> Documentación Lista</li>
                 </ul>
-                <a href="https://link.mercadopago.com.ar/brunsss" target="_blank" className="block text-center bg-accent-600 hover:bg-accent-500 text-white font-black py-4 rounded-xl transition-all shadow-lg shadow-accent-500/20 hover:-translate-y-1">SOLICITAR AYUDA YA</a>
+                <div className="block text-center bg-slate-800 text-white font-black py-4 rounded-xl border-2 border-accent-500/50">PASOS DE PAGO ABAJO</div>
             </div>
         </div>
 
-        <div className="mt-20 glass-card p-12 rounded-3xl border border-white/5 text-center bg-slate-900/30">
-            <h2 className="text-4xl font-black mb-6">Paga Directo con Mercado Pago</h2>
-            <p className="text-slate-400 mb-8 max-w-xl mx-auto text-lg leading-relaxed">Si prefieres una transferencia directa y agilizar el proceso, puedes usar nuestro Alias oficial.</p>
-            <div className="inline-flex flex-col items-center bg-slate-950 px-10 py-6 rounded-2xl border-2 border-brand-500/20 shadow-xl">
-                <div className="text-xs text-brand-400 font-black uppercase tracking-[0.3em] mb-2 font-display">Alias CVU</div>
-                <div className="text-4xl font-black text-white selection:bg-brand-500 tracking-tighter">brunsss.mp</div>
+        <div className="mt-20 glass-card p-12 rounded-[40px] border border-brand-500/30 text-center bg-slate-900 shadow-[0_0_50px_rgba(59,130,246,0.15)] overflow-hidden relative">
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-brand-500 to-transparent"></div>
+            <h2 className="text-5xl font-black mb-8">Instrucciones de Pago (Sin Links)</h2>
+            <div className="grid md:grid-cols-2 gap-12 items-center">
+                <div className="text-left space-y-6">
+                    <div className="flex gap-4">
+                        <div className="w-10 h-10 rounded-full bg-brand-500 flex items-center justify-center text-slate-950 font-black shrink-0">1</div>
+                        <p className="text-slate-300">Abre tu app de banco o Mercado Pago y selecciona <strong>"Transferir"</strong>.</p>
+                    </div>
+                    <div className="flex gap-4">
+                        <div className="w-10 h-10 rounded-full bg-brand-500 flex items-center justify-center text-slate-950 font-black shrink-0">2</div>
+                        <p className="text-slate-300">Ingresa nuestro Alias oficial y envía el monto del servicio que elegiste.</p>
+                    </div>
+                    <div className="flex gap-4">
+                        <div className="w-10 h-10 rounded-full bg-brand-500 flex items-center justify-center text-slate-950 font-black shrink-0">3</div>
+                        <p className="text-slate-300">Envíanos el comprobante por WhatsApp o Email y recibirás tu acceso automático.</p>
+                    </div>
+                </div>
+                <div className="bg-slate-950 p-8 rounded-3xl border-2 border-brand-500/20">
+                    <div className="text-xs text-brand-400 font-black uppercase tracking-[0.3em] mb-4">Alias Mercado Pago</div>
+                    <div className="text-5xl font-black text-white selection:bg-brand-500 mb-2">brunsss.mp</div>
+                    <div className="text-xs text-slate-500 font-bold uppercase tracking-widest">Titular: BRUNO S.</div>
+                </div>
+            </div>
+            <div className="mt-12 flex justify-center gap-10">
+                <div className="flex items-center gap-2 text-slate-500 text-[10px] font-black uppercase">💳 Apta todas las tarjetas</div>
+                <div className="flex items-center gap-2 text-slate-500 text-[10px] font-black uppercase">⚡ Acreditación inmediata</div>
+                <div className="flex items-center gap-2 text-slate-500 text-[10px] font-black uppercase">🛡️ Pago Protegido</div>
             </div>
         </div>
     </div>
