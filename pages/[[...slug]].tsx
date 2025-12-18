@@ -249,7 +249,11 @@ export const getStaticPaths: GetStaticPaths = async () => {
     // Only pre-build top 5 exchanges to save time
     const top5 = EXCHANGES_LIST.slice(0, 5);
     const paths = top5.map(ex => ({ params: { slug: ['reviews', slugify(ex)] } }));
-    paths.push({ params: { slug: [] } }); // Home
+    paths.push(
+        { params: { slug: ['servicios'] } },
+        { params: { slug: ['estafas'] } },
+        { params: { slug: [] } } // Home
+    );
     return { paths, fallback: 'blocking' };
 };
 
@@ -304,6 +308,17 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
             const prob = PROBLEMAS.find(p => p.slug === p2);
             if (ex && prob) pageData = generateProblemPage(getExchangeData(ex), prob);
         }
+        if (slug[0] === 'servicios') {
+            return {
+                props: {
+                    data: {
+                        meta: { title: "Servicios Premium de Asesoría Crypto", desc: "Consultoría experta, auditorías de seguridad y soporte técnico urgente." },
+                        hero: { title: "Servicios Pro", subtitle: "Tu seguridad, nuestra prioridad" }
+                    }
+                },
+                revalidate: 120
+            };
+        }
         // NEW ROUTES
         else if (section === 'noticias') {
             // /noticias/bitcoin/halving
@@ -338,6 +353,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
 export default function Page({ data }: { data: any }) {
     if (!data) return null;
+    const slug = data.slug || []; // Assuming slug is passed or derived
 
     return (
         <div className="min-h-screen bg-slate-950 text-slate-200 font-sans selection:bg-brand-500 selection:text-white">
@@ -979,3 +995,172 @@ const HubWalletsView = ({ data }: any) => (
         </div>
     </div>
 );
+
+const ServicesView = ({ data }: any) => (
+    <div className="max-w-7xl mx-auto px-4 py-12">
+        <div className="text-center mb-16">
+            <h1 className="font-display font-black text-6xl md:text-8xl mb-6 bg-gradient-to-r from-brand-400 to-accent-400 bg-clip-text text-transparent">Servicios Premium</h1>
+            <p className="text-xl text-slate-400 max-w-2xl mx-auto italic">“Soluciones reales en un mundo digital complejo. Garantía de seguridad y confidencialidad.”</p>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-8">
+            <div className="glass-card p-10 rounded-3xl border border-white/5 hover:border-brand-500/50 transition-all group flex flex-col h-full bg-gradient-to-b from-slate-900 to-slate-950 shadow-2xl">
+                <div className="w-16 h-16 bg-brand-500/20 rounded-2xl flex items-center justify-center text-4xl mb-6 group-hover:scale-110 transition-transform">🎓</div>
+                <h3 className="text-3xl font-black mb-4 text-white uppercase tracking-tight">Asesoría 1-a-1</h3>
+                <p className="text-slate-400 mb-8 flex-grow">Sesión privada de 40 min por Zoom/Google Meet. Configuración de wallets, seguridad de exchanges y resolución de dudas técnicas en vivo.</p>
+                <div className="text-4xl font-black text-brand-400 mb-8">$15.000 <span className="text-sm font-normal text-slate-500 italic">/ sesión</span></div>
+                <ul className="space-y-4 mb-10 text-sm text-slate-300">
+                    <li><span className="text-brand-500 font-bold">✓</span> Soporte directo por WhatsApp</li>
+                    <li><span className="text-brand-500 font-bold">✓</span> Protocolo de Seguridad VIP</li>
+                </ul>
+                <a href="https://link.mercadopago.com.ar/brunsss" target="_blank" className="block text-center bg-brand-600 hover:bg-brand-500 text-white font-black py-4 rounded-xl transition-all shadow-lg shadow-brand-500/20 hover:-translate-y-1">RESERVAR AHORA</a>
+            </div>
+
+            <div className="glass-card p-10 rounded-3xl border-2 border-brand-500 hover:border-brand-400 transition-all group flex flex-col h-full bg-slate-950 relative shadow-2xl scale-105 z-10">
+                <div className="absolute top-0 right-0 bg-brand-500 text-slate-950 text-[10px] font-black px-4 py-1 rounded-bl-xl uppercase tracking-widest">Lo Más Pedido</div>
+                <div className="w-16 h-16 bg-brand-500/30 rounded-2xl flex items-center justify-center text-4xl mb-6 group-hover:scale-110 transition-transform">🛡️</div>
+                <h3 className="text-3xl font-black mb-4 text-white uppercase tracking-tight">Auditoría Total</h3>
+                <p className="text-slate-400 mb-8 flex-grow">Blindaje completo de tu vida digital. Auditoría de 2FA, resguardo de claves privadas, verificación de dispositivos y limpieza de software.</p>
+                <div className="text-4xl font-black text-brand-400 mb-8">$25.000 <span className="text-sm font-normal text-slate-500 italic">/ pago único</span></div>
+                <ul className="space-y-4 mb-10 text-sm text-slate-200">
+                    <li><span className="text-brand-500 font-bold">✓</span> Configuración de Cold Wallets</li>
+                    <li><span className="text-brand-500 font-bold">✓</span> Informe Reporte de Riesgos</li>
+                    <li><span className="text-brand-500 font-bold">✓</span> Soporte prioritario 7 días</li>
+                </ul>
+                <a href="https://link.mercadopago.com.ar/brunsss" target="_blank" className="block text-center bg-white text-slate-950 hover:bg-slate-200 font-black py-4 rounded-xl transition-all shadow-lg shadow-white/20 hover:-translate-y-1">CONTRATAR PROTECCIÓN</a>
+            </div>
+
+            <div className="glass-card p-10 rounded-3xl border border-white/5 hover:border-accent-500/50 transition-all group flex flex-col h-full bg-gradient-to-b from-slate-900 to-slate-950 shadow-2xl">
+                <div className="w-16 h-16 bg-accent-500/20 rounded-2xl flex items-center justify-center text-4xl mb-6 group-hover:scale-110 transition-transform">🩹</div>
+                <h3 className="text-3xl font-black mb-4 text-white uppercase tracking-tight">Soporte Urgente</h3>
+                <p className="text-slate-400 mb-8 flex-grow">¿Fondos trabados? ¿Error en la red? ¿Exchange bloqueado? Te ayudamos a gestionar el reclamo técnico en menos de 12hs.</p>
+                <div className="text-4xl font-black text-accent-400 mb-8">$10.000 <span className="text-sm font-normal text-slate-500 italic">/ incidencia</span></div>
+                <ul className="space-y-4 mb-10 text-sm text-slate-300">
+                    <li><span className="text-accent-500 font-bold">✓</span> Diagnóstico Técnico Rápido</li>
+                    <li><span className="text-accent-500 font-bold">✓</span> Gestión de Tickets Oficiales</li>
+                </ul>
+                <a href="https://link.mercadopago.com.ar/brunsss" target="_blank" className="block text-center bg-accent-600 hover:bg-accent-500 text-white font-black py-4 rounded-xl transition-all shadow-lg shadow-accent-500/20 hover:-translate-y-1">SOLICITAR AYUDA YA</a>
+            </div>
+        </div>
+
+        <div className="mt-20 glass-card p-12 rounded-3xl border border-white/5 text-center bg-slate-900/30">
+            <h2 className="text-4xl font-black mb-6">Paga Directo con Mercado Pago</h2>
+            <p className="text-slate-400 mb-8 max-w-xl mx-auto text-lg leading-relaxed">Si prefieres una transferencia directa y agilizar el proceso, puedes usar nuestro Alias oficial.</p>
+            <div className="inline-flex flex-col items-center bg-slate-950 px-10 py-6 rounded-2xl border-2 border-brand-500/20 shadow-xl">
+                <div className="text-xs text-brand-400 font-black uppercase tracking-[0.3em] mb-2 font-display">Alias CVU</div>
+                <div className="text-4xl font-black text-white selection:bg-brand-500 tracking-tighter">brunsss.mp</div>
+            </div>
+        </div>
+    </div>
+);
+
+export default function Page({ data }: { data: any }) {
+    if (!data) return null;
+    return (
+        <div className="min-h-screen bg-slate-950 text-slate-200 font-sans selection:bg-brand-500 selection:text-white">
+            <SeoHead title={data.meta?.title || 'CryptoAyuda'} description={data.meta?.desc} type={data.type === 'news' || data.type === 'guide' ? 'article' : 'website'} image={data.hero?.image} />
+            <PriceTicker />
+            <Navbar />
+            <main className="relative">
+                <div className="max-w-7xl mx-auto px-4 mt-8"><AdPlaceholder type="top" /></div>
+                {data.type === 'home' && <HomeView data={data} />}
+                {data.type !== 'home' && <div className="max-w-7xl mx-auto px-4 pt-12"><Breadcrumbs paths={getBreadcrumbs(data)} /></div>}
+                {data.type === 'hub_news' && <HubNewsView data={data} />}
+                {data.type === 'hub_guides' && <HubGuidesView data={data} />}
+                {data.type === 'hub_scams' && <HubScamsView data={data} />}
+                {data.type === 'hub_security' && <HubSecurityView data={data} />}
+                {data.type === 'hub_wallets' && <HubWalletsView data={data} />}
+                {data.type === 'hub_compare_all' && <HubCompareView data={data} />}
+                {data.type === 'hub_faq' && <HubFaqView data={data} />}
+                {data.type === 'hub_reviews' && <HubReviewsView data={data} />}
+                {data.type === 'hub_compare' && <HubCompareView data={data} />}
+                {data.type === 'hub_opinions' && <HubOpinionsView data={data} />}
+                {data.type === 'hub_problems' && <HubProblemsView data={data} />}
+                {data.type === 'servicios' && <ServicesView data={data} />}
+                {data.type === 'static_contact' && <ContactView />}
+                {data.type === 'static_about' && <AboutView />}
+                {data.type === 'static_legal' && <LegalView data={data} />}
+                {data.type === 'review' && <ReviewView data={data} />}
+                {data.type === 'comparison' && <ComparisonView data={data} />}
+                {data.type === 'opinion' && <OpinionView data={data} />}
+                {data.type === 'scam' && <ScamView data={data} />}
+                {data.type === 'problem' && <ProblemView data={data} />}
+                {(data.type === 'news' || data.type === 'guide') && <ArticleView data={data} />}
+                {data.type !== 'home' && <div className="max-w-4xl mx-auto px-4 pb-20"><AdPlaceholder type="bottom" /></div>}
+            </main>
+            <Footer />
+        </div>
+    );
+}
+
+export const getStaticPaths: GetStaticPaths = async () => {
+    const top5 = EXCHANGES_LIST.slice(0, 5);
+    const paths = top5.map(ex => ({ params: { slug: ['reviews', slugify(ex)] } }));
+    paths.push({ params: { slug: ['servicios'] } }, { params: { slug: ['estafas'] } }, { params: { slug: [] } });
+    return { paths, fallback: 'blocking' };
+};
+
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+    const slug = params?.slug as string[] || [];
+    let pageData = null;
+    if (slug.length === 0) { pageData = { type: 'home', exchanges: EXCHANGES_LIST.slice(0, 12), coins: COINS.slice(0, 6) }; }
+    else {
+        const [section, p1, p2] = slug;
+        if (!p1) {
+            if (section === 'servicios') pageData = { type: 'servicios', meta: { title: "Servicios Premium de Asesoría Crypto", desc: "Consultoría experta, auditorías de seguridad y soporte técnico urgente." }, hero: { title: "Servicios Pro", subtitle: "Tu seguridad, nuestra prioridad" } };
+            else if (section === 'reviews') pageData = { type: 'hub_reviews', exchanges: EXCHANGES_LIST };
+            else if (section === 'comparar') pageData = { type: 'hub_compare', exchanges: EXCHANGES_LIST };
+            else if (section === 'noticias') pageData = { type: 'hub_news', coins: COINS, topics: TOPICS };
+            else if (section === 'guias') pageData = { type: 'hub_guides', coins: COINS, guides: GUIAS_TITLES };
+            else if (section === 'estafas') pageData = { type: 'hub_scams', scams: SCAM_TOPICS, guides: SECURITY_GUIDES };
+            else if (section === 'seguridad') pageData = { type: 'hub_security', guides: SECURITY_GUIDES };
+            else if (section === 'wallets') pageData = { type: 'hub_wallets', coins: COINS };
+            else if (section === 'comparativas') pageData = { type: 'hub_compare_all', exchanges: EXCHANGES_LIST };
+            else if (section === 'faq') pageData = { type: 'hub_faq' };
+            else if (section === 'contacto') pageData = { type: 'static_contact' };
+            else if (section === 'sobre-nosotros') pageData = { type: 'static_about' };
+            else if (section === 'privacidad') pageData = { type: 'static_legal', title: 'Política de Privacidad' };
+            else if (section === 'terminos') pageData = { type: 'static_legal', title: 'Términos y Condiciones' };
+            else if (section === 'disclaimer') pageData = { type: 'static_legal', title: 'Descargo de Responsabilidad' };
+        }
+        else if (section === 'reviews') {
+            const ex = EXCHANGES_LIST.find(e => slugify(e) === p1);
+            if (ex) pageData = generateReviewPage(getExchangeData(ex));
+        }
+        else if (section === 'comparar') {
+            const parts = p1.split('-vs-');
+            if (parts.length === 2) {
+                const ex1 = EXCHANGES_LIST.find(e => slugify(e) === parts[0]);
+                const ex2 = EXCHANGES_LIST.find(e => slugify(e) === parts[1]);
+                if (ex1 && ex2) pageData = generateComparisonPage(getExchangeData(ex1), getExchangeData(ex2));
+            }
+        }
+        else if (section === 'opiniones') {
+            const ex = EXCHANGES_LIST.find(e => slugify(e) === p1);
+            const pais = PAISES.find(p => slugify(p) === p2);
+            if (ex && pais) pageData = generateOpinionPage(getExchangeData(ex), pais);
+        }
+        else if (section === 'problemas') {
+            const ex = EXCHANGES_LIST.find(e => slugify(e) === p1);
+            const prob = PROBLEMAS.find(p => p.slug === p2);
+            if (ex && prob) pageData = generateProblemPage(getExchangeData(ex), prob);
+        }
+        else if (section === 'noticias') {
+            const coin = COINS.find(c => slugify(c.name) === p1);
+            const topic = TOPICS.find(t => slugify(t) === p2);
+            if (coin && topic) pageData = generateNewsPage(coin, topic);
+        }
+        else if (section === 'guias') {
+            const guideTitle = GUIAS_TITLES.find(g => slugify(g) === p1);
+            const coin = COINS.find(c => slugify(c.name) === p2);
+            const country = slug[3] ? PAISES.find(p => slugify(p) === slug[3]) : undefined;
+            if (guideTitle && coin) pageData = generateGuidePage(coin, guideTitle, country);
+        }
+        else if (section === 'estafas') {
+            const topic = SCAM_TOPICS.find(t => slugify(t) === p1);
+            if (topic) pageData = generateScamPage(topic);
+        }
+    }
+    if (!pageData) return { notFound: true };
+    return { props: { data: pageData }, revalidate: 3600 };
+};
