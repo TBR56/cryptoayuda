@@ -17,7 +17,7 @@ function slugify(text) {
         .replace(/--+/g, '-');
 }
 
-const BASE_URL = 'https://cryptoayuda.org';
+const BASE_URL = 'https://cryptoayudahoy.vercel.app';
 
 function generateSitemap() {
     const urls = ['/'];
