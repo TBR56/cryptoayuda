@@ -85,6 +85,7 @@ export default function SeoHead({
             <title>{siteTitle}</title>
             <meta name="description" content={description} />
             <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <meta name="google-site-verification" content="google79d7506bdb76c169" />
             <meta name="robots" content="index, follow" />
             <link rel="canonical" href={url} />
 
