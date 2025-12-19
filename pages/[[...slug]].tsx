@@ -10,6 +10,7 @@ import ScoreCard from '../components/ScoreCard';
 import PriceTicker from '../components/PriceTicker';
 import RobustImage from '../components/RobustImage'; // v2.0
 import SeoHead from '../components/SeoHead'; // v2.0
+import DiagnosticTool from '../components/DiagnosticTool';
 
 // ==========================================
 // 2. HELPER FUNCTIONS & RNG
@@ -218,8 +219,11 @@ const getBreadcrumbs = (data: any) => {
     } else if (data.type === 'scam') {
         paths.push({ label: 'Seguridad', href: '/estafas' });
         paths.push({ label: data.data.topic, href: '#' });
-    } else if (data.type.startsWith('static_')) {
+    } else if (data.type === 'static_') {
         paths.push({ label: data.title || 'Página', href: '#' });
+    } else if (data.type === 'diagnostico_landing') {
+        paths.push({ label: 'Diagnóstico', href: '/diagnostico' });
+        paths.push({ label: data.hero.title, href: '#' });
     }
     return paths;
 };
@@ -988,6 +992,17 @@ export default function Page({ data }: { data: any }) {
                 {data.type === 'opinion' && <OpinionView data={data} />}
                 {data.type === 'scam' && <ScamView data={data} />}
                 {data.type === 'problem' && <ProblemView data={data} />}
+                {data.type === 'diagnostico_landing' && (
+                    <div className="max-w-7xl mx-auto px-4 py-12">
+                        <div className="text-center mb-16">
+                            <h1 className="text-4xl md:text-6xl font-black text-white mb-4 uppercase italic tracking-tighter">
+                                Solución de <span className="text-brand-500">Conflictos</span>
+                            </h1>
+                            <p className="max-w-xl mx-auto text-slate-500 text-sm italic">Análisis oficial certificado para {data.hero.title} x {data.hero.subtitle}</p>
+                        </div>
+                        <DiagnosticTool initialSelection={data.selection} />
+                    </div>
+                )}
                 {(data.type === 'news' || data.type === 'guide') && <ArticleView data={data} />}
                 {data.type !== 'home' && <div className="max-w-4xl mx-auto px-4 pb-20"><AdPlaceholder type="bottom" /></div>}
             </main>
@@ -1062,6 +1077,29 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         else if (section === 'estafas') {
             const topic = SCAM_TOPICS.find(t => slugify(t) === p1);
             if (topic) pageData = generateScamPage(topic);
+        }
+        else if (section === 'diagnostico') {
+            const ex = EXCHANGES_LIST.find(e => slugify(e) === p1);
+            const prob = PROBLEMAS.find(p => p.slug === p2);
+            if (ex && prob) {
+                pageData = {
+                    type: 'diagnostico_landing',
+                    meta: {
+                        title: `[OFICIAL] Solución: ${prob.title} en ${ex}`,
+                        desc: `¿Tienes problemas con ${prob.title} en ${ex}? Nuestro diagnóstico avanzado te ayuda a recuperar el acceso a tus fondos de forma segura.`
+                    },
+                    hero: { title: ex, subtitle: prob.title, image: getImage("SECURITY", getSeed(ex + prob.slug)) },
+                    selection: { exchange: ex, country: 'España', problem: prob, kycVerified: true }
+                };
+            } else if (ex) {
+                // Secondary fallback for exchange-only diagnostic
+                pageData = {
+                    type: 'diagnostico_landing',
+                    meta: { title: `Centro de Diagnóstico: ${ex}`, desc: `Soluciona problemas de seguridad y bloqueos en ${ex}.` },
+                    hero: { title: ex, subtitle: "Centro de Soporte", image: getImage("SECURITY", getSeed(ex)) },
+                    selection: { exchange: ex, country: 'España', problem: null, kycVerified: true }
+                };
+            }
         }
     }
     if (!pageData) return { notFound: true };

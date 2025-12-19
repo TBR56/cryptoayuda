@@ -13,6 +13,36 @@ const pick = <T>(arr: T[], seed: number, offset: number = 0): T => arr[Math.floo
 // ==========================================
 // LEGACY BLOCKS (REUSED FOR DEPTH)
 // ==========================================
+// ==========================================
+// SEO ENHANCEMENT: LSI & INTERNAL LINKING
+// ==========================================
+const LSI_KEYWORDS = [
+    "mercado de criptomonedas", "tecnología blockchain", "estrategia de inversión", "seguridad digital",
+    "cartera de activos", "exchange regulado", "trading profesional", "análisis fundamental",
+    "finanzas descentralizadas (DeFi)", "ecosistema crypto"
+];
+
+const INTERNAL_LINKS = [
+    { text: "nuestras reviews de exchanges", href: "/reviews" },
+    { text: "guías para principiantes", href: "/guias" },
+    { text: "alertas de estafas", href: "/estafas" },
+    { text: "comparativa de plataformas", href: "/comparar" }
+];
+
+const injectSeoElements = (text: string, seed: number) => {
+    let enriched = text;
+    // Inject LSI keyword
+    const lsi = pick(LSI_KEYWORDS, seed, 50);
+    enriched += ` Al considerar el **${lsi}**, es vital notar que la industria evoluciona rápidamente. `;
+
+    // Inject Internal Link occasionally
+    if (seededRandom(seed + 100) > 0.5) {
+        const link = pick(INTERNAL_LINKS, seed, 20);
+        enriched += ` Podés consultar más en <a href="${link.href}" class="text-brand-400 underline">${link.text}</a> de CryptoAyuda. `;
+    }
+    return enriched;
+};
+
 const CONTEXT_BLOCKS = [
     "Históricamente, {SUBJECT} ha demostrado una correlación significativa con los movimientos macroeconómicos globales. Sin embargo, los datos on-chain sugieren que esta vez podría ser diferente. Las ballenas (whales) han estado acumulando posiciones discretamente, lo que suele ser un indicador alcista previo a un rally masivo. No obstante, el índice de miedo y codicia (Fear & Greed Index) todavía muestra cautela entre los inversores minoristas.",
     "Para entender la magnitud de este evento, debemos mirar atrás. Durante el ciclo alcista anterior, {SUBJECT} tuvo un comportamiento similar justo antes de romper su máximo histórico (ATH). La diferencia clave hoy es la madurez del ecosistema y la entrada de capital institucional a través de ETFs y fondos regulados, lo que aporta una capa de estabilidad que no existía hace cuatro años.",
@@ -72,49 +102,49 @@ export function generateArticleContent(subject: string, type: string, country?: 
     let content = "";
 
     // 1. ELABORATE INTRO (2 paragraphs)
-    content += `<h2>Análisis Maestro de ${subject}</h2>`;
-    content += `<p>${pick(LONG_INTROS, seed).replace(/{SUBJECT}/g, subject)}</p>`;
+    content += `<h2>Análisis Maestro de ${subject} y su impacto en el ecosistema</h2>`;
+    content += `<p>${injectSeoElements(pick(LONG_INTROS, seed).replace(/{SUBJECT}/g, subject), seed)}</p>`;
     content += `<p>${pick(LONG_INTROS, seed, 1).replace(/{SUBJECT}/g, subject)}</p>`;
 
     // 2. LOCAL CONTEXT
     if (country) {
         const countryText = COUNTRY_BLOCKS[country] || DEFAULT_COUNTRY_BLOCK;
-        content += `<h3>Operando desde ${country}</h3>`;
+        content += `<h3>Operando con ${subject} desde ${country}</h3>`;
         content += `<p>${countryText.replace(/{SUBJECT}/g, subject)}</p>`;
-        content += `<p>Si te encuentras en ${country}, es fundamental conocer las leyes locales sobre activos digitales. En el caso de ${subject}, las plataformas operativas en la región suelen ofrecer rampas de acceso mediante moneda local (FIAT), lo que facilita enormemente la adopción sin depender de intermediarios internacionales costosos.</p>`;
+        content += `<p>Si estás buscando invertir en **${subject}** desde ${country}, es fundamental entender que la **tecnología blockchain** local está ganando tracción. Las plataformas operativas en la región suelen ofrecer rampas de acceso mediante moneda local, facilitando la adopción masiva sin intermediarios.</p>`;
     }
 
     // 3. TECHNICAL DEEP DIVE (3 paragraphs)
-    content += `<h3>Fundamentos Técnicos y Operativos</h3>`;
-    content += `<p>${pick(EXPERT_LEVEL_BLOCKS, seed).replace(/{SUBJECT}/g, subject)}</p>`;
+    content += `<h3>Fundamentos Técnicos y Seguridad de ${subject}</h3>`;
+    content += `<p>${injectSeoElements(pick(EXPERT_LEVEL_BLOCKS, seed).replace(/{SUBJECT}/g, subject), seed + 1)}</p>`;
     content += `<p>${pick(ANALYSIS_BLOCKS, seed).replace(/{SUBJECT}/g, subject)}</p>`;
     content += `<p>${pick(EXPERT_LEVEL_BLOCKS, seed, 2).replace(/{SUBJECT}/g, subject)}</p>`;
 
     // 4. STEP BY STEP (PRO)
-    content += `<h3>Guía Paso a Paso para el Éxito con ${subject}</h3>`;
+    content += `<h3>Hoja de Ruta: Cómo dominar ${subject} en 2025</h3>`;
     content += `<div class="bg-slate-900 border-l-4 border-brand-500 p-6 my-8 rounded-r-xl">`;
     content += `<ol class="space-y-4">
-        <li><strong>Fase de Auditoría:</strong> Investiga el whitepaper y los repositorios de GitHub de ${subject}. Una comunidad activa es el mejor indicador de valor.</li>
-        <li><strong>Selección de Entorno:</strong> Configura una wallet no-custodial. El control de tus llaves es el control de tu dinero.</li>
-        <li><strong>Ejecución Estratégica:</strong> Utiliza exchanges con alta liquidez para evitar el 'slippage'. Si estás en ${country || 'Latinoamérica'}, prioriza exchanges con soporte P2P.</li>
-        <li><strong>Monitoreo y Rebalanceo:</strong> No dejes tus activos olvidados. El mercado cambia y tu estrategia con ${subject} debe ser dinámica.</li>
+        <li><strong>Auditoría de Protocolo:</strong> Verifica el repositorio oficial de ${subject}. La transparencia es clave en **DeFi**.</li>
+        <li><strong>Custodia Segura:</strong> Usa siempre una cartera digital fría para montos grandes de ${subject}.</li>
+        <li><strong>Análisis de Liquidez:</strong> Opera solo en **exchanges regulados** para evitar el deslizamiento de precios.</li>
+        <li><strong>Gestión de Portfolio:</strong> Diversifica tu inversión en ${subject} para mitigar la volatilidad del mercado.</li>
     </ol></div>`;
 
     // 5. SECURITY & RISKS (2 long paragraphs)
-    content += `<h3>Seguridad y Gestión de Riesgos</h3>`;
-    content += `<p>${pick(SECURITY_DEEP_DIVE, seed).replace(/{SUBJECT}/g, subject)}</p>`;
+    content += `<h3>Prevención de Fraudes con ${subject}</h3>`;
+    content += `<p>${injectSeoElements(pick(SECURITY_DEEP_DIVE, seed).replace(/{SUBJECT}/g, subject), seed + 2)}</p>`;
     content += `<p>${pick(SECURITY_DEEP_DIVE, seed, 1).replace(/{SUBJECT}/g, subject)}</p>`;
     content += `<div class="p-4 bg-red-950/20 border border-red-500/20 rounded-lg text-red-200 text-sm">
-        <strong>ADVERTENCIA:</strong> Nunca compartas tu frase semilla de 12 o 24 palabras. Ningún soporte técnico de ${subject} te la pedirá jamás. Si lo hacen, es una estafa.
+        <strong>⚠️ CRÍTICO:</strong> Protege tus llaves privadas de ${subject}. El **phishing** es la mayor amenaza para tu cartera hoy.
     </div>`;
 
     // 6. FUTURE PROJECTIONS
-    content += `<h3>El Futuro de ${subject}: ¿Qué esperar después de 2025?</h3>`;
+    content += `<h3>¿Qué pasará con ${subject} tras el próximo ciclo?</h3>`;
     content += `<p>${pick(CONTEXT_BLOCKS, seed).replace(/{SUBJECT}/g, subject)}</p>`;
-    content += `<p>La convergencia entre IA y blockchain pondrá a ${subject} en una posición única. La automatización de transacciones mediante agentes inteligentes podría disparar la demanda de este activo, convirtiéndolo en un estándar utilitario dentro del próximo bull run.</p>`;
+    content += `<p>La integración de **inteligencia artificial** y smart contracts hará que ${subject} sea indispensable. Los que se preparen hoy para este cambio tecnológico liderarán el próximo gran movimiento alcista.</p>`;
 
     // 7. FAQ SECTION (Structured for SEO)
-    content += `<h3 class="mt-12">Preguntas Frecuentes (FAQ)</h3>`;
+    content += `<h3 class="mt-12">Dudas Frecuentes sobre ${subject} (FAQ)</h3>`;
     content += `<div class="space-y-6">`;
     FAQ_TEMPLATE.forEach((item, i) => {
         content += `<div class="border-b border-white/5 pb-4">
@@ -125,7 +155,7 @@ export function generateArticleContent(subject: string, type: string, country?: 
     content += `</div>`;
 
     // 8. FINAL VERDICT
-    content += `<h3>Conclusión Final de CryptoAyuda</h3>`;
+    content += `<h3>Veredicto Final: ¿Vale la pena ${subject}?</h3>`;
     content += `<p>${pick(CONCLUSION_BLOCKS, seed).replace(/{SUBJECT}/g, subject)}</p>`;
 
     return content;
@@ -133,32 +163,24 @@ export function generateArticleContent(subject: string, type: string, country?: 
 
 export function generateScamContent(topic: string) {
     return `
-<h2>Alerta de Seguridad Máxima: ${topic}</h2>
-<p>En el panorama de la ciberdelincuencia financiera, el **${topic}** ha surgido como una de las tácticas más devastadoras debido a su capacidad para aprovechar tanto las vulnerabilidades tecnológicas como psicológicas de los usuarios. En CryptoAyuda hemos documentado casos donde las pérdidas superan las seis cifras debido a la sofisticación de estos grupos organizados.</p>
+<h2>Alerta de Seguridad: Cómo evitar la estafa de ${topic}</h2>
+<p>El fraudulento esquema de **${topic}** es una amenaza creciente para la **seguridad digital** de los inversores. En CryptoAyuda hemos rastreado múltiples redes de actores maliciosos que usan ${topic} para drenar carteras enteras en cuestión de segundos.</p>
 
-<h3>¿Cómo se orquesta el fraude de ${topic}?</h3>
-<p>Generalmente, los atacantes operan en etapas. Primero, se establece un contacto que parece legítimo, ya sea a través de redes sociales profesionales o de mensajería cifrada. Utilizan perfiles creados artificialmente con años de "historial" falso para generar una sensación de confianza. Una vez enganchada la víctima, presentan la oportunidad relacionada con ${topic} como algo exclusivo, de bajo riesgo y limitado en el tiempo.</p>
+<h3>Mecánica del engaño en ${topic}</h3>
+<p>Los estafadores suelen contactar mediante canales de Telegram o grupos de WhatsApp, prometiendo retornos garantizados mediante el uso de **${topic}**. Es una trampa diseñada para robar tus frases semilla o engañarte para que apruebes transacciones maliciosas en tu cartera.</p>
 
 <div class="bg-red-500/10 border border-red-500/30 p-6 rounded-xl my-8">
-    <h4 class="text-red-400 font-bold mb-4">🚩 2025 Red Flags Checklist</h4>
+    <h4 class="text-red-400 font-bold mb-4">🚨 Señales de Peligro (Red Flags)</h4>
     <ul class="space-y-2 text-red-200">
-        <li>Baja volatilidad prometida con retornos extraordinarios (Incompatible con la realidad del mercado).</li>
-        <li>Presión psicológica para invertir de inmediato sin hacer preguntas técnicas.</li>
-        <li>Requerimiento de mover fondos a una plataforma desconocida que clona la UI de exchanges reales.</li>
+        <li>Promesas de rentabilidad sin riesgo vinculadas a ${topic}.</li>
+        <li>Necesidad de "validar" tu cartera en sitios web sospechosos.</li>
+        <li>Soporte técnico de ${topic} que te pide tu frase secreta.</li>
     </ul>
 </div>
 
-<h3>Impacto Técnico y Operativo</h3>
-<p>Más allá de la pérdida directa de capital, el ataque de ${topic} suele comprometer la identidad digital de la víctima. El uso de malware oculto en "guías de inversión" o apps de escritorio permite a los hackers acceder a cookies de sesión y bypass de 2FA. Es una intrusión total que puede durar meses antes de ser detectada.</p>
+<h3>Cómo Proteger tus Activos</h3>
+<p>Para no caer en la red de **${topic}**, es vital seguir una disciplina de **seguridad crypto** estricta: nunca conectes tu cartera principal a dApps desconocidas y siempre verifica dos veces las URL oficiales. La educación es tu mejor defensa contra el fraude en el **ecosistema blockchain**.</p>
 
-<h3>Protocolo de Defensa Activa</h3>
-<ol>
-    <li><strong>Aislamiento de Hardware:</strong> Si sospechas de un intento de ${topic}, desconecta tus dispositivos de internet inmediatamente.</li>
-    <li><strong>Rotación de Seguridad:</strong> Cambia todas tus contraseñas y resetea tus códigos 2FA desde un dispositivo que sepas que está limpio (preferiblemente uno nuevo).</li>
-    <li><strong>Denuncia Internacional:</strong> Reporta las direcciones de BTC/ETH involucradas en bases de datos como BitcoinAbuse o ante las autoridades de ciberdelincuencia de tu país.</li>
-</ol>
-
-<p>Recuerda que en el mundo crypto, eres tu propio banco. La responsabilidad de proteger tu capital contra estafas como ${topic} recae únicamente en tu capacidad para discernir entre una oportunidad real y una trampa bien estructurada. Mantente alerta y siempre desconfía de lo que parece demasiado bueno para ser verdad.</p>
+<p>Si crees haber sido víctima de ${topic}, desconecta tus equipos de la red y transfiere el capital restante a una nueva dirección de inmediato. Consulta nuestra sección de <a href="/estafas" class="text-brand-400 underline">alertas de estafas</a> para más información.</p>
     `;
 }
-

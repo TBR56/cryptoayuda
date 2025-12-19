@@ -15,14 +15,70 @@ export default function SeoHead({
     title,
     description,
     image = "https://images.unsplash.com/photo-1621504450374-147cb9225562?auto=format&fit=crop&w=1200&q=80",
-    url = "https://cryptoayuda.com",
+    url = "https://cryptoayudahoy.vercel.app",
     type = "website",
     publishedTime,
     author = "CryptoAyuda Team",
     jsonLd
 }: SeoHeadProps) {
 
-    const siteTitle = `${title} | CryptoAyuda`;
+    // 1. DYNAMIC CTA PREFIXES (AGGRESSIVE SEO)
+    let ctaTitle = title;
+    if (title.toLowerCase().includes('guía') || title.toLowerCase().includes('cómo')) {
+        ctaTitle = `[OFICIAL] ${title} 2025`;
+    } else if (title.toLowerCase().includes('review') || title.toLowerCase().includes('opiniones')) {
+        ctaTitle = `🛡️ ${title} (Análisis Real)`;
+    } else if (title.toLowerCase().includes('alerta') || title.toLowerCase().includes('estafa')) {
+        ctaTitle = `⚠️ [URGENTE] ${title}`;
+    }
+
+    const siteTitle = `${ctaTitle} | CryptoAyuda`;
+
+    // 2. AUTOMATIC BREADCRUMBS JSON-LD
+    const pathSegments = url.replace('https://cryptoayudahoy.vercel.app', '').split('/').filter(Boolean);
+    const breadcrumbLd = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Inicio",
+                "item": "https://cryptoayudahoy.vercel.app"
+            },
+            ...pathSegments.map((segment, index) => ({
+                "@type": "ListItem",
+                "position": index + 2,
+                "name": segment.charAt(0).toUpperCase() + segment.slice(1).replace(/-/g, ' '),
+                "item": `https://cryptoayudahoy.vercel.app/${pathSegments.slice(0, index + 1).join('/')}`
+            }))
+        ]
+    };
+
+    // 3. ORGANIZATION & WEBSITE JSON-LD
+    const organizationLd = {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "CryptoAyuda",
+        "url": "https://cryptoayudahoy.vercel.app",
+        "logo": "https://cryptoayudahoy.vercel.app/logo.png",
+        "sameAs": [
+            "https://twitter.com/cryptoayuda",
+            "https://facebook.com/cryptoayuda"
+        ]
+    };
+
+    const websiteLd = {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "CryptoAyuda",
+        "url": "https://cryptoayudahoy.vercel.app",
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://cryptoayudahoy.vercel.app/noticias?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+        }
+    };
 
     return (
         <Head>
@@ -53,6 +109,9 @@ export default function SeoHead({
             {author && <meta name="author" content={author} />}
 
             {/* JSON-LD Structured Data */}
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationLd) }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteLd) }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
             {jsonLd && (
                 <script
                     type="application/ld+json"
@@ -60,8 +119,8 @@ export default function SeoHead({
                 />
             )}
 
-            {/* Adsterra Global Script */}
-            <script type='text/javascript' src='//pl28286231.effectivegatecpm.com/e4/66/b3/e466b34eb771d131ac9e61eb44015230.js'></script>
         </Head>
+
+
     );
 }

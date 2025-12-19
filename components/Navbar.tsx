@@ -35,6 +35,9 @@ export default function Navbar() {
                             <Link href="/comparar" className="text-slate-300 hover:text-white hover:bg-white/5 px-3 py-2 rounded-md text-sm font-bold uppercase tracking-wide transition-all">
                                 Comparar
                             </Link>
+                            <Link href="/diagnostico" className="text-brand-400 hover:text-brand-300 hover:bg-brand-500/10 px-3 py-2 rounded-md text-sm font-black uppercase tracking-wide transition-all border border-brand-500/30">
+                                🔥 Diagnóstico
+                            </Link>
                             <Link href="/servicios" className="text-brand-400 hover:text-brand-300 hover:bg-brand-500/10 px-3 py-2 rounded-md text-sm font-black uppercase tracking-wide transition-all border border-brand-500/30">
                                 💎 Servicios Pro
                             </Link>
