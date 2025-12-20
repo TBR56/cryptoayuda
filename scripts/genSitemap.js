@@ -65,7 +65,8 @@ function slugify(text) {
         .replace(/--+/g, '-');
 }
 
-const BASE_URL = 'https://cryptoayudahoy.vercel.app';
+// 1. Dynamic Domain (IMPORTANT for Search Console mismatch)
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://cryptoayudahoy.vercel.app';
 const LASTMOD = new Date().toISOString().split('T')[0];
 
 function generateXml(urls, priority = 0.6) {
@@ -170,7 +171,8 @@ ${sitemaps.map(s => `  <sitemap>
     const robots = `User-agent: *
 Allow: /
 
-Sitemap: ${BASE_URL}/sitemap.xml`;
+Sitemap: ${BASE_URL}/sitemap.xml
+`;
     fs.writeFileSync('./public/robots.txt', robots);
     console.log(`Updated robots.txt.`);
 }
