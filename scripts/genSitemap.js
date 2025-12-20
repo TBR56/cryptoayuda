@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-// DATA SOURCES (MATCHES lib/data.ts for 5,000+ urls)
+// DATA SOURCES (MATCHES lib/data.ts)
 const EXCHANGES_LIST = [
     "Binance", "Coinbase", "Kraken", "KuCoin", "Bybit", "OKX", "Bitget", "Gate.io", "BingX", "MEXC",
     "HTX", "Bitfinex", "Bitstamp", "Gemini", "Crypto.com", "Phemex", "Poloniex", "LBank", "XT.com", "CoinEx",
@@ -65,90 +65,114 @@ function slugify(text) {
         .replace(/--+/g, '-');
 }
 
-// THE DOMAIN MUST MATCH Production
 const BASE_URL = 'https://cryptoayudahoy.vercel.app';
+const LASTMOD = new Date().toISOString().split('T')[0];
 
-function generateSitemap() {
-    const urls = ['/'];
-
-    // Hubs
-    const hubs = [
-        'reviews', 'comparar', 'noticias', 'guias', 'estafas', 'seguridad',
-        'wallets', 'comparativas', 'faq', 'contacto', 'sobre-nosotros',
-        'privacidad', 'terminos', 'disclaimer', 'servicios', 'problemas'
-    ];
-    hubs.forEach(h => urls.push(`/${h}`));
-
-    // Reviews (Full List)
-    EXCHANGES_LIST.forEach(ex => urls.push(`/reviews/${slugify(ex)}`));
-
-    // Opiniones (Exchanges x Paises) ~2,300
-    EXCHANGES_LIST.forEach(ex => {
-        PAISES.forEach(p => urls.push(`/opiniones/${slugify(ex)}/${slugify(p)}`));
-    });
-
-    // Problemas (Exchanges x Probleme Slugs) ~1,400
-    EXCHANGES_LIST.forEach(ex => {
-        PROBLEMAS.forEach(prob => urls.push(`/problemas/${slugify(ex)}/${prob}`));
-    });
-
-    // Guias (Coins x Titles) ~660
-    COINS.forEach(coin => {
-        GUIAS_TITLES.forEach(g => urls.push(`/guias/${slugify(g)}/${slugify(coin)}`));
-    });
-
-    // Guias Localizadas (Subset to reach ~5000+ total)
-    COINS.slice(0, 10).forEach(coin => {
-        GUIAS_TITLES.slice(0, 10).forEach(g => {
-            PAISES.slice(0, 10).forEach(p => urls.push(`/guias/${slugify(g)}/${slugify(coin)}/${slugify(p)}`));
-        });
-    });
-
-    // Estafas (Topics)
-    SCAM_TOPICS.forEach(t => urls.push(`/estafas/${slugify(t)}`));
-
-    // News (Coins x Topics) ~570
-    COINS.forEach(coin => {
-        TOPICS.forEach(t => urls.push(`/noticias/${slugify(coin)}/${slugify(t)}`));
-    });
-
-    // Diagnóstico (Exchanges x Problems) ~1,400
-    EXCHANGES_LIST.forEach(ex => {
-        urls.push(`/diagnostico/${slugify(ex)}`);
-        PROBLEMAS.forEach(prob => {
-            urls.push(`/diagnostico/${slugify(ex)}/${prob}`);
-        });
-    });
-
-    // Diagnóstico Localizado (Subset: Top 5 Exchanges x top 10 Paises x All Problems) ~850
-    EXCHANGES_LIST.slice(0, 5).forEach(ex => {
-        PAISES.slice(0, 10).forEach(p => {
-            PROBLEMAS.forEach(prob => {
-                urls.push(`/diagnostico/${slugify(ex)}/${slugify(p)}/${prob}`);
-            });
-        });
-    });
-
-    console.log(`Generating sitemap with ${urls.length} URLs...`);
-
-    const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+function generateXml(urls, priority = 0.6) {
+    return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${urls.map(url => `  <url>
     <loc>${BASE_URL}${url}</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <lastmod>${LASTMOD}</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>${url === '/' ? '1.0' : url.split('/').length > 2 ? '0.6' : '0.8'}</priority>
+    <priority>${url === '/' ? '1.0' : priority}</priority>
   </url>`).join('\n')}
 </urlset>`;
-
-    fs.writeFileSync('./public/sitemap.xml', sitemap);
-
-    const robots = `User-agent: *
-Allow: /
-Sitemap: ${BASE_URL}/sitemap.xml`;
-    fs.writeFileSync('./public/robots.txt', robots);
-
-    console.log(`Success: Sitemap and robots.txt written to /public`);
 }
 
-generateSitemap();
+function writeSitemap(name, urls, priority) {
+    const content = generateXml(urls, priority);
+    fs.writeFileSync(`./public/${name}`, content);
+    console.log(`Generated ${name} with ${urls.length} URLs.`);
+}
+
+function generateSitemaps() {
+    const sitemaps = [];
+
+    // 1. Static & Hubs
+    const staticUrls = [
+        '/', '/reviews', '/comparar', '/noticias', '/guias', '/estafas', '/seguridad',
+        '/wallets', '/comparativas', '/faq', '/contacto', '/sobre-nosotros',
+        '/privacidad', '/terminos', '/disclaimer', '/servicios', '/problemas', '/diagnostico'
+    ];
+    writeSitemap('sitemap-static.xml', staticUrls, 0.8);
+    sitemaps.push('sitemap-static.xml');
+
+    // 2. Reviews
+    const reviewUrls = EXCHANGES_LIST.map(ex => `/reviews/${slugify(ex)}`);
+    writeSitemap('sitemap-reviews.xml', reviewUrls, 0.7);
+    sitemaps.push('sitemap-reviews.xml');
+
+    // 3. Opiniones
+    const opinionUrls = [];
+    EXCHANGES_LIST.forEach(ex => {
+        PAISES.forEach(p => opinionUrls.push(`/opiniones/${slugify(ex)}/${slugify(p)}`));
+    });
+    writeSitemap('sitemap-opiniones.xml', opinionUrls, 0.5);
+    sitemaps.push('sitemap-opiniones.xml');
+
+    // 4. Problemas
+    const problemaUrls = [];
+    EXCHANGES_LIST.forEach(ex => {
+        PROBLEMAS.forEach(prob => problemaUrls.push(`/problemas/${slugify(ex)}/${prob}`));
+    });
+    writeSitemap('sitemap-problemas.xml', problemaUrls, 0.5);
+    sitemaps.push('sitemap-problemas.xml');
+
+    // 5. Guias
+    const guiaUrls = [];
+    COINS.forEach(coin => {
+        GUIAS_TITLES.forEach(g => guiaUrls.push(`/guias/${slugify(g)}/${slugify(coin)}`));
+    });
+    // Localized subset
+    COINS.slice(0, 5).forEach(coin => {
+        GUIAS_TITLES.slice(0, 5).forEach(g => {
+            PAISES.slice(0, 10).forEach(p => guiaUrls.push(`/guias/${slugify(g)}/${slugify(coin)}/${slugify(p)}`));
+        });
+    });
+    writeSitemap('sitemap-guias.xml', guiaUrls, 0.6);
+    sitemaps.push('sitemap-guias.xml');
+
+    // 6. Estafas
+    const scamUrls = SCAM_TOPICS.map(t => `/estafas/${slugify(t)}`);
+    writeSitemap('sitemap-estafas.xml', scamUrls, 0.7);
+    sitemaps.push('sitemap-estafas.xml');
+
+    // 7. News
+    const newsUrls = [];
+    COINS.forEach(coin => {
+        TOPICS.forEach(topic => newsUrls.push(`/noticias/${slugify(coin)}/${slugify(topic)}`));
+    });
+    writeSitemap('sitemap-noticias.xml', newsUrls, 0.6);
+    sitemaps.push('sitemap-noticias.xml');
+
+    // 8. Diagnostico
+    const diagUrls = [];
+    EXCHANGES_LIST.forEach(ex => {
+        diagUrls.push(`/diagnostico/${slugify(ex)}`);
+        PROBLEMAS.forEach(prob => diagUrls.push(`/diagnostico/${slugify(ex)}/${prob}`));
+    });
+    writeSitemap('sitemap-diagnostico.xml', diagUrls, 0.6);
+    sitemaps.push('sitemap-diagnostico.xml');
+
+    // 9. Sitemap Index
+    const indexContent = `<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${sitemaps.map(s => `  <sitemap>
+    <loc>${BASE_URL}/${s}</loc>
+    <lastmod>${LASTMOD}</lastmod>
+  </sitemap>`).join('\n')}
+</sitemapindex>`;
+    fs.writeFileSync('./public/sitemap.xml', indexContent);
+    console.log(`Generated sitemap.xml (Index) with ${sitemaps.length} sub-maps.`);
+
+    // 10. Robots.txt
+    const robots = `User-agent: *
+Allow: /
+
+Sitemap: ${BASE_URL}/sitemap.xml`;
+    fs.writeFileSync('./public/robots.txt', robots);
+    console.log(`Updated robots.txt.`);
+}
+
+generateSitemaps();
