@@ -38,9 +38,6 @@ export default function Navbar() {
                             <Link href="/diagnostico" className="text-brand-400 hover:text-brand-300 hover:bg-brand-500/10 px-3 py-2 rounded-md text-sm font-black uppercase tracking-wide transition-all border border-brand-500/30">
                                 🔥 Diagnóstico
                             </Link>
-                            <Link href="/servicios" className="text-brand-400 hover:text-brand-300 hover:bg-brand-500/10 px-3 py-2 rounded-md text-sm font-black uppercase tracking-wide transition-all border border-brand-500/30">
-                                💎 Servicios Pro
-                            </Link>
                         </div>
                     </div>
                     <div className="hidden md:block">
@@ -67,7 +64,6 @@ export default function Navbar() {
                         <Link href="/noticias" className="text-slate-300 hover:text-white block px-3 py-2 rounded-md text-base font-bold">Noticias</Link>
                         <Link href="/guias" className="text-slate-300 hover:text-white block px-3 py-2 rounded-md text-base font-bold">Guías</Link>
                         <Link href="/reviews" className="text-slate-300 hover:text-white block px-3 py-2 rounded-md text-base font-bold">Reviews</Link>
-                        <Link href="/servicios" className="text-brand-400 hover:text-brand-300 block px-3 py-2 rounded-md text-base font-black">💎 SERVICIOS PRO</Link>
                         <Link href="/estafas" className="text-red-400 hover:text-red-300 block px-3 py-2 rounded-md text-base font-bold">Alertas de Estafa</Link>
                         <Link href="/problemas" className="text-slate-300 hover:text-white block px-3 py-2 rounded-md text-base font-bold">Soporte</Link>
                     </div>

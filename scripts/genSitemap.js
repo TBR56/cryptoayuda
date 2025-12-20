@@ -93,7 +93,7 @@ function generateSitemaps() {
     const staticUrls = [
         '/', '/reviews', '/comparar', '/noticias', '/guias', '/estafas', '/seguridad',
         '/wallets', '/comparativas', '/faq', '/contacto', '/sobre-nosotros',
-        '/privacidad', '/terminos', '/disclaimer', '/servicios', '/problemas', '/diagnostico'
+        '/privacidad', '/terminos', '/disclaimer', '/problemas', '/diagnostico'
     ];
     writeSitemap('sitemap-static.xml', staticUrls, 0.8);
     sitemaps.push('sitemap-static.xml');
