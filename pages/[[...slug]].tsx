@@ -380,6 +380,7 @@ const ArticleView = ({ data }: any) => (
                 </button>
             </div>
         </div>
+        <NativeAd />
     </div>
 );
 
@@ -549,6 +550,7 @@ const ReviewView = ({ data }: any) => (
                 </div>
             </article>
         </div>
+        <NativeAd />
     </div>
 );
 
