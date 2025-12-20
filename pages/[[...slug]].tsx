@@ -1058,8 +1058,8 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
             const ex = EXCHANGES_LIST.find(e => slugify(e) === p1);
             if (ex) {
                 pageData = generateReviewPage(getExchangeData(ex));
-                pageData.faq = getFaqForSubject(ex);
-                pageData.rating = { score: 4.7, count: rangeSeeded(200, 1000, getSeed(ex)) };
+                (pageData as any).faq = getFaqForSubject(ex);
+                (pageData as any).rating = { score: 4.7, count: rangeSeeded(200, 1000, getSeed(ex)) };
             }
         }
         else if (section === 'comparar') {
@@ -1080,8 +1080,8 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
             const prob = PROBLEMAS.find(p => p.slug === p2);
             if (ex && prob) {
                 pageData = generateProblemPage(getExchangeData(ex), prob);
-                pageData.faq = getFaqForSubject(prob.title);
-                pageData.rating = { score: 4.8, count: rangeSeeded(50, 200, getSeed(ex + prob.slug)) };
+                (pageData as any).faq = getFaqForSubject(prob.title);
+                (pageData as any).rating = { score: 4.8, count: rangeSeeded(50, 200, getSeed(ex + prob.slug)) };
             }
         }
         else if (section === 'noticias') {
@@ -1089,7 +1089,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
             const topic = TOPICS.find(t => slugify(t) === p2);
             if (coin && topic) {
                 pageData = generateNewsPage(coin, topic);
-                pageData.faq = getFaqForSubject(coin.name);
+                (pageData as any).faq = getFaqForSubject(coin.name);
             }
         }
         else if (section === 'guias') {
@@ -1098,15 +1098,15 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
             const country = slug[3] ? PAISES.find(p => slugify(p) === slug[3]) : undefined;
             if (guideTitle && coin) {
                 pageData = generateGuidePage(coin, guideTitle, country);
-                pageData.faq = getFaqForSubject(guideTitle);
-                pageData.rating = { score: 4.9, count: rangeSeeded(100, 500, getSeed(guideTitle + coin.name)) };
+                (pageData as any).faq = getFaqForSubject(guideTitle);
+                (pageData as any).rating = { score: 4.9, count: rangeSeeded(100, 500, getSeed(guideTitle + coin.name)) };
             }
         }
         else if (section === 'estafas') {
             const topic = SCAM_TOPICS.find(t => slugify(t) === p1);
             if (topic) {
                 pageData = generateScamPage(topic);
-                pageData.faq = getFaqForSubject(topic);
+                (pageData as any).faq = getFaqForSubject(topic);
             }
         }
         else if (section === 'diagnostico') {
