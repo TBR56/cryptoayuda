@@ -32,4 +32,12 @@
     <loc>https://cryptoayudahoy.vercel.app/sitemap-diagnostico.xml</loc>
     <lastmod>2025-12-20</lastmod>
   </sitemap>
+  <sitemap>
+    <loc>https://cryptoayudahoy.vercel.app/sitemap-comparativas.xml</loc>
+    <lastmod>2025-12-20</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://cryptoayudahoy.vercel.app/sitemap-auditorias.xml</loc>
+    <lastmod>2025-12-20</lastmod>
+  </sitemap>
 </sitemapindex>

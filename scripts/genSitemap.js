@@ -10,7 +10,9 @@ const EXCHANGES_LIST = [
     "Novadax", "BitcoinTrade", "Ripio", "Bitso", "Volabit", "Lemon Cash", "Buenbit", "Belo", "SatoshiTango", "ArgenBTC",
     "Decrypto", "TiendaCrypto", "LetsBit", "Buda", "Orionx", "CryptoMarket", "Luno", "VALR", "Swyftx", "CoinSpot",
     "Independent Reserve", "Digital Surrey", "Bitvavo", "Coinmerce", "LiteBit", "Young Platform", "The Rock Trading",
-    "Bitpanda", "Coinfinity", "Bisenomic", "ZebPay", "WazirX", "CoinDCX", "Rain", "CoinMENA", "BitOasis"
+    "Bitpanda", "Coinfinity", "Bisenomic", "ZebPay", "WazirX", "CoinDCX", "Rain", "CoinMENA", "BitOasis",
+    "Bluebit", "Dex-Trade", "ProBit", "Azbit", "Latoken", "Finexbox", "FMFW.io", "CEX.io", "EXMO", "HitBTC",
+    "YoBit", "Mercatox", "Tidex", "STEX", "Kanga", "LocalCoinsSwap", "Paxful", "Bisq", "HodlHodl"
 ];
 
 const PAISES = [
@@ -25,7 +27,8 @@ const COINS = [
     "Bitcoin", "Ethereum", "Solana", "Cardano", "XRP", "Polkadot", "Dogecoin", "Shiba Inu", "Avalanche",
     "Polygon", "Litecoin", "Chainlink", "Stellar", "Binance Coin", "Tron", "Monero", "Cosmos", "Algorand",
     "Near Protocol", "Aptos", "Sui", "Pepe", "Arbitrum", "Optimism", "Render", "Kaspa", "Injective",
-    "Celestia", "Filecoin", "Internet Computer"
+    "Celestia", "Filecoin", "Internet Computer", "Worldcoin", "Bittensor", "Stacks", "JasmyCoin", "Bonk",
+    "Jupiter", "Ethena", "Fetch.ai", "SingularityNET", "Flow", "Mantra", "Ondo"
 ];
 
 const GUIAS_TITLES = [
@@ -34,7 +37,9 @@ const GUIAS_TITLES = [
     "Comprar con PayPal", "Retirar a Cuenta Bancaria desde", "Configurar Metamask para",
     "Minería de", "Futura Regulación de", "Historial de Precios de", "Comparativa Crypto vs Fiat",
     "Errores comunes al enviar", "Cómo recuperar", "Mejor App para tradear", "Impuestos sobre",
-    "Comprar sin comisiones", "Intercambio P2P de", "Seguridad Avanzada para", "Préstamos con colateral en"
+    "Comprar sin comisiones", "Intercambio P2P de", "Seguridad Avanzada para", "Préstamos con colateral en",
+    "Alternativas a", "Opiniones Reales sobre", "Cómo funciona el protocolo de", "Ventajas y Desventajas de",
+    "Guía Definitiva 2025 de", "Es real o farsa", "Comunidad oficial de", "Tutorial paso a paso de"
 ];
 
 const SCAM_TOPICS = [
@@ -47,7 +52,9 @@ const TOPICS = [
     "Regulación SEC", "Adopción Institucional", "Halving de Bitcoin", "Upgrade Dencun", "Hackeo en DeFi",
     "Listado en Binance", "Rumores de ETF Spot", "Asociación con Visa", "Lanzamiento de Mainnet",
     "Quema de Tokens", "Airdrop Masivo", "Demanda Legal", "Impuestos Crypto", "Minería Sostenible",
-    "Privacidad Monero", "Scalability L2", "NFT Utility", "Stablecoin Regulation", "CBDC Launch"
+    "Privacidad Monero", "Scalability L2", "NFT Utility", "Stablecoin Regulation", "CBDC Launch",
+    "Minería con GPU", "Proof of Work vs Stake", "Inteligencia Artificial y Crypto", "DePIN", "Real World Assets (RWA)",
+    "Billeteras Frías", "Libertad Financiera", "Inflación y Cripto", "Web3 Gaming", "Metaverso 2025"
 ];
 
 const PROBLEMAS = [
@@ -125,10 +132,10 @@ function generateSitemaps() {
     COINS.forEach(coin => {
         GUIAS_TITLES.forEach(g => guiaUrls.push(`/guias/${slugify(g)}/${slugify(coin)}`));
     });
-    // Localized subset
-    COINS.slice(0, 5).forEach(coin => {
-        GUIAS_TITLES.slice(0, 5).forEach(g => {
-            PAISES.slice(0, 10).forEach(p => guiaUrls.push(`/guias/${slugify(g)}/${slugify(coin)}/${slugify(p)}`));
+    // Massive Localized expansion - ALL COINS
+    COINS.forEach(coin => {
+        GUIAS_TITLES.forEach(g => {
+            PAISES.forEach(p => guiaUrls.push(`/guias/${slugify(g)}/${slugify(coin)}/${slugify(p)}`));
         });
     });
     writeSitemap('sitemap-guias.xml', guiaUrls, 0.6);
@@ -156,7 +163,28 @@ function generateSitemaps() {
     writeSitemap('sitemap-diagnostico.xml', diagUrls, 0.6);
     sitemaps.push('sitemap-diagnostico.xml');
 
-    // 9. Sitemap Index
+    // 9. Comparativas (N x N) - MASSIVE SEO
+    const compareUrls = [];
+    const mainExchanges = EXCHANGES_LIST.slice(0, 50); // Compare top 50 significantly
+    for (let i = 0; i < mainExchanges.length; i++) {
+        for (let j = i + 1; j < mainExchanges.length; j++) {
+            compareUrls.push(`/comparar/${slugify(mainExchanges[i])}-vs-${slugify(mainExchanges[j])}`);
+        }
+    }
+    writeSitemap('sitemap-comparativas.xml', compareUrls, 0.7);
+    sitemaps.push('sitemap-comparativas.xml');
+
+    // 10. Auditorías de Confianza (Trust Audits)
+    const auditUrls = [];
+    const TRUST_FACTORS = ["licencia", "reservas", "antiguedad", "seguridad-fondos", "soporte", "tarifas"];
+    EXCHANGES_LIST.forEach(ex => {
+        auditUrls.push(`/auditoria/${slugify(ex)}`);
+        TRUST_FACTORS.forEach(factor => auditUrls.push(`/auditoria/${slugify(ex)}/${factor}`));
+    });
+    writeSitemap('sitemap-auditorias.xml', auditUrls, 0.6);
+    sitemaps.push('sitemap-auditorias.xml');
+
+    // 11. Sitemap Index
     const indexContent = `<?xml version="1.0" encoding="UTF-8"?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${sitemaps.map(s => `  <sitemap>

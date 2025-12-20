@@ -8,7 +8,9 @@ export const EXCHANGES_LIST = [
     "Novadax", "BitcoinTrade", "Ripio", "Bitso", "Volabit", "Lemon Cash", "Buenbit", "Belo", "SatoshiTango", "ArgenBTC",
     "Decrypto", "TiendaCrypto", "LetsBit", "Buda", "Orionx", "CryptoMarket", "Luno", "VALR", "Swyftx", "CoinSpot",
     "Independent Reserve", "Digital Surrey", "Bitvavo", "Coinmerce", "LiteBit", "Young Platform", "The Rock Trading",
-    "Bitpanda", "Coinfinity", "Bisenomic", "ZebPay", "WazirX", "CoinDCX", "Rain", "CoinMENA", "BitOasis"
+    "Bitpanda", "Coinfinity", "Bisenomic", "ZebPay", "WazirX", "CoinDCX", "Rain", "CoinMENA", "BitOasis",
+    "Bluebit", "Dex-Trade", "ProBit", "Azbit", "Latoken", "Finexbox", "FMFW.io", "CEX.io", "EXMO", "HitBTC",
+    "YoBit", "Mercatox", "Tidex", "STEX", "Kanga", "LocalCoinsSwap", "Paxful", "Bisq", "HodlHodl"
 ];
 
 export const PAISES = [
@@ -23,7 +25,9 @@ export const TOPICS = [
     "Regulación SEC", "Adopción Institucional", "Halving de Bitcoin", "Upgrade Dencun", "Hackeo en DeFi",
     "Listado en Binance", "Rumores de ETF Spot", "Asociación con Visa", "Lanzamiento de Mainnet",
     "Quema de Tokens (Burn)", "Airdrop Masivo", "Demanda Legal", "Impuestos Crypto", "Minería Sostenible",
-    "Privacidad Monero", "Scalability L2", "NFT Utility", "Stablecoin Regulation", "CBDC Launch"
+    "Privacidad Monero", "Scalability L2", "NFT Utility", "Stablecoin Regulation", "CBDC Launch",
+    "Minería con GPU", "Proof of Work vs Stake", "Inteligencia Artificial y Crypto", "DePIN", "Real World Assets (RWA)",
+    "Billeteras Frías", "Libertad Financiera", "Inflación y Cripto", "Web3 Gaming", "Metaverso 2025"
 ];
 
 export const COINS = [
@@ -36,7 +40,11 @@ export const COINS = [
     { name: "Near Protocol", symbol: "NEAR" }, { name: "Aptos", symbol: "APT" }, { name: "Sui", symbol: "SUI" },
     { name: "Pepe", symbol: "PEPE" }, { name: "Arbitrum", symbol: "ARB" }, { name: "Optimism", symbol: "OP" },
     { name: "Render", symbol: "RNDR" }, { name: "Kaspa", symbol: "KAS" }, { name: "Injective", symbol: "INJ" },
-    { name: "Celestia", symbol: "TIA" }, { name: "Filecoin", symbol: "FIL" }, { name: "Internet Computer", symbol: "ICP" }
+    { name: "Celestia", symbol: "TIA" }, { name: "Filecoin", symbol: "FIL" }, { name: "Internet Computer", symbol: "ICP" },
+    { name: "Worldcoin", symbol: "WLD" }, { name: "Bittensor", symbol: "TAO" }, { name: "Stacks", symbol: "STX" },
+    { name: "JasmyCoin", symbol: "JASMY" }, { name: "Bonk", symbol: "BONK" }, { name: "Jupiter", symbol: "JUP" },
+    { name: "Ethena", symbol: "ENA" }, { name: "Fetch.ai", symbol: "FET" }, { name: "SingularityNET", symbol: "AGIX" },
+    { name: "Flow", symbol: "FLOW" }, { name: "Mantra", symbol: "OM" }, { name: "Ondo", symbol: "ONDO" }
 ];
 
 export const GUIAS_TITLES = [
@@ -45,7 +53,18 @@ export const GUIAS_TITLES = [
     "Comprar con PayPal", "Retirar a Cuenta Bancaria desde", "Configurar Metamask para",
     "Minería de", "Futura Regulación de", "Historial de Precios de", "Comparativa: {COIN} vs Fiat",
     "Errores comunes al enviar", "Cómo recuperar", "Mejor App para tradear", "Impuestos sobre",
-    "Comprar sin comisiones", "Intercambio P2P de", "Seguridad Avanzada para", "Préstamos con colateral en"
+    "Comprar sin comisiones", "Intercambio P2P de", "Seguridad Avanzada para", "Préstamos con colateral en",
+    "Alternativas a", "Opiniones Reales sobre", "Cómo funciona el protocolo de", "Ventajas y Desventajas de",
+    "Guía Definitiva 2025 de", "Es real o farsa", "Comunidad oficial de", "Tutorial paso a paso de"
+];
+
+export const TRUST_FACTORS = [
+    { name: "Licencia Regulatoria", slug: "licencia" },
+    { name: "Pruebas de Reserva (PoR)", slug: "reservas" },
+    { name: "Antigüedad en el Mercado", slug: "antiguedad" },
+    { name: "Seguridad de Fondos", slug: "seguridad-fondos" },
+    { name: "Atención al Cliente", slug: "soporte" },
+    { name: "Transparencia de Tarifas", slug: "tarifas" }
 ];
 
 export const GUIA_CATEGORIES = [
