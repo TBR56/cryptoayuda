@@ -17,7 +17,7 @@ export default function SeoHead({
     title,
     description,
     image = "https://images.unsplash.com/photo-1621504450374-147cb9225562?auto=format&fit=crop&w=1200&q=80",
-    url = "https://cryptoayudahoy.vercel.app",
+    url = "https://www.cryptoayuda.org",
     type = "website",
     publishedTime,
     author = "CryptoAyuda Team",
@@ -39,7 +39,7 @@ export default function SeoHead({
     const siteTitle = `${ctaTitle} | CryptoAyuda`;
 
     // 2. AUTOMATIC BREADCRUMBS JSON-LD
-    const pathSegments = url.replace('https://cryptoayudahoy.vercel.app', '').split('/').filter(Boolean);
+    const pathSegments = url.replace('https://www.cryptoayuda.org', '').split('/').filter(Boolean);
     const breadcrumbLd = {
         "@context": "https://schema.org",
         "@type": "BreadcrumbList",
@@ -48,13 +48,13 @@ export default function SeoHead({
                 "@type": "ListItem",
                 "position": 1,
                 "name": "Inicio",
-                "item": "https://cryptoayudahoy.vercel.app"
+                "item": "https://www.cryptoayuda.org"
             },
             ...pathSegments.map((segment, index) => ({
                 "@type": "ListItem",
                 "position": index + 2,
                 "name": segment.charAt(0).toUpperCase() + segment.slice(1).replace(/-/g, ' '),
-                "item": `https://cryptoayudahoy.vercel.app/${pathSegments.slice(0, index + 1).join('/')}`
+                "item": `https://www.cryptoayuda.org/${pathSegments.slice(0, index + 1).join('/')}`
             }))
         ]
     };
@@ -64,8 +64,8 @@ export default function SeoHead({
         "@context": "https://schema.org",
         "@type": "Organization",
         "name": "CryptoAyuda",
-        "url": "https://cryptoayudahoy.vercel.app",
-        "logo": "https://cryptoayudahoy.vercel.app/logo.png",
+        "url": "https://www.cryptoayuda.org",
+        "logo": "https://www.cryptoayuda.org/logo.png",
         "sameAs": [
             "https://twitter.com/cryptoayuda",
             "https://facebook.com/cryptoayuda"
@@ -76,10 +76,10 @@ export default function SeoHead({
         "@context": "https://schema.org",
         "@type": "WebSite",
         "name": "CryptoAyuda",
-        "url": "https://cryptoayudahoy.vercel.app",
+        "url": "https://www.cryptoayuda.org",
         "potentialAction": {
             "@type": "SearchAction",
-            "target": "https://cryptoayudahoy.vercel.app/noticias?q={search_term_string}",
+            "target": "https://www.cryptoayuda.org/noticias?q={search_term_string}",
             "query-input": "required name=search_term_string"
         }
     };

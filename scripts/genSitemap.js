@@ -73,7 +73,7 @@ function slugify(text) {
 }
 
 // 1. Dynamic Domain (IMPORTANT for Search Console mismatch)
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://cryptoayudahoy.vercel.app';
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.cryptoayuda.org';
 const LASTMOD = new Date().toISOString().split('T')[0];
 
 function generateXml(urls, priority = 0.6) {

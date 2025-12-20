@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://cryptoayudahoy.vercel.app/sitemap.xml
+Sitemap: https://www.cryptoayuda.org/sitemap.xml
