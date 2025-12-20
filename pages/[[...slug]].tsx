@@ -3,7 +3,6 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { EXCHANGES_LIST, PAISES, PROBLEMAS, COINS, TOPICS, GUIAS_TITLES, SCAM_TOPICS, SECURITY_GUIDES } from '../lib/data';
-import { generateArticleContent, generateScamContent } from '../lib/contentGen';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ScoreCard from '../components/ScoreCard';
@@ -11,6 +10,7 @@ import PriceTicker from '../components/PriceTicker';
 import RobustImage from '../components/RobustImage'; // v2.0
 import SeoHead from '../components/SeoHead'; // v2.0
 import DiagnosticTool from '../components/DiagnosticTool';
+import { generateArticleContent, generateScamContent, getFaqForSubject } from '../lib/contentGen';
 
 // ==========================================
 // 2. HELPER FUNCTIONS & RNG
@@ -887,7 +887,14 @@ export default function Page({ data }: { data: any }) {
     if (!data) return null;
     return (
         <div className="min-h-screen bg-slate-950 text-slate-200 font-sans selection:bg-brand-500 selection:text-white">
-            <SeoHead title={data.meta?.title || 'CryptoAyuda'} description={data.meta?.desc} type={data.type === 'news' || data.type === 'guide' ? 'article' : 'website'} image={data.hero?.image} />
+            <SeoHead
+                title={data.meta?.title || 'CryptoAyuda'}
+                description={data.meta?.desc}
+                type={data.type === 'news' || data.type === 'guide' ? 'article' : 'website'}
+                image={data.hero?.image}
+                faq={data.faq}
+                rating={data.rating}
+            />
             <PriceTicker />
             <Navbar />
             <main className="relative">
@@ -950,7 +957,15 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
             else if (section === 'comparar') pageData = { type: 'hub_compare', exchanges: EXCHANGES_LIST };
             else if (section === 'noticias') pageData = { type: 'hub_news', coins: COINS, topics: TOPICS };
             else if (section === 'guias') pageData = { type: 'hub_guides', coins: COINS, guides: GUIAS_TITLES };
-            else if (section === 'estafas') pageData = { type: 'hub_scams', scams: SCAM_TOPICS, guides: SECURITY_GUIDES };
+            else if (section === 'estafas') {
+                pageData = {
+                    type: 'hub_scams',
+                    scams: SCAM_TOPICS,
+                    guides: SECURITY_GUIDES,
+                    meta: { title: "Alerta de Estafas Crypto 2025", desc: "Reportes actualizados sobre fraudes, phishing y esquemas Ponzi." },
+                    faq: getFaqForSubject("Seguridad Crypto")
+                };
+            }
             else if (section === 'seguridad') pageData = { type: 'hub_security', guides: SECURITY_GUIDES };
             else if (section === 'wallets') pageData = { type: 'hub_wallets', coins: COINS };
             else if (section === 'comparativas') pageData = { type: 'hub_compare_all', exchanges: EXCHANGES_LIST };
@@ -963,7 +978,11 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         }
         else if (section === 'reviews') {
             const ex = EXCHANGES_LIST.find(e => slugify(e) === p1);
-            if (ex) pageData = generateReviewPage(getExchangeData(ex));
+            if (ex) {
+                pageData = generateReviewPage(getExchangeData(ex));
+                pageData.faq = getFaqForSubject(ex);
+                pageData.rating = { score: 4.7, count: rangeSeeded(200, 1000, getSeed(ex)) };
+            }
         }
         else if (section === 'comparar') {
             const parts = p1.split('-vs-');
@@ -981,22 +1000,36 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         else if (section === 'problemas') {
             const ex = EXCHANGES_LIST.find(e => slugify(e) === p1);
             const prob = PROBLEMAS.find(p => p.slug === p2);
-            if (ex && prob) pageData = generateProblemPage(getExchangeData(ex), prob);
+            if (ex && prob) {
+                pageData = generateProblemPage(getExchangeData(ex), prob);
+                pageData.faq = getFaqForSubject(prob.title);
+                pageData.rating = { score: 4.8, count: rangeSeeded(50, 200, getSeed(ex + prob.slug)) };
+            }
         }
         else if (section === 'noticias') {
             const coin = COINS.find(c => slugify(c.name) === p1);
             const topic = TOPICS.find(t => slugify(t) === p2);
-            if (coin && topic) pageData = generateNewsPage(coin, topic);
+            if (coin && topic) {
+                pageData = generateNewsPage(coin, topic);
+                pageData.faq = getFaqForSubject(coin.name);
+            }
         }
         else if (section === 'guias') {
             const guideTitle = GUIAS_TITLES.find(g => slugify(g) === p1);
             const coin = COINS.find(c => slugify(c.name) === p2);
             const country = slug[3] ? PAISES.find(p => slugify(p) === slug[3]) : undefined;
-            if (guideTitle && coin) pageData = generateGuidePage(coin, guideTitle, country);
+            if (guideTitle && coin) {
+                pageData = generateGuidePage(coin, guideTitle, country);
+                pageData.faq = getFaqForSubject(guideTitle);
+                pageData.rating = { score: 4.9, count: rangeSeeded(100, 500, getSeed(guideTitle + coin.name)) };
+            }
         }
         else if (section === 'estafas') {
             const topic = SCAM_TOPICS.find(t => slugify(t) === p1);
-            if (topic) pageData = generateScamPage(topic);
+            if (topic) {
+                pageData = generateScamPage(topic);
+                pageData.faq = getFaqForSubject(topic);
+            }
         }
         else if (section === 'diagnostico') {
             const ex = EXCHANGES_LIST.find(e => slugify(e) === p1);

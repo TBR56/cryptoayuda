@@ -9,6 +9,8 @@ interface SeoHeadProps {
     publishedTime?: string;
     author?: string;
     jsonLd?: any;
+    faq?: { q: string, a: string }[];
+    rating?: { score: number, count: number };
 }
 
 export default function SeoHead({
@@ -19,7 +21,9 @@ export default function SeoHead({
     type = "website",
     publishedTime,
     author = "CryptoAyuda Team",
-    jsonLd
+    jsonLd,
+    faq,
+    rating
 }: SeoHeadProps) {
 
     // 1. DYNAMIC CTA PREFIXES (AGGRESSIVE SEO)
@@ -80,6 +84,34 @@ export default function SeoHead({
         }
     };
 
+    // 4. FAQ SCHEMA
+    const faqLd = faq ? {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": faq.map(item => ({
+            "@type": "Question",
+            "name": item.q,
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": item.a
+            }
+        }))
+    } : null;
+
+    // 5. REVIEW SCHEMA (Aggregated)
+    const reviewLd = rating ? {
+        "@context": "https://schema.org",
+        "@type": "Product",
+        "name": title,
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": rating.score,
+            "reviewCount": rating.count,
+            "bestRating": "5",
+            "worstRating": "1"
+        }
+    } : null;
+
     return (
         <Head>
             <title>{siteTitle}</title>
@@ -113,6 +145,8 @@ export default function SeoHead({
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationLd) }} />
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteLd) }} />
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
+            {faqLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />}
+            {reviewLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(reviewLd) }} />}
             {jsonLd && (
                 <script
                     type="application/ld+json"

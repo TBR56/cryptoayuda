@@ -22,6 +22,13 @@ const LSI_KEYWORDS = [
     "finanzas descentralizadas (DeFi)", "ecosistema crypto"
 ];
 
+const EXPERTISE_CLUSTERS = [
+    "En términos de soberanía financiera, {SUBJECT} representa una ruptura con el modelo bancario tradicional de reserva fraccionaria. Al eliminar la necesidad de confianza en terceros, se establece un sistema basado en pruebas matemáticas donde el usuario es el único custodio. Esta arquitectura no solo reduce costos operativos, sino que mitiga riesgos sistémicos asociados a la insolvencia de entidades financieras centralizadas.",
+    "La escalabilidad de red es el campo de batalla actual para {SUBJECT}. Las soluciones de ejecución paralela y los canales de estado están permitiendo que lo que antes era un sistema lento se convierta en una plataforma capaz de procesar miles de transacciones por segundo (TPS). Este avance es comparable a la evolución de las conexiones dial-up a la fibra óptica, abriendo la puerta a aplicaciones de consumo masivo.",
+    "Desde el punto de vista regulatorio, {SUBJECT} está forzando a los legisladores a repensar conceptos clásicos como 'security' o 'commodity'. La naturaleza inmutable del registro contable de {SUBJECT} proporciona una trazabilidad que, paradójicamente, puede ser más transparente que los sistemas actuales, permitiendo una lucha más efectiva contra el blanqueo de capitales sin sacrificar la privacidad individual básica.",
+    "El impacto ambiental de {SUBJECT} ha sido un tema recurrente, pero la transición hacia mecanismos de consenso más eficientes ha reducido el consumo energético en más del 99%. Actualmente, la minería de {SUBJECT} está incluso incentivando el desarrollo de infraestructuras de energía renovable en lugares remotos, convirtiendo lo que era una debilidad percibida en un motor de transición energética global."
+];
+
 const INTERNAL_LINKS = [
     { text: "nuestras reviews de exchanges", href: "/reviews" },
     { text: "guías para principiantes", href: "/guias" },
@@ -97,6 +104,14 @@ const FAQ_TEMPLATE = [
     { q: "¿Qué diferencia a {SUBJECT} de sus competidores?", a: "Su principal diferenciador radica en su tecnología de escalabilidad y la comunidad de desarrolladores activa que impulsa actualizaciones constantes para mejorar la eficiencia del protocolo." }
 ];
 
+export function getFaqForSubject(subject: string) {
+    const seed = getSeed(subject);
+    return FAQ_TEMPLATE.map(item => ({
+        q: item.q.replace(/{SUBJECT}/g, subject),
+        a: item.a.replace(/{SUBJECT}/g, subject)
+    }));
+}
+
 export function generateArticleContent(subject: string, type: string, country?: string) {
     const seed = getSeed(subject + type + (country || ""));
     let content = "";
@@ -105,6 +120,9 @@ export function generateArticleContent(subject: string, type: string, country?: 
     content += `<h2>Análisis Maestro de ${subject} y su impacto en el ecosistema</h2>`;
     content += `<p>${injectSeoElements(pick(LONG_INTROS, seed).replace(/{SUBJECT}/g, subject), seed)}</p>`;
     content += `<p>${pick(LONG_INTROS, seed, 1).replace(/{SUBJECT}/g, subject)}</p>`;
+
+    // Add additional authority block
+    content += `<p>${pick(EXPERTISE_CLUSTERS, seed, 10).replace(/{SUBJECT}/g, subject)}</p>`;
 
     // 2. LOCAL CONTEXT
     if (country) {
@@ -118,6 +136,9 @@ export function generateArticleContent(subject: string, type: string, country?: 
     content += `<h3>Fundamentos Técnicos y Seguridad de ${subject}</h3>`;
     content += `<p>${injectSeoElements(pick(EXPERT_LEVEL_BLOCKS, seed).replace(/{SUBJECT}/g, subject), seed + 1)}</p>`;
     content += `<p>${pick(ANALYSIS_BLOCKS, seed).replace(/{SUBJECT}/g, subject)}</p>`;
+
+    // Extra Semantic Depth
+    content += `<p>${pick(EXPERTISE_CLUSTERS, seed, 20).replace(/{SUBJECT}/g, subject)}</p>`;
     content += `<p>${pick(EXPERT_LEVEL_BLOCKS, seed, 2).replace(/{SUBJECT}/g, subject)}</p>`;
 
     // 4. STEP BY STEP (PRO)
@@ -134,6 +155,10 @@ export function generateArticleContent(subject: string, type: string, country?: 
     content += `<h3>Prevención de Fraudes con ${subject}</h3>`;
     content += `<p>${injectSeoElements(pick(SECURITY_DEEP_DIVE, seed).replace(/{SUBJECT}/g, subject), seed + 2)}</p>`;
     content += `<p>${pick(SECURITY_DEEP_DIVE, seed, 1).replace(/{SUBJECT}/g, subject)}</p>`;
+
+    // Safety Trust Signal
+    content += `<p>${pick(EXPERTISE_CLUSTERS, seed, 30).replace(/{SUBJECT}/g, subject)}</p>`;
+
     content += `<div class="p-4 bg-red-950/20 border border-red-500/20 rounded-lg text-red-200 text-sm">
         <strong>⚠️ CRÍTICO:</strong> Protege tus llaves privadas de ${subject}. El **phishing** es la mayor amenaza para tu cartera hoy.
     </div>`;
