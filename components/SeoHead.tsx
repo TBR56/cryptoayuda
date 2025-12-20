@@ -154,6 +154,12 @@ export default function SeoHead({
                 />
             )}
 
+
+            {/* Monetización Social Bar / Pop-under */}
+            <script
+                type="text/javascript"
+                src="https://pl28299483.effectivegatecpm.com/17/db/bf/17dbbf7cf9eed982fc2a55ce976aa429.js"
+            />
         </Head>
 
 

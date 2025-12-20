@@ -69,6 +69,34 @@ const Breadcrumbs = ({ paths }: { paths: { label: string, href: string }[] }) =>
     </nav>
 );
 
+const NativeAd = () => {
+    const containerRef = React.useRef<HTMLDivElement>(null);
+
+    React.useEffect(() => {
+        if (typeof window !== 'undefined' && containerRef.current) {
+            containerRef.current.innerHTML = '';
+
+            const script = document.createElement('script');
+            script.async = true;
+            script.setAttribute('data-cfasync', 'false');
+            script.src = 'https://pl28299473.effectivegatecpm.com/eb5b50825bb2656a4852bd3dd27945de/invoke.js';
+
+            const div = document.createElement('div');
+            div.id = 'container-eb5b50825bb2656a4852bd3dd27945de';
+
+            containerRef.current.appendChild(script);
+            containerRef.current.appendChild(div);
+        }
+    }, []);
+
+    return (
+        <div className="my-16 flex flex-col items-center">
+            <span className="text-[10px] text-slate-600 font-black uppercase tracking-widest mb-4">Recomendado para ti</span>
+            <div ref={containerRef} className="w-full max-w-4xl min-h-[250px] bg-slate-900/20 rounded-2xl border border-white/5 overflow-hidden" />
+        </div>
+    );
+};
+
 const AdPlaceholder = ({ type }: { type: 'top' | 'mid' | 'bottom' }) => {
     const bannerId = type === 'top' ? '066098c9c4d080b859d6302fa8c1da13' : '1d49c2cf37f3fc004bea0a51a80f402f';
     const containerRef = React.useRef<HTMLDivElement>(null);
