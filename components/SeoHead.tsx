@@ -121,6 +121,10 @@ export default function SeoHead({
             <meta name="robots" content="index, follow" />
             <link rel="canonical" href={url} />
 
+            {/* Favicon */}
+            <link rel="icon" type="image/png" href="/favicon.png" />
+            <link rel="apple-touch-icon" href="/favicon.png" />
+
             {/* Open Graph / Facebook */}
             <meta property="og:type" content={type} />
             <meta property="og:url" content={url} />
