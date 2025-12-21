@@ -79,10 +79,10 @@ const NativeAd = () => {
             const script = document.createElement('script');
             script.async = true;
             script.setAttribute('data-cfasync', 'false');
-            script.src = 'https://pl28299473.effectivegatecpm.com/eb5b50825bb2656a4852bd3dd27945de/invoke.js';
+            script.src = 'https://pl28306841.effectivegatecpm.com/80b4b647a59f9a27e664563197664a3e/invoke.js';
 
             const div = document.createElement('div');
-            div.id = 'container-eb5b50825bb2656a4852bd3dd27945de';
+            div.id = 'container-80b4b647a59f9a27e664563197664a3e';
 
             containerRef.current.appendChild(script);
             containerRef.current.appendChild(div);
@@ -98,7 +98,6 @@ const NativeAd = () => {
 };
 
 const AdPlaceholder = ({ type }: { type: 'top' | 'mid' | 'bottom' }) => {
-    const bannerId = type === 'top' ? '066098c9c4d080b859d6302fa8c1da13' : '1d49c2cf37f3fc004bea0a51a80f402f';
     const containerRef = React.useRef<HTMLDivElement>(null);
 
     React.useEffect(() => {
@@ -110,22 +109,22 @@ const AdPlaceholder = ({ type }: { type: 'top' | 'mid' | 'bottom' }) => {
             scriptAt.type = 'text/javascript';
             scriptAt.innerHTML = `
                 atOptions = {
-                    'key' : '${bannerId}',
+                    'key' : 'ca45e640bcb1f7768f4cb6cf060aecaa',
                     'format' : 'iframe',
-                    'height' : ${type === 'top' ? 250 : 300},
-                    'width' : ${type === 'top' ? 300 : 160},
+                    'height' : 250,
+                    'width' : 300,
                     'params' : {}
                 };
             `;
 
             const scriptInvoke = document.createElement('script');
             scriptInvoke.type = 'text/javascript';
-            scriptInvoke.src = `//www.highperformanceformat.com/${bannerId}/invoke.js`;
+            scriptInvoke.src = `//www.highperformanceformat.com/ca45e640bcb1f7768f4cb6cf060aecaa/invoke.js`;
 
             containerRef.current.appendChild(scriptAt);
             containerRef.current.appendChild(scriptInvoke);
         }
-    }, [type, bannerId]);
+    }, [type]);
 
     return (
         <div className="my-12 flex flex-col items-center justify-center">

@@ -162,11 +162,10 @@ export default function SeoHead({
                 />
             )}
 
-
-            {/* Monetización Social Bar / Pop-under */}
+            {/* Monetización Global */}
             <script
                 type="text/javascript"
-                src="https://pl28299483.effectivegatecpm.com/17/db/bf/17dbbf7cf9eed982fc2a55ce976aa429.js"
+                src="https://pl28306849.effectivegatecpm.com/8d/77/29/8d77299ae4287364e5fc157ec9bcb2a9.js"
             />
         </Head>
 
