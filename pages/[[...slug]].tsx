@@ -100,38 +100,52 @@ const NativeAd = () => {
 const AdPlaceholder = ({ type }: { type: 'top' | 'mid' | 'bottom' }) => {
     const containerRef = React.useRef<HTMLDivElement>(null);
 
+    // Configuración dinámica según el tipo de slot
+    const adConfig = type === 'top'
+        ? {
+            key: 'a3f81690fa23f2516bd6dc449bd7e262',
+            width: 728,
+            height: 90,
+            className: 'min-h-[90px] min-w-[728px]'
+        }
+        : {
+            key: 'ca45e640bcb1f7768f4cb6cf060aecaa',
+            width: 300,
+            height: 250,
+            className: 'min-h-[250px] min-w-[300px]'
+        };
+
     React.useEffect(() => {
         if (typeof window !== 'undefined' && containerRef.current) {
-            // Clear previous ads in this slot if any
             containerRef.current.innerHTML = '';
 
             const scriptAt = document.createElement('script');
             scriptAt.type = 'text/javascript';
             scriptAt.innerHTML = `
                 atOptions = {
-                    'key' : 'ca45e640bcb1f7768f4cb6cf060aecaa',
+                    'key' : '${adConfig.key}',
                     'format' : 'iframe',
-                    'height' : 250,
-                    'width' : 300,
+                    'height' : ${adConfig.height},
+                    'width' : ${adConfig.width},
                     'params' : {}
                 };
             `;
 
             const scriptInvoke = document.createElement('script');
             scriptInvoke.type = 'text/javascript';
-            scriptInvoke.src = `//www.highperformanceformat.com/ca45e640bcb1f7768f4cb6cf060aecaa/invoke.js`;
+            scriptInvoke.src = `//www.highperformanceformat.com/${adConfig.key}/invoke.js`;
 
             containerRef.current.appendChild(scriptAt);
             containerRef.current.appendChild(scriptInvoke);
         }
-    }, [type]);
+    }, [type, adConfig.key, adConfig.height, adConfig.width]);
 
     return (
         <div className="my-12 flex flex-col items-center justify-center">
             <span className="text-[10px] text-slate-600 font-black uppercase tracking-widest mb-4">Anuncio Publicitario</span>
             <div
                 ref={containerRef}
-                className="min-h-[250px] min-w-[300px] bg-slate-900/40 rounded-xl border border-white/5 flex items-center justify-center overflow-hidden"
+                className={`${adConfig.className} bg-slate-900/40 rounded-xl border border-white/5 flex items-center justify-center overflow-hidden`}
             />
         </div>
     );
