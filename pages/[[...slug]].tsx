@@ -140,12 +140,25 @@ const AdPlaceholder = ({ type }: { type: 'top' | 'mid' | 'bottom' }) => {
         }
     }, [type, adConfig.key, adConfig.height, adConfig.width]);
 
+    // Ocultar el banner de 728x90 en móviles (demasiado ancho)
+    if (type === 'top') {
+        return (
+            <div className="hidden md:flex my-12 flex-col items-center justify-center">
+                <span className="text-[10px] text-slate-600 font-black uppercase tracking-widest mb-4">Anuncio Publicitario</span>
+                <div
+                    ref={containerRef}
+                    className={`${adConfig.className} bg-slate-900/40 rounded-xl border border-white/5 flex items-center justify-center overflow-hidden`}
+                />
+            </div>
+        );
+    }
+
     return (
-        <div className="my-12 flex flex-col items-center justify-center">
+        <div className="my-12 flex flex-col items-center justify-center max-w-full overflow-hidden">
             <span className="text-[10px] text-slate-600 font-black uppercase tracking-widest mb-4">Anuncio Publicitario</span>
             <div
                 ref={containerRef}
-                className={`${adConfig.className} bg-slate-900/40 rounded-xl border border-white/5 flex items-center justify-center overflow-hidden`}
+                className={`${adConfig.className} bg-slate-900/40 rounded-xl border border-white/5 flex items-center justify-center overflow-hidden scale-90 md:scale-100 transition-transform origin-center`}
             />
         </div>
     );
