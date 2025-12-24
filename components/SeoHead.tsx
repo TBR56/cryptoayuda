@@ -126,7 +126,7 @@ export default function SeoHead({
             <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
             <link rel="icon" type="image/png" sizes="512x512" href="/favicon-512.png" />
             <link rel="apple-touch-icon" sizes="180x180" href="/favicon-192.png" />
-            <link rel="shortcut icon" href="/favicon.png" />
+            <link rel="shortcut icon" href="/favicon.ico" />
             <link rel="manifest" href="/manifest.json" />
 
             {/* Open Graph / Facebook */}
