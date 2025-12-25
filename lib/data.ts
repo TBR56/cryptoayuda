@@ -1,4 +1,5 @@
 // 1. DATA SOURCES: THE 1,000+ ENGINE (PRODUCTION READY)
+export const BINANCE_AFFILIATE_LINK = "https://accounts.binance.com/register?ref=471597919";
 export const EXCHANGES_LIST = [
     "Binance", "Coinbase", "Kraken", "KuCoin", "Bybit", "OKX", "Bitget", "Gate.io", "BingX", "MEXC",
     "HTX", "Bitfinex", "Bitstamp", "Gemini", "Crypto.com", "Phemex", "Poloniex", "LBank", "XT.com", "CoinEx",

@@ -2,7 +2,8 @@ import React from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { GetStaticPaths, GetStaticProps } from 'next';
-import { EXCHANGES_LIST, PAISES, PROBLEMAS, COINS, TOPICS, GUIAS_TITLES, SCAM_TOPICS, SECURITY_GUIDES } from '../lib/data';
+import { ArrowRight } from 'lucide-react';
+import { EXCHANGES_LIST, PAISES, PROBLEMAS, COINS, TOPICS, GUIAS_TITLES, SCAM_TOPICS, SECURITY_GUIDES, BINANCE_AFFILIATE_LINK } from '../lib/data';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ScoreCard from '../components/ScoreCard';
@@ -406,6 +407,19 @@ const ArticleView = ({ data }: any) => (
                 </button>
             </div>
         </div>
+        <div className="mt-16 p-8 bg-gradient-to-br from-brand-900/40 to-slate-900/60 rounded-3xl border border-white/10 text-center relative overflow-hidden group">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-brand-500/20 blur-3xl group-hover:bg-brand-500/40 transition-all duration-500" />
+            <h3 className="text-3xl font-black text-white mb-4 uppercase italic tracking-tighter">¿Listo para invertir?</h3>
+            <p className="text-slate-400 mb-8 max-w-xl mx-auto">Comienza tu viaje en el mundo crypto con la plataforma líder a nivel mundial. Seguridad, liquidez y las comisiones más bajas del mercado.</p>
+            <Link
+                href={BINANCE_AFFILIATE_LINK}
+                target="_blank"
+                className="inline-flex items-center gap-3 bg-brand-500 hover:bg-brand-400 text-white font-black px-12 py-5 rounded-2xl text-xl transition-all shadow-xl shadow-brand-500/20 transform hover:-translate-y-1"
+            >
+                REGISTRARSE EN BINANCE <ArrowRight size={24} />
+            </Link>
+            <p className="mt-6 text-[10px] text-slate-600 font-bold uppercase tracking-widest">Enlace de afiliado oficial • Registro seguro</p>
+        </div>
         <NativeAd />
     </div>
 );
@@ -527,7 +541,11 @@ const ReviewView = ({ data }: any) => (
                                 🆚 Comparar con Binance
                             </Link>
                         </div>
-                        <Link href={`https://${data.data.slug}.com/register`} target="_blank" className="block w-full bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-500 hover:to-brand-400 text-white font-bold py-4 rounded-xl mt-8 transition-all shadow-lg hover:shadow-brand-500/30 transform hover:-translate-y-1">
+                        <Link
+                            href={data.data.slug === 'binance' ? BINANCE_AFFILIATE_LINK : `https://${data.data.slug}.com/register`}
+                            target="_blank"
+                            className="block w-full bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-500 hover:to-brand-400 text-white font-bold py-4 rounded-xl mt-8 transition-all shadow-lg hover:shadow-brand-500/30 transform hover:-translate-y-1"
+                        >
                             ABRIR CUENTA OFICIAL
                         </Link>
                     </div>
@@ -581,6 +599,19 @@ const ReviewView = ({ data }: any) => (
                         </ul>
                     </div>
                 </div>
+                <div className="mt-16 p-8 bg-gradient-to-br from-brand-900/40 to-slate-900/60 rounded-3xl border border-white/10 text-center relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-brand-500/20 blur-3xl group-hover:bg-brand-500/40 transition-all duration-500" />
+                    <h3 className="text-3xl font-black text-white mb-4 uppercase italic tracking-tighter">¿Listo para invertir?</h3>
+                    <p className="text-slate-400 mb-8 max-w-xl mx-auto">Comienza tu viaje en el mundo crypto con la plataforma líder a nivel mundial. Seguridad, liquidez y las comisiones más bajas del mercado.</p>
+                    <Link
+                        href={BINANCE_AFFILIATE_LINK}
+                        target="_blank"
+                        className="inline-flex items-center gap-3 bg-brand-500 hover:bg-brand-400 text-white font-black px-12 py-5 rounded-2xl text-xl transition-all shadow-xl shadow-brand-500/20 transform hover:-translate-y-1"
+                    >
+                        REGISTRARSE EN BINANCE <ArrowRight size={24} />
+                    </Link>
+                    <p className="mt-6 text-[10px] text-slate-600 font-bold uppercase tracking-widest">Enlace de afiliado oficial • Registro seguro</p>
+                </div>
             </article>
         </div>
         <NativeAd />
@@ -616,6 +647,16 @@ const ComparisonView = ({ data }: any) => (
                     <li className="flex justify-between border-b border-white/5 pb-2"><span>Usuarios</span> <span className="text-white font-bold">{data.data.ex2.users}</span></li>
                 </ul>
             </div>
+        </div>
+
+        <div className="mt-12 text-center">
+            <Link
+                href={data.data.winner.slug === 'binance' ? BINANCE_AFFILIATE_LINK : `https://${data.data.winner.slug}.com/register`}
+                target="_blank"
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-brand-600 to-brand-400 text-white font-black px-10 py-5 rounded-2xl text-lg hover:scale-105 transition-all shadow-2xl shadow-brand-500/20"
+            >
+                ABRIR CUENTA EN {data.data.winner.name.toUpperCase()} <span className="text-2xl">⚡</span>
+            </Link>
         </div>
     </div>
 );
@@ -1027,7 +1068,7 @@ const VersusView = ({ data }: any) => (
                 </div>
             ))}
             <div className="p-6 bg-slate-900/80 text-center">
-                <a href="https://www.binance.com/es/register?ref=LIMIT_RL2RN1M4" target="_blank" rel="nofollow noreferrer" className="inline-flex items-center gap-2 bg-brand-500 hover:bg-brand-400 text-white font-bold py-3 px-8 rounded-xl transition-all shadow-lg shadow-brand-500/20">
+                <a href={BINANCE_AFFILIATE_LINK} target="_blank" rel="nofollow noreferrer" className="inline-flex items-center gap-2 bg-brand-500 hover:bg-brand-400 text-white font-bold py-3 px-8 rounded-xl transition-all shadow-lg shadow-brand-500/20">
                     Comprar Ganador en Binance <span className="text-lg">➔</span>
                 </a>
             </div>
