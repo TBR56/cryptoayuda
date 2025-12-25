@@ -133,16 +133,24 @@ export const COINS = [
     { name: "Blur", symbol: "BLUR", type: "NFT", consensus: "ERC-20 Token", year: 2023 }
 ];
 
-export const GUIAS_TITLES = [
-    "Cómo Comprar", "Es Seguro Invertir en", "Predicción de Precio 2025 para",
-    "Mejor Wallet para", "Staking de", "Análisis Fundamental de", "Evitar Estafas con",
-    "Comprar con PayPal", "Retirar a Cuenta Bancaria desde", "Configurar Metamask para",
-    "Minería de", "Futura Regulación de", "Historial de Precios de", "Comparativa: {COIN} vs Fiat",
-    "Errores comunes al enviar", "Cómo recuperar", "Mejor App para tradear", "Impuestos sobre",
-    "Comprar sin comisiones", "Intercambio P2P de", "Seguridad Avanzada para", "Préstamos con colateral en",
-    "Alternativas a", "Opiniones Reales sobre", "Cómo funciona el protocolo de", "Ventajas y Desventajas de",
-    "Guía Definitiva 2025 de", "Es real o farsa", "Comunidad oficial de", "Tutorial paso a paso de"
+// Categorized Guides for Smart Generation
+export const GUIDES_LOCAL = [
+    "Cómo comprar {COIN}", "Dónde comprar {COIN} barato", "Impuestos {COIN}", "Es legal {COIN}",
+    "Mejores Exchanges para {COIN}", "Comprar {COIN} con Tarjeta", "Comprar {COIN} con Transferencia",
+    "Cajeros de {COIN}", "Quién acepta {COIN}", "Retirar {COIN} a Banco"
 ];
+
+export const GUIDES_GLOBAL = [
+    "Predicción precio {COIN} 2025", "Es {COIN} una estafa?", "Opiniones sobre {COIN}",
+    "Mejor Wallet para {COIN}", "Staking de {COIN}", "Minar {COIN} guía",
+    "Futuro de {COIN}", "Análisis técnico {COIN}", "Noticias {COIN} última hora",
+    "Ventajas y Desventajas de {COIN}", "Historia de {COIN}", "Creador de {COIN}",
+    "Roadmap {COIN} 2025", "Comunidad {COIN}", "Seguridad de {COIN}",
+    "Contrato inteligente de {COIN}", "Casos de uso {COIN}", "Competidores de {COIN}",
+    "Whitepaper {COIN} explicado", "Tokenomics de {COIN}"
+];
+
+export const GUIAS_TITLES = [...GUIDES_LOCAL, ...GUIDES_GLOBAL].map(t => t.replace(" {COIN}", ""));
 
 export const TRUST_FACTORS = [
     { name: "Licencia Regulatoria", slug: "licencia" },

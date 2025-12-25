@@ -428,7 +428,7 @@ const HomeView = ({ data }: any) => (
             </p>
 
             {/* Hub Navigation Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-16 max-w-5xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-16 max-w-6xl mx-auto">
                 <Link href="/noticias" className="glass-card p-6 rounded-xl hover:bg-white/5 transition flex items-center gap-4 text-left group">
                     <div className="bg-blue-500/10 p-3 rounded-lg text-2xl group-hover:scale-110 transition-transform">⚡</div>
                     <div>
@@ -455,6 +455,13 @@ const HomeView = ({ data }: any) => (
                     <div>
                         <h3 className="font-bold text-white leading-tight">Reviews</h3>
                         <p className="text-xs text-slate-400">Exchanges</p>
+                    </div>
+                </Link>
+                <Link href="/vs/bitcoin-vs-ethereum" className="glass-card p-6 rounded-xl hover:bg-white/5 transition flex items-center gap-4 text-left group border border-brand-500/20 hover:border-brand-500/40">
+                    <div className="bg-brand-500/10 p-3 rounded-lg text-2xl group-hover:scale-110 transition-transform">🆚</div>
+                    <div>
+                        <h3 className="font-bold text-white leading-tight">Versus</h3>
+                        <p className="text-xs text-slate-400">Comparador</p>
                     </div>
                 </Link>
             </div>

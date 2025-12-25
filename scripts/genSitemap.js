@@ -24,28 +24,122 @@ const PAISES = [
 ];
 
 const COINS = [
-    "Bitcoin", "Ethereum", "Tether", "BNB", "Solana", "USDC", "XRP", "Dogecoin", "Toncoin", "Cardano",
-    "Shiba Inu", "Avalanche", "Polkadot", "TRON", "Bitcoin Cash", "Chainlink", "Near Protocol", "Polygon",
-    "Litecoin", "Internet Computer", "Dai", "Uniswap", "Aptos", "Cosmos", "Stacks", "Filecoin", "Render",
-    "Hedera", "Arbitrum", "Optimism", "Maker", "Cronos", "Kaspa", "Pepe", "VeChain", "Ethereum Classic",
-    "Injective", "Stellar", "Monero", "OKB", "Thorchain", "Celestia", "Immutable", "Fantom", "The Graph",
-    "Algorand", "Sei", "Floki", "Flow", "Bitget Token", "Arweave", "Bonk", "Jupiter", "Fetch.ai", "Ethena",
-    "Worldcoin", "Bittensor", "Ondo", "JasmyCoin", "Mantra", "SingularityNET", "Quant", "Lido DAO",
-    "Bitcoin SV", "Gala", "Beam", "Neo", "EOS", "Klaytn", "IOTA", "Tezos", "Sandbox", "Decentraland",
-    "Axie Infinity", "Aave", "Curve", "Synthetix", "Compound", "PancakeSwap", "Mina", "Chiliz", "Conflux",
-    "dYdX", "eCash", "Gnosis", "KuCoin Token", "GateToken", "Nexo", "Pendle", "Pyth Network", "Wormhole",
-    "Starknet", "Zcash", "Dash", "Siacoin", "Ronin", "Kava", "Helium", "Zilliqa", "Blur"
+    { name: "Bitcoin", symbol: "BTC", type: "Layer 1", consensus: "Proof of Work (PoW)", year: 2009 },
+    { name: "Ethereum", symbol: "ETH", type: "Layer 1", consensus: "Proof of Stake (PoS)", year: 2015 },
+    { name: "Tether", symbol: "USDT", type: "Stablecoin", consensus: "Fiat Backed", year: 2014 },
+    { name: "BNB", symbol: "BNB", type: "Layer 1", consensus: "Proof of Staked Authority", year: 2017 },
+    { name: "Solana", symbol: "SOL", type: "Layer 1", consensus: "PoH + PoS", year: 2020 },
+    { name: "USDC", symbol: "USDC", type: "Stablecoin", consensus: "Fiat Backed", year: 2018 },
+    { name: "XRP", symbol: "XRP", type: "Layer 1", consensus: "RPCA", year: 2012 },
+    { name: "Dogecoin", symbol: "DOGE", type: "Meme Coin", consensus: "Proof of Work (PoW)", year: 2013 },
+    { name: "Toncoin", symbol: "TON", type: "Layer 1", consensus: "Proof of Stake (PoS)", year: 2018 },
+    { name: "Cardano", symbol: "ADA", type: "Layer 1", consensus: "Proof of Stake (PoS)", year: 2017 },
+    { name: "Shiba Inu", symbol: "SHIB", type: "Meme Coin", consensus: "ERC-20 Token", year: 2020 },
+    { name: "Avalanche", symbol: "AVAX", type: "Layer 1", consensus: "Proof of Stake (PoS)", year: 2020 },
+    { name: "Polkadot", symbol: "DOT", type: "Layer 0", consensus: "NPoS", year: 2020 },
+    { name: "TRON", symbol: "TRX", type: "Layer 1", consensus: "DPoS", year: 2017 },
+    { name: "Bitcoin Cash", symbol: "BCH", type: "Layer 1", consensus: "Proof of Work (PoW)", year: 2017 },
+    { name: "Chainlink", symbol: "LINK", type: "Oracle", consensus: "ERC-20 Token", year: 2017 },
+    { name: "Near Protocol", symbol: "NEAR", type: "Layer 1", consensus: "Proof of Stake (PoS)", year: 2020 },
+    { name: "Polygon", symbol: "MATIC", type: "Layer 2", consensus: "Proof of Stake (PoS)", year: 2017 },
+    { name: "Litecoin", symbol: "LTC", type: "Layer 1", consensus: "Proof of Work (PoW)", year: 2011 },
+    { name: "Internet Computer", symbol: "ICP", type: "Layer 1", consensus: "Threshold Relay", year: 2021 },
+    { name: "Dai", symbol: "DAI", type: "Stablecoin", consensus: "Crypto Backed", year: 2017 },
+    { name: "Uniswap", symbol: "UNI", type: "DeFi", consensus: "Governance Token", year: 2020 },
+    { name: "Aptos", symbol: "APT", type: "Layer 1", consensus: "Proof of Stake (PoS)", year: 2022 },
+    { name: "Cosmos", symbol: "ATOM", type: "Layer 0", consensus: "Tendermint", year: 2019 },
+    { name: "Stacks", symbol: "STX", type: "Layer 2", consensus: "Proof of Transfer (PoX)", year: 2019 },
+    { name: "Filecoin", symbol: "FIL", type: "Storage", consensus: "Proof of Spacetime", year: 2020 },
+    { name: "Render", symbol: "RNDR", type: "AI/Compute", consensus: "ERC-20 Token", year: 2017 },
+    { name: "Hedera", symbol: "HBAR", type: "Layer 1", consensus: "Hashgraph", year: 2019 },
+    { name: "Arbitrum", symbol: "ARB", type: "Layer 2", consensus: "Optimistic Rollup", year: 2023 },
+    { name: "Optimism", symbol: "OP", type: "Layer 2", consensus: "Optimistic Rollup", year: 2022 },
+    { name: "Maker", symbol: "MKR", type: "DeFi", consensus: "Governance Token", year: 2017 },
+    { name: "Cronos", symbol: "CRO", type: "Layer 1", consensus: "Proof of Authority", year: 2018 },
+    { name: "Kaspa", symbol: "KAS", type: "Layer 1", consensus: "BlockDAG PoW", year: 2021 },
+    { name: "Pepe", symbol: "PEPE", type: "Meme Coin", consensus: "ERC-20 Token", year: 2023 },
+    { name: "VeChain", symbol: "VET", type: "Layer 1", consensus: "Proof of Authority", year: 2015 },
+    { name: "Ethereum Classic", symbol: "ETC", type: "Layer 1", consensus: "Proof of Work (PoW)", year: 2016 },
+    { name: "Injective", symbol: "INJ", type: "Layer 1", consensus: "Proof of Stake (PoS)", year: 2020 },
+    { name: "Stellar", symbol: "XLM", type: "Layer 1", consensus: "SCP", year: 2014 },
+    { name: "Monero", symbol: "XMR", type: "Privacy", consensus: "Proof of Work (PoW)", year: 2014 },
+    { name: "OKB", symbol: "OKB", type: "Exchange Token", consensus: "ERC-20 Token", year: 2019 },
+    { name: "Thorchain", symbol: "RUNE", type: "Layer 1", consensus: "Proof of Stake (PoS)", year: 2018 },
+    { name: "Celestia", symbol: "TIA", type: "Modular L1", consensus: "Proof of Stake (PoS)", year: 2023 },
+    { name: "Immutable", symbol: "IMX", type: "Layer 2", consensus: "Validium", year: 2021 },
+    { name: "Fantom", symbol: "FTM", type: "Layer 1", consensus: "Lachesis", year: 2018 },
+    { name: "The Graph", symbol: "GRT", type: "Middleware", consensus: "Proof of Stake", year: 2020 },
+    { name: "Algorand", symbol: "ALGO", type: "Layer 1", consensus: "PPoS", year: 2019 },
+    { name: "Sei", symbol: "SEI", type: "Layer 1", consensus: "Proof of Stake (PoS)", year: 2023 },
+    { name: "Floki", symbol: "FLOKI", type: "Meme Coin", consensus: "ERC-20 / BEP-20", year: 2021 },
+    { name: "Flow", symbol: "FLOW", type: "Layer 1", consensus: "Proof of Stake (PoS)", year: 2020 },
+    { name: "Bitget Token", symbol: "BGB", type: "Exchange Token", consensus: "ERC-20 Token", year: 2021 },
+    { name: "Arweave", symbol: "AR", type: "Storage", consensus: "Proof of Access", year: 2018 },
+    { name: "Bonk", symbol: "BONK", type: "Meme Coin", consensus: "SPL Token", year: 2022 },
+    { name: "Jupiter", symbol: "JUP", type: "DeFi", consensus: "SPL Token", year: 2024 },
+    { name: "Fetch.ai", symbol: "FET", type: "AI", consensus: "Proof of Stake (PoS)", year: 2019 },
+    { name: "Ethena", symbol: "ENA", type: "DeFi", consensus: "ERC-20 Token", year: 2024 },
+    { name: "Worldcoin", symbol: "WLD", type: "Identity", consensus: "Optimistic Rollup", year: 2023 },
+    { name: "Bittensor", symbol: "TAO", type: "AI", consensus: "Proof of Intelligence", year: 2021 },
+    { name: "Ondo", symbol: "ONDO", type: "RWA", consensus: "ERC-20 Token", year: 2024 },
+    { name: "JasmyCoin", symbol: "JASMY", type: "IoT", consensus: "ERC-20 Token", year: 2021 },
+    { name: "Mantra", symbol: "OM", type: "RWA", consensus: "Proof of Stake (PoS)", year: 2020 },
+    { name: "SingularityNET", symbol: "AGIX", type: "AI", consensus: "ERC-20 Token", year: 2017 },
+    { name: "Quant", symbol: "QNT", type: "Interop", consensus: "ERC-20 Token", year: 2018 },
+    { name: "Lido DAO", symbol: "LDO", type: "DeFi", consensus: "Governance Token", year: 2020 },
+    { name: "Bitcoin SV", symbol: "BSV", type: "Layer 1", consensus: "Proof of Work (PoW)", year: 2018 },
+    { name: "Gala", symbol: "GALA", type: "Gaming", consensus: "ERC-20 Token", year: 2020 },
+    { name: "Beam", symbol: "BEAM", type: "Gaming", consensus: "Avalanche Subnet", year: 2023 },
+    { name: "Neo", symbol: "NEO", type: "Layer 1", consensus: "dBFT", year: 2014 },
+    { name: "EOS", symbol: "EOS", type: "Layer 1", consensus: "DPoS", year: 2018 },
+    { name: "Klaytn", symbol: "KLAY", type: "Layer 1", consensus: "IBFT", year: 2019 },
+    { name: "IOTA", symbol: "IOTA", type: "Layer 1", consensus: "Tangle", year: 2016 },
+    { name: "Tezos", symbol: "XTZ", type: "Layer 1", consensus: "LPoS", year: 2018 },
+    { name: "Sandbox", symbol: "SAND", type: "Metaverse", consensus: "ERC-20 Token", year: 2011 },
+    { name: "Decentraland", symbol: "MANA", type: "Metaverse", consensus: "ERC-20 Token", year: 2020 },
+    { name: "Axie Infinity", symbol: "AXS", type: "Gaming", consensus: "ERC-20 Token", year: 2020 },
+    { name: "Aave", symbol: "AAVE", type: "DeFi", consensus: "Governance Token", year: 2017 },
+    { name: "Curve", symbol: "CRV", type: "DeFi", consensus: "Governance Token", year: 2020 },
+    { name: "Synthetix", symbol: "SNX", type: "DeFi", consensus: "ERC-20 Token", year: 2017 },
+    { name: "Compound", symbol: "COMP", type: "DeFi", consensus: "Governance Token", year: 2017 },
+    { name: "PancakeSwap", symbol: "CAKE", type: "DeFi", consensus: "BEP-20 Token", year: 2020 },
+    { name: "Mina", symbol: "MINA", type: "Layer 1", consensus: "Proof of Stake (PoS)", year: 2021 },
+    { name: "Chiliz", symbol: "CHZ", type: "Sports", consensus: "Proof of Authority", year: 2018 },
+    { name: "Conflux", symbol: "CFX", type: "Layer 1", consensus: "Tree-Graph PoW", year: 2018 },
+    { name: "dYdX", symbol: "DYDX", type: "DeFi", consensus: "Proof of Stake (PoS)", year: 2021 },
+    { name: "eCash", symbol: "XEC", type: "Layer 1", consensus: "Proof of Work (PoW)", year: 2021 },
+    { name: "Gnosis", symbol: "GNO", type: "Layer 1", consensus: "Proof of Stake (PoS)", year: 2015 },
+    { name: "KuCoin Token", symbol: "KCS", type: "Exchange Token", consensus: "ERC-20 Token", year: 2017 },
+    { name: "GateToken", symbol: "GT", type: "Exchange Token", consensus: "PoS", year: 2019 },
+    { name: "Nexo", symbol: "NEXO", type: "DeFi", consensus: "ERC-20 Token", year: 2018 },
+    { name: "Pendle", symbol: "PENDLE", type: "DeFi", consensus: "ERC-20 Token", year: 2021 },
+    { name: "Pyth Network", symbol: "PYTH", type: "Oracle", consensus: "Solana Token", year: 2023 },
+    { name: "Wormhole", symbol: "W", type: "Interop", consensus: "Guardian Network", year: 2024 },
+    { name: "Starknet", symbol: "STRK", type: "Layer 2", consensus: "ZK-Rollup", year: 2024 },
+    { name: "Zcash", symbol: "ZEC", type: "Privacy", consensus: "Proof of Work (PoW)", year: 2016 },
+    { name: "Dash", symbol: "DASH", type: "Payment", consensus: "X11 PoW", year: 2014 },
+    { name: "Siacoin", symbol: "SC", type: "Storage", consensus: "Proof of Work (PoW)", year: 2015 },
+    { name: "Ronin", symbol: "RON", type: "Gaming", consensus: "DPoS", year: 2021 },
+    { name: "Kava", symbol: "KAVA", type: "Layer 1", consensus: "Proof of Stake (PoS)", year: 2019 },
+    { name: "Helium", symbol: "HNT", type: "DePIN", consensus: "Proof of Coverage", year: 2019 },
+    { name: "Zilliqa", symbol: "ZIL", type: "Layer 1", consensus: "Sharded PoW", year: 2017 },
+    { name: "Blur", symbol: "BLUR", type: "NFT", consensus: "ERC-20 Token", year: 2023 }
 ];
 
-const GUIAS_TITLES = [
-    "Cómo Comprar", "Es Seguro Invertir en", "Predicción de Precio 2025 para",
-    "Mejor Wallet para", "Staking de", "Análisis Fundamental de", "Evitar Estafas con",
-    "Comprar con PayPal", "Retirar a Cuenta Bancaria desde", "Configurar Metamask para",
-    "Minería de", "Futura Regulación de", "Historial de Precios de", "Comparativa Crypto vs Fiat",
-    "Errores comunes al enviar", "Cómo recuperar", "Mejor App para tradear", "Impuestos sobre",
-    "Comprar sin comisiones", "Intercambio P2P de", "Seguridad Avanzada para", "Préstamos con colateral en",
-    "Alternativas a", "Opiniones Reales sobre", "Cómo funciona el protocolo de", "Ventajas y Desventajas de",
-    "Guía Definitiva 2025 de", "Es real o farsa", "Comunidad oficial de", "Tutorial paso a paso de"
+const GUIDES_LOCAL = [
+    "Cómo comprar {COIN}", "Dónde comprar {COIN} barato", "Impuestos {COIN}", "Es legal {COIN}",
+    "Mejores Exchanges para {COIN}", "Comprar {COIN} con Tarjeta", "Comprar {COIN} con Transferencia",
+    "Cajeros de {COIN}", "Quién acepta {COIN}", "Retirar {COIN} a Banco"
+];
+
+const GUIDES_GLOBAL = [
+    "Predicción precio {COIN} 2025", "Es {COIN} una estafa?", "Opiniones sobre {COIN}",
+    "Mejor Wallet para {COIN}", "Staking de {COIN}", "Minar {COIN} guía",
+    "Futuro de {COIN}", "Análisis técnico {COIN}", "Noticias {COIN} última hora",
+    "Ventajas y Desventajas de {COIN}", "Historia de {COIN}", "Creador de {COIN}",
+    "Roadmap {COIN} 2025", "Comunidad {COIN}", "Seguridad de {COIN}",
+    "Contrato inteligente de {COIN}", "Casos de uso {COIN}", "Competidores de {COIN}",
+    "Whitepaper {COIN} explicado", "Tokenomics de {COIN}"
 ];
 
 const SCAM_TOPICS = [
@@ -133,15 +227,26 @@ function generateSitemaps() {
     writeSitemap('sitemap-problemas.xml', problemaUrls, 0.5);
     sitemaps.push('sitemap-problemas.xml');
 
-    // 5. Guias
+    // 5. Smart Guides (Global & Local)
     const guiaUrls = [];
     COINS.forEach(coin => {
-        GUIAS_TITLES.forEach(g => guiaUrls.push(`/guias/${slugify(g)}/${slugify(coin)}`));
-    });
-    // Massive Localized expansion - ALL COINS
-    COINS.forEach(coin => {
-        GUIAS_TITLES.forEach(g => {
-            PAISES.forEach(p => guiaUrls.push(`/guias/${slugify(g)}/${slugify(coin)}/${slugify(p)}`));
+        // GLOBAL GUIDES
+        GUIDES_GLOBAL.forEach(g => {
+            // FILTER 1: Mining (Only PoW)
+            if (g.includes('Minar') && !coin.consensus.includes('Proof of Work')) return;
+            // FILTER 2: Staking (Only PoS) - loose filter, mainly for pure PoW
+            if (g.includes('Staking') && coin.consensus.includes('Proof of Work')) return;
+            // FILTER 3: Predictions for Stablecoins
+            if (g.includes('Predicción') && coin.type === 'Stablecoin') return;
+
+            guiaUrls.push(`/guias/${slugify(g)}/${slugify(coin.name)}`);
+        });
+
+        // LOCAL GUIDES (Coin + Country)
+        GUIDES_LOCAL.forEach(g => {
+            PAISES.forEach(p => {
+                guiaUrls.push(`/guias/${slugify(g)}/${slugify(coin.name)}/${slugify(p)}`);
+            });
         });
     });
     writeSitemap('sitemap-guias.xml', guiaUrls, 0.6);
@@ -155,7 +260,7 @@ function generateSitemaps() {
     // 7. News
     const newsUrls = [];
     COINS.forEach(coin => {
-        TOPICS.forEach(topic => newsUrls.push(`/noticias/${slugify(coin)}/${slugify(topic)}`));
+        TOPICS.forEach(topic => newsUrls.push(`/noticias/${slugify(coin.name)}/${slugify(topic)}`));
     });
     writeSitemap('sitemap-noticias.xml', newsUrls, 0.6);
     sitemaps.push('sitemap-noticias.xml');
@@ -194,8 +299,8 @@ function generateSitemaps() {
     const vsUrls = [];
     for (let i = 0; i < COINS.length; i++) {
         for (let j = i + 1; j < COINS.length; j++) {
-            const c1 = slugify(COINS[i]);
-            const c2 = slugify(COINS[j]);
+            const c1 = slugify(COINS[i].name);
+            const c2 = slugify(COINS[j].name);
             vsUrls.push(`/vs/${c1}-vs-${c2}`);
         }
     }
