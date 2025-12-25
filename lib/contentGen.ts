@@ -213,9 +213,122 @@ export function generateScamContent(topic: string) {
 export function generateCoinComparisonContent(c1: any, c2: any) {
     const seed = getSeed(c1.name + c2.name);
     const isC1Newer = c1.year > c2.year;
+    const isC1PoW = c1.consensus.includes('Proof of Work');
+    const isC2PoW = c2.consensus.includes('Proof of Work');
+    const isC1Stable = c1.type === 'Stablecoin';
+    const isC2Stable = c2.type === 'Stablecoin';
 
     return `
     <h2>${c1.name} vs ${c2.name}: Comparativa Definitiva 2025</h2>
+    <p>En el duelo de hoy analizamos dos titanes del mercado: **${c1.name} (${c1.symbol})**, el representante de ${c1.type}, frente a **${c2.name} (${c2.symbol})**, un competidor feraz basado en ${c2.consensus}. Elegir entre ambos depende drásticamente de tu perfil de inversor y tu tesis sobre la **${isC1Newer ? 'innovación tecnológica' : 'resiliencia histórica'}**.</p>
+    
+    <p>${injectSeoElements(pick(LONG_INTROS, seed).replace(/{SUBJECT}/g, `${c1.name} y ${c2.name}`), seed)}</p>
+
+    <h3>Diferencias Clave en Tecnología y Consenso</h3>
+    <div class="grid md:grid-cols-2 gap-6 my-8">
+        <div class="bg-slate-900/50 p-6 rounded-xl border-l-4 border-blue-500">
+            <h4 class="font-bold text-blue-400 mb-2">Por qué elegir ${c1.name}</h4>
+            <ul class="space-y-2 text-sm text-slate-300">
+                <li>Modelo de Consenso: <strong>${c1.consensus}</strong> ${isC1PoW ? '(Alta seguridad)' : '(Eficiencia energética)'}.</li>
+                <li>Trayectoria: Fundado en <strong>${c1.year}</strong> ${c1.year < 2017 ? '(Veterano probado)' : '(Tecnología moderna)'}.</li>
+                <li>Categoría: <strong>${c1.type}</strong> ${isC1Stable ? '(Estabilidad garantizada)' : '(Potencial de crecimiento)'}.</li>
+                <li>Ideal para: ${isC1Stable ? 'Preservación de capital' : isC1PoW ? 'Inversores conservadores' : 'Traders activos'}.</li>
+            </ul>
+        </div>
+        <div class="bg-slate-900/50 p-6 rounded-xl border-l-4 border-purple-500">
+            <h4 class="font-bold text-purple-400 mb-2">Por qué elegir ${c2.name}</h4>
+            <ul class="space-y-2 text-sm text-slate-300">
+                <li>Modelo de Consenso: <strong>${c2.consensus}</strong> ${isC2PoW ? '(Descentralización máxima)' : '(Velocidad superior)'}.</li>
+                <li>Trayectoria: Fundado en <strong>${c2.year}</strong> ${c2.year < 2017 ? '(Confianza histórica)' : '(Innovación reciente)'}.</li>
+                <li>Categoría: <strong>${c2.type}</strong> ${isC2Stable ? '(Sin volatilidad)' : '(Upside explosivo)'}.</li>
+                <li>Ideal para: ${isC2Stable ? 'Refugio seguro' : isC2PoW ? 'HODLers de largo plazo' : 'Especuladores DeFi'}.</li>
+            </ul>
+        </div>
+    </div>
+
+    <h3>Análisis de Rendimiento y Escalabilidad</h3>
+    <p>${pick(EXPERT_LEVEL_BLOCKS, seed).replace(/{SUBJECT}/g, c1.name)} Por otro lado, ${c2.name} ha tomado un enfoque diferente. ${pick(ANALYSIS_BLOCKS, seed, 1).replace(/{SUBJECT}/g, c2.name)}</p>
+    
+    <p>Si comparamos la **velocidad de transacción** y los costos de gas, la arquitectura de **${c1.consensus}** presenta desafíos únicos que **${c2.consensus}** intenta resolver mediante su diseño nativo. En términos de **throughput**, ${c1.type === 'Layer 2' ? c1.name + ' aprovecha rollups para escalar exponencialmente' : c1.name + ' mantiene su enfoque en seguridad sobre velocidad'}.</p>
+
+    <h3>Casos de Uso: ¿Dónde Brilla Cada Uno?</h3>
+    <div class="bg-slate-900/30 p-6 rounded-xl my-8 border border-white/5">
+        <h4 class="font-bold text-white mb-4">🎯 ${c1.name} domina en:</h4>
+        <ul class="space-y-2 text-slate-300 text-sm">
+            <li>${isC1Stable ? '💵 Pagos internacionales sin volatilidad' : c1.type === 'DeFi' ? '🏦 Protocolos de préstamos descentralizados' : c1.type.includes('Layer') ? '⚡ Infraestructura blockchain de alta demanda' : '🎮 Aplicaciones de consumo masivo'}</li>
+            <li>${isC1PoW ? '🔐 Almacenamiento de valor a largo plazo (Digital Gold)' : '🚀 Transacciones de alta frecuencia y microtransacciones'}</li>
+            <li>${c1.year < 2018 ? '📊 Adopción institucional y fondos regulados' : '🆕 Innovación en Web3 y nuevas narrativas'}</li>
+        </ul>
+    </div>
+    <div class="bg-slate-900/30 p-6 rounded-xl my-8 border border-white/5">
+        <h4 class="font-bold text-white mb-4">🎯 ${c2.name} domina en:</h4>
+        <ul class="space-y-2 text-slate-300 text-sm">
+            <li>${isC2Stable ? '🛡️ Cobertura contra crashes del mercado' : c2.type === 'DeFi' ? '💱 Swaps y yield farming automatizado' : c2.type.includes('Gaming') ? '🎮 NFTs y economías de juegos' : '🌐 Contratos inteligentes complejos'}</li>
+            <li>${isC2PoW ? '⛏️ Minería rentable y resistencia a censura' : '💰 Staking pasivo con APYs competitivos'}</li>
+            <li>${c2.year < 2018 ? '🏛️ Integración con sistemas financieros legacy' : '🔥 Comunidades activas y desarrollo acelerado'}</li>
+        </ul>
+    </div>
+
+    <h3>Seguridad y Riesgos: Análisis Crítico</h3>
+    <p>${pick(SECURITY_DEEP_DIVE, seed).replace(/{SUBJECT}/g, `${c1.name} y ${c2.name}`)}</p>
+    <p>En cuanto a **auditorías de seguridad**, ${c1.year < c2.year ? c1.name + ' tiene un historial más extenso de pruebas en producción' : c2.name + ' ha implementado las últimas mejoras en criptografía'}. El riesgo de **centralización** es ${c1.consensus.includes('Authority') || c1.consensus.includes('DPoS') ? 'moderado en ' + c1.name : 'bajo en ' + c1.name}, mientras que ${c2.consensus.includes('Authority') || c2.consensus.includes('DPoS') ? c2.name + ' sacrifica algo de descentralización por velocidad' : c2.name + ' mantiene una red altamente distribuida'}.</p>
+
+    <div class="p-4 bg-yellow-950/20 border border-yellow-500/20 rounded-lg text-yellow-200 text-sm my-8">
+        <strong>⚠️ ADVERTENCIA:</strong> Tanto ${c1.name} como ${c2.name} son inversiones de alto riesgo. ${isC1Stable || isC2Stable ? 'Aunque las stablecoins reducen volatilidad, no están exentas de riesgos de desvinculación (depeg).' : 'La volatilidad puede superar el 50% en periodos de pánico del mercado.'} Nunca inviertas más de lo que puedas permitirte perder.
+    </div>
+
+    <h3>Adopción y Ecosistema: ¿Quién Tiene Más Momentum?</h3>
+    <p>La **adopción institucional** favorece a ${c1.year < c2.year ? c1.name + ' por su trayectoria comprobada' : c2.name + ' por su tecnología superior'}. En términos de **TVL (Total Value Locked)**, ${c1.type === 'DeFi' || c1.type.includes('Layer') ? c1.name + ' lidera con miles de millones en protocolos activos' : c2.type === 'DeFi' || c2.type.includes('Layer') ? c2.name + ' está creciendo exponencialmente' : 'ambos mantienen ecosistemas saludables'}.</p>
+    
+    <p>${pick(CONTEXT_BLOCKS, seed).replace(/{SUBJECT}/g, 'el ecosistema crypto')} La integración con **exchanges centralizados** es universal para ambos, pero ${c1.name} ${c1.year < 2016 ? 'tiene pares de trading en prácticamente todas las plataformas' : 'está expandiendo su presencia rápidamente'}.</p>
+
+    <h3>Predicción de Precio 2025: Escenarios Posibles</h3>
+    <div class="grid md:grid-cols-2 gap-6 my-8">
+        <div class="bg-green-950/20 border border-green-500/20 p-6 rounded-xl">
+            <h4 class="text-green-400 font-bold mb-3">📈 Escenario Alcista (Bull Case)</h4>
+            <p class="text-sm text-slate-300">${isC1Stable ? c1.name + ' mantiene su peg 1:1 con el dólar, ideal para refugio.' : c1.name + ' podría multiplicar su valor si ' + (c1.type.includes('Layer') ? 'la adopción de dApps explota' : c1.type === 'DeFi' ? 'el sector DeFi recupera confianza' : 'el mercado entra en fase de euforia') + '.'}</p>
+            <p class="text-sm text-slate-300 mt-2">${isC2Stable ? c2.name + ' se consolida como la stablecoin preferida por instituciones.' : c2.name + ' tiene potencial de ' + (c2.year > 2020 ? '10-50x si captura narrativa dominante' : '3-10x basado en adopción histórica') + '.'}</p>
+        </div>
+        <div class="bg-red-950/20 border border-red-500/20 p-6 rounded-xl">
+            <h4 class="text-red-400 font-bold mb-3">📉 Escenario Bajista (Bear Case)</h4>
+            <p class="text-sm text-slate-300">${isC1Stable ? c1.name + ' podría sufrir un evento de desvinculación si pierde respaldo.' : c1.name + ' enfrenta riesgo de ' + (c1.type.includes('Layer') ? 'competencia de nuevas L1/L2' : 'obsolescencia tecnológica') + '.'}</p>
+            <p class="text-sm text-slate-300 mt-2">${isC2Stable ? c2.name + ' depende de la confianza en su emisor centralizado.' : c2.name + ' podría caer ' + (c2.year > 2020 ? '80-95% en bear market extremo' : '60-80% en corrección normal') + '.'}</p>
+        </div>
+    </div>
+
+    <h3>Veredicto Final: ¿${c1.symbol} o ${c2.symbol}?</h3>
+    <p>La decisión final se reduce a tu **horizonte temporal** y **tolerancia al riesgo**. Si buscas ${isC1Stable ? 'estabilidad absoluta' : 'seguridad probada en batalla'}, **${c1.year < c2.year ? c1.name : c2.name}** lleva la delantera. Si prefieres apostar por ${isC2Stable ? 'liquidez sin fricciones' : 'tecnología más reciente y potencial de crecimiento explosivo'}, **${c1.year > c2.year ? c1.name : c2.name}** es la elección lógica.</p>
+    
+    <p><strong>Nuestra recomendación:</strong> ${isC1Stable || isC2Stable ? 'Mantén stablecoins solo para trading activo, no como inversión a largo plazo.' : 'Diversifica entre ambos. Asigna ' + (c1.year < c2.year ? '70% a ' + c1.name + ' (estabilidad) y 30% a ' + c2.name + ' (crecimiento)' : '60% a ' + c2.name + ' (momentum) y 40% a ' + c1.name + ' (cobertura)') + '.'}</p>
+    
+    <p>${pick(CONCLUSION_BLOCKS, seed).replace(/{SUBJECT}/g, 'esta comparativa')}</p>
+
+    <h3 class="mt-12">Preguntas Frecuentes: ${c1.name} vs ${c2.name}</h3>
+    <div class="space-y-6">
+        <div class="border-b border-white/5 pb-4">
+            <h4 class="font-bold text-white mb-2">¿Cuál es más seguro, ${c1.name} o ${c2.name}?</h4>
+            <p class="text-slate-400 text-sm">${c1.year < c2.year ? c1.name + ' tiene más años de operación sin hacks críticos' : c2.name + ' implementa las últimas mejoras en seguridad'}. Ambos son seguros si usas wallets no-custodiales y verificas las direcciones.</p>
+        </div>
+        <div class="border-b border-white/5 pb-4">
+            <h4 class="font-bold text-white mb-2">¿Cuál tiene mejores comisiones de transacción?</h4>
+            <p class="text-slate-400 text-sm">${c1.type.includes('Layer 2') ? c1.name + ' ofrece fees ultra-bajos gracias a rollups' : c2.type.includes('Layer 2') ? c2.name + ' es significativamente más barato' : isC1PoW && !isC2PoW ? c2.name + ' es más económico al no depender de minería' : c1.name + ' y ' + c2.name + ' tienen costos similares'}. Verifica siempre en tiempo real antes de operar.</p>
+        </div>
+        <div class="border-b border-white/5 pb-4">
+            <h4 class="font-bold text-white mb-2">¿Puedo hacer staking con ${c1.name} y ${c2.name}?</h4>
+            <p class="text-slate-400 text-sm">${!isC1PoW ? c1.name + ' permite staking con APYs del 4-12% anual' : c1.name + ' no soporta staking nativo (es PoW)'}. ${!isC2PoW ? c2.name + ' ofrece staking líquido en múltiples plataformas' : c2.name + ' requiere minería, no staking'}.</p>
+        </div>
+        <div class="border-b border-white/5 pb-4">
+            <h4 class="font-bold text-white mb-2">¿Dónde comprar ${c1.name} y ${c2.name} de forma segura?</h4>
+            <p class="text-slate-400 text-sm">Ambos están disponibles en <strong>Binance, Coinbase, Kraken</strong> y otros exchanges regulados. Evita plataformas sin licencia. Usa siempre 2FA y retira a tu wallet personal.</p>
+        </div>
+    </div>
+
+    <div class="mt-12 p-8 bg-gradient-to-r from-brand-900/40 to-purple-900/40 rounded-2xl border border-white/10">
+        <h4 class="text-2xl font-bold text-white mb-4">🎯 Conclusión Ejecutiva</h4>
+        <p class="text-slate-300 leading-relaxed">${c1.name} y ${c2.name} representan filosofías diferentes en el mundo crypto. ${isC1Stable ? c1.name + ' es tu ancla de estabilidad' : c1.year < 2017 ? c1.name + ' es la opción conservadora con historial probado' : c1.name + ' es la apuesta a innovación tecnológica'}. ${isC2Stable ? c2.name + ' complementa como reserva de valor estable' : c2.year < 2017 ? c2.name + ' ofrece seguridad similar con diferentes tradeoffs' : c2.name + ' maximiza el potencial de retornos exponenciales'}. <strong>La mejor estrategia es no elegir uno solo</strong> — diversifica según tu perfil de riesgo y mantén siempre una visión de largo plazo.</p>
+    </div>
+    `;
+} vs ${c2.name}: Comparativa Definitiva 2025</h2>
     <p>En el duelo de hoy analizamos dos titanes del mercado: **${c1.name} (${c1.symbol})**, el representante de ${c1.type}, frente a **${c2.name} (${c2.symbol})**, un competidor feraz basado en ${c2.consensus}. Elegir entre ambos depende drásticamente de tu perfil de inversor y tu tesis sobre la **${isC1Newer ? 'innovación tecnológica' : 'resiliencia histórica'}**.</p>
     
     <p>${injectSeoElements(pick(LONG_INTROS, seed).replace(/{SUBJECT}/g, `${c1.name} y ${c2.name}`), seed)}</p>
@@ -251,3 +364,4 @@ export function generateCoinComparisonContent(c1: any, c2: any) {
     <p>${pick(CONCLUSION_BLOCKS, seed).replace(/{SUBJECT}/g, 'esta comparativa')}</p>
     `;
 }
+
