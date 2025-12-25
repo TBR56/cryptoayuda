@@ -24,11 +24,17 @@ const PAISES = [
 ];
 
 const COINS = [
-    "Bitcoin", "Ethereum", "Solana", "Cardano", "XRP", "Polkadot", "Dogecoin", "Shiba Inu", "Avalanche",
-    "Polygon", "Litecoin", "Chainlink", "Stellar", "Binance Coin", "Tron", "Monero", "Cosmos", "Algorand",
-    "Near Protocol", "Aptos", "Sui", "Pepe", "Arbitrum", "Optimism", "Render", "Kaspa", "Injective",
-    "Celestia", "Filecoin", "Internet Computer", "Worldcoin", "Bittensor", "Stacks", "JasmyCoin", "Bonk",
-    "Jupiter", "Ethena", "Fetch.ai", "SingularityNET", "Flow", "Mantra", "Ondo"
+    "Bitcoin", "Ethereum", "Tether", "BNB", "Solana", "USDC", "XRP", "Dogecoin", "Toncoin", "Cardano",
+    "Shiba Inu", "Avalanche", "Polkadot", "TRON", "Bitcoin Cash", "Chainlink", "Near Protocol", "Polygon",
+    "Litecoin", "Internet Computer", "Dai", "Uniswap", "Aptos", "Cosmos", "Stacks", "Filecoin", "Render",
+    "Hedera", "Arbitrum", "Optimism", "Maker", "Cronos", "Kaspa", "Pepe", "VeChain", "Ethereum Classic",
+    "Injective", "Stellar", "Monero", "OKB", "Thorchain", "Celestia", "Immutable", "Fantom", "The Graph",
+    "Algorand", "Sei", "Floki", "Flow", "Bitget Token", "Arweave", "Bonk", "Jupiter", "Fetch.ai", "Ethena",
+    "Worldcoin", "Bittensor", "Ondo", "JasmyCoin", "Mantra", "SingularityNET", "Quant", "Lido DAO",
+    "Bitcoin SV", "Gala", "Beam", "Neo", "EOS", "Klaytn", "IOTA", "Tezos", "Sandbox", "Decentraland",
+    "Axie Infinity", "Aave", "Curve", "Synthetix", "Compound", "PancakeSwap", "Mina", "Chiliz", "Conflux",
+    "dYdX", "eCash", "Gnosis", "KuCoin Token", "GateToken", "Nexo", "Pendle", "Pyth Network", "Wormhole",
+    "Starknet", "Zcash", "Dash", "Siacoin", "Ronin", "Kava", "Helium", "Zilliqa", "Blur"
 ];
 
 const GUIAS_TITLES = [
@@ -184,7 +190,21 @@ function generateSitemaps() {
     writeSitemap('sitemap-auditorias.xml', auditUrls, 0.6);
     sitemaps.push('sitemap-auditorias.xml');
 
-    // 11. Sitemap Index
+    // 11. Comparador Versus (The 5,000 Page Engine)
+    const vsUrls = [];
+    for (let i = 0; i < COINS.length; i++) {
+        for (let j = i + 1; j < COINS.length; j++) {
+            const c1 = slugify(COINS[i]);
+            const c2 = slugify(COINS[j]);
+            vsUrls.push(`/vs/${c1}-vs-${c2}`);
+        }
+    }
+    // Limit to 4500 roughly per sitemap file or check if it fits. 5000 is fine for one XML.
+    // However, splitting if it grows too big is good practice. 5k is safe.
+    writeSitemap('sitemap-versus.xml', vsUrls, 0.7);
+    sitemaps.push('sitemap-versus.xml');
+
+    // 12. Sitemap Index
     const indexContent = `<?xml version="1.0" encoding="UTF-8"?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${sitemaps.map(s => `  <sitemap>

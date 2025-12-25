@@ -10,7 +10,7 @@ import PriceTicker from '../components/PriceTicker';
 import RobustImage from '../components/RobustImage'; // v2.0
 import SeoHead from '../components/SeoHead'; // v2.0
 import DiagnosticTool from '../components/DiagnosticTool';
-import { generateArticleContent, generateScamContent, getFaqForSubject } from '../lib/contentGen';
+import { generateArticleContent, generateScamContent, getFaqForSubject, generateCoinComparisonContent } from '../lib/contentGen';
 
 // ==========================================
 // 2. HELPER FUNCTIONS & RNG
@@ -986,6 +986,50 @@ const AuditView = ({ data }: any) => (
 );
 
 
+const VersusView = ({ data }: any) => (
+    <div className="max-w-4xl mx-auto px-4 py-12">
+        <div className="text-center mb-12">
+            <span className="inline-block px-3 py-1 bg-brand-500/10 text-brand-400 font-bold text-xs uppercase tracking-widest rounded-full mb-4">
+                Análisis Comparativo Directo
+            </span>
+            <h1 className="text-5xl md:text-7xl font-black mb-6 tracking-tighter">
+                {data.coin1.name} <span className="text-slate-600">vs</span> {data.coin2.name}
+            </h1>
+            <p className="text-xl text-slate-400 max-w-2xl mx-auto">
+                ¿Cuál es mejor inversión en 2025? Analizamos tecnología, adopción y potencial de precio.
+            </p>
+        </div>
+
+        {/* Comparison Stats Table */}
+        <div className="glass-card p-0 rounded-2xl overflow-hidden mb-12 border border-white/5">
+            <div className="grid grid-cols-3 bg-slate-900/50 border-b border-white/5 font-bold uppercase text-xs tracking-widest text-slate-500 py-4">
+                <div className="text-center">Factor</div>
+                <div className="text-center text-brand-400">{data.coin1.symbol}</div>
+                <div className="text-center text-purple-400">{data.coin2.symbol}</div>
+            </div>
+            {[
+                { label: "Tipo", v1: data.coin1.type, v2: data.coin2.type },
+                { label: "Consenso", v1: data.coin1.consensus, v2: data.coin2.consensus },
+                { label: "Fundado", v1: data.coin1.year, v2: data.coin2.year },
+                { label: "Riesgo", v1: "Medio", v2: "Alto" }
+            ].map((row, i) => (
+                <div key={i} className={`grid grid-cols-3 py-4 border-b border-white/5 ${i % 2 === 0 ? 'bg-white/[0.02]' : ''}`}>
+                    <div className="text-center font-bold text-slate-400 text-sm">{row.label}</div>
+                    <div className="text-center font-medium text-white">{row.v1}</div>
+                    <div className="text-center font-medium text-white">{row.v2}</div>
+                </div>
+            ))}
+            <div className="p-6 bg-slate-900/80 text-center">
+                <a href="https://www.binance.com/es/register?ref=LIMIT_RL2RN1M4" target="_blank" rel="nofollow noreferrer" className="inline-flex items-center gap-2 bg-brand-500 hover:bg-brand-400 text-white font-bold py-3 px-8 rounded-xl transition-all shadow-lg shadow-brand-500/20">
+                    Comprar Ganador en Binance <span className="text-lg">➔</span>
+                </a>
+            </div>
+        </div>
+
+        <article className="prose prose-invert prose-lg max-w-none mb-16" dangerouslySetInnerHTML={{ __html: data.content }} />
+    </div>
+);
+
 export default function Page({ data }: { data: any }) {
     if (!data) return null;
     return (
@@ -1135,6 +1179,30 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
                 (pageData as any).faq = getFaqForSubject(topic);
             }
         }
+        else if (section === 'vs') {
+            if (p1) {
+                const [slug1, slug2] = p1.split('-vs-');
+                if (slug1 && slug2) {
+                    const c1 = COINS.find(c => slugify(c.name) === slug1);
+                    const c2 = COINS.find(c => slugify(c.name) === slug2);
+                    if (c1 && c2) {
+                        const content = generateCoinComparisonContent(c1, c2);
+                        pageData = {
+                            type: 'comparison_coin',
+                            coin1: c1,
+                            coin2: c2,
+                            content: content,
+                            meta: {
+                                title: `${c1.name} vs ${c2.name}: ¿Cual es mejor inversión en 2025?`,
+                                desc: `Comparativa definitiva: ${c1.name} vs ${c2.name}. Analizamos velocidad, seguridad, consenso (${c1.consensus} vs ${c2.consensus}) y potencial de precio.`
+                            },
+                            hero: { title: `${c1.name} vs ${c2.name}`, subtitle: "Combate Crypto", image: getImage("ANALYSIS", getSeed(c1.name)) },
+                            faq: getFaqForSubject(`${c1.name} vs ${c2.name}`)
+                        };
+                    }
+                }
+            }
+        }
         else if (section === 'diagnostico') {
             const ex = EXCHANGES_LIST.find(e => slugify(e) === p1);
             const prob = PROBLEMAS.find(p => p.slug === p2);
@@ -1156,6 +1224,32 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
                     hero: { title: ex, subtitle: "Centro de Soporte", image: getImage("SECURITY", getSeed(ex)) },
                     selection: { exchange: ex, country: 'España', problem: null, kycVerified: true }
                 };
+            }
+        }
+        else if (section === 'vs') {
+            // Logic for /vs/coin1-vs-coin2
+            // p1 is "coin1-vs-coin2"
+            if (p1) {
+                const [slug1, slug2] = p1.split('-vs-');
+                if (slug1 && slug2) {
+                    const c1 = COINS.find(c => slugify(c.name) === slug1);
+                    const c2 = COINS.find(c => slugify(c.name) === slug2);
+                    if (c1 && c2) {
+                        const content = generateCoinComparisonContent(c1, c2);
+                        pageData = {
+                            type: 'comparison_coin', // Distinct from exchange comparison
+                            coin1: c1,
+                            coin2: c2,
+                            content: content,
+                            meta: {
+                                title: `${c1.name} vs ${c2.name}: ¿Cual es mejor inversión en 2025?`,
+                                desc: `Comparativa definitiva: ${c1.name} vs ${c2.name}. Analizamos velocidad, seguridad, consenso (${c1.consensus} vs ${c2.consensus}) y potencial de precio.`
+                            },
+                            hero: { title: `${c1.name} vs ${c2.name}`, subtitle: "Combate Crypto", image: getImage("ANALYSIS", getSeed(c1.name)) },
+                            faq: getFaqForSubject(`${c1.name} vs ${c2.name}`)
+                        };
+                    }
+                }
             }
         }
         else if (section === 'auditoria') {

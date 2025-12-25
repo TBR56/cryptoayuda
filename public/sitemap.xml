@@ -2,42 +2,46 @@
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <sitemap>
     <loc>https://www.cryptoayuda.org/sitemap-static.xml</loc>
-    <lastmod>2025-12-20</lastmod>
+    <lastmod>2025-12-25</lastmod>
   </sitemap>
   <sitemap>
     <loc>https://www.cryptoayuda.org/sitemap-reviews.xml</loc>
-    <lastmod>2025-12-20</lastmod>
+    <lastmod>2025-12-25</lastmod>
   </sitemap>
   <sitemap>
     <loc>https://www.cryptoayuda.org/sitemap-opiniones.xml</loc>
-    <lastmod>2025-12-20</lastmod>
+    <lastmod>2025-12-25</lastmod>
   </sitemap>
   <sitemap>
     <loc>https://www.cryptoayuda.org/sitemap-problemas.xml</loc>
-    <lastmod>2025-12-20</lastmod>
+    <lastmod>2025-12-25</lastmod>
   </sitemap>
   <sitemap>
     <loc>https://www.cryptoayuda.org/sitemap-guias.xml</loc>
-    <lastmod>2025-12-20</lastmod>
+    <lastmod>2025-12-25</lastmod>
   </sitemap>
   <sitemap>
     <loc>https://www.cryptoayuda.org/sitemap-estafas.xml</loc>
-    <lastmod>2025-12-20</lastmod>
+    <lastmod>2025-12-25</lastmod>
   </sitemap>
   <sitemap>
     <loc>https://www.cryptoayuda.org/sitemap-noticias.xml</loc>
-    <lastmod>2025-12-20</lastmod>
+    <lastmod>2025-12-25</lastmod>
   </sitemap>
   <sitemap>
     <loc>https://www.cryptoayuda.org/sitemap-diagnostico.xml</loc>
-    <lastmod>2025-12-20</lastmod>
+    <lastmod>2025-12-25</lastmod>
   </sitemap>
   <sitemap>
     <loc>https://www.cryptoayuda.org/sitemap-comparativas.xml</loc>
-    <lastmod>2025-12-20</lastmod>
+    <lastmod>2025-12-25</lastmod>
   </sitemap>
   <sitemap>
     <loc>https://www.cryptoayuda.org/sitemap-auditorias.xml</loc>
-    <lastmod>2025-12-20</lastmod>
+    <lastmod>2025-12-25</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://www.cryptoayuda.org/sitemap-versus.xml</loc>
+    <lastmod>2025-12-25</lastmod>
   </sitemap>
 </sitemapindex>

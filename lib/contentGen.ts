@@ -209,3 +209,45 @@ export function generateScamContent(topic: string) {
 <p>Si crees haber sido víctima de ${topic}, desconecta tus equipos de la red y transfiere el capital restante a una nueva dirección de inmediato. Consulta nuestra sección de <a href="/estafas" class="text-brand-400 underline">alertas de estafas</a> para más información.</p>
     `;
 }
+
+export function generateCoinComparisonContent(c1: any, c2: any) {
+    const seed = getSeed(c1.name + c2.name);
+    const isC1Newer = c1.year > c2.year;
+
+    return `
+    <h2>${c1.name} vs ${c2.name}: Comparativa Definitiva 2025</h2>
+    <p>En el duelo de hoy analizamos dos titanes del mercado: **${c1.name} (${c1.symbol})**, el representante de ${c1.type}, frente a **${c2.name} (${c2.symbol})**, un competidor feraz basado en ${c2.consensus}. Elegir entre ambos depende drásticamente de tu perfil de inversor y tu tesis sobre la **${isC1Newer ? 'innovación tecnológica' : 'resiliencia histórica'}**.</p>
+    
+    <p>${injectSeoElements(pick(LONG_INTROS, seed).replace(/{SUBJECT}/g, `${c1.name} y ${c2.name}`), seed)}</p>
+
+    <h3>Diferencias Clave en Tecnología y Consenso</h3>
+    <div class="grid md:grid-cols-2 gap-6 my-8">
+        <div class="bg-slate-900/50 p-6 rounded-xl border-l-4 border-blue-500">
+            <h4 class="font-bold text-blue-400 mb-2">Por qué elegir ${c1.name}</h4>
+            <ul class="space-y-2 text-sm text-slate-300">
+                <li>Modelo de Consenso: <strong>${c1.consensus}</strong> comprobado.</li>
+                <li>Trayectoria: Fundado en <strong>${c1.year}</strong>.</li>
+                <li>Ideal para: Inversores que buscan estabilidad en ${c1.type}.</li>
+            </ul>
+        </div>
+        <div class="bg-slate-900/50 p-6 rounded-xl border-l-4 border-purple-500">
+            <h4 class="font-bold text-purple-400 mb-2">Por qué elegir ${c2.name}</h4>
+            <ul class="space-y-2 text-sm text-slate-300">
+                <li>Modelo de Consenso: <strong>${c2.consensus}</strong> eficiente.</li>
+                <li>Trayectoria: Fundado en <strong>${c2.year}</strong>.</li>
+                <li>Ideal para: Especuladores de ${c2.type} con alto potencial.</li>
+            </ul>
+        </div>
+    </div>
+
+    <h3>Análisis de Rendimiento y Escalabilidad</h3>
+    <p>${pick(EXPERT_LEVEL_BLOCKS, seed).replace(/{SUBJECT}/g, c1.name)} Por otro lado, ${c2.name} ha tomado un enfoque diferente. ${pick(ANALYSIS_BLOCKS, seed, 1).replace(/{SUBJECT}/g, c2.name)}</p>
+    
+    <p>Si comparamos la **velocidad de transacción** y los costos de gas, la arquitectura de **${c1.consensus}** presenta desafíos únicos que **${c2.consensus}** intenta resolver mediante su diseño nativo.</p>
+
+    <h3>Veredicto: ¿${c1.symbol} o ${c2.symbol}?</h3>
+    <p>La decisión final se reduce a tu horizonte temporal. Si buscas seguridad probada en batalla, **${c1.year < c2.year ? c1.name : c2.name}** lleva la delantera. Si prefieres apostar por tecnología más reciente y potencial de crecimiento explosivo, **${c1.year > c2.year ? c1.name : c2.name}** es la elección lógica.</p>
+    
+    <p>${pick(CONCLUSION_BLOCKS, seed).replace(/{SUBJECT}/g, 'esta comparativa')}</p>
+    `;
+}
