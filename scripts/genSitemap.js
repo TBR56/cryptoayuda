@@ -309,7 +309,29 @@ function generateSitemaps() {
     writeSitemap('sitemap-versus.xml', vsUrls, 0.7);
     sitemaps.push('sitemap-versus.xml');
 
-    // 12. Sitemap Index
+    // 12. Programmatic Search Queries (5,000 pages)
+    let searchQueries = [];
+    try {
+        const fileContent = fs.readFileSync('./lib/searchQueries.ts', 'utf8');
+        // Extract slugs using regex instead of complex parsing for a simple script
+        const slugMatches = fileContent.match(/"slug":\s*"([^"]+)"/g);
+        if (slugMatches) {
+            searchQueries = slugMatches.map(m => {
+                const match = m.match(/"([^"]+)"$/);
+                return `/busquedas-crypto/${match[1]}`;
+            });
+        }
+    } catch (e) {
+        console.error("Could not load searchQueries.ts for sitemap:", e.message);
+    }
+
+    if (searchQueries.length > 0) {
+        // Split into chunks of 2500 if needed, but 5k fits in one sitemap (limit is 50k)
+        writeSitemap('sitemap-busquedas.xml', searchQueries, 0.6);
+        sitemaps.push('sitemap-busquedas.xml');
+    }
+
+    // 13. Sitemap Index
     const indexContent = `<?xml version="1.0" encoding="UTF-8"?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${sitemaps.map(s => `  <sitemap>

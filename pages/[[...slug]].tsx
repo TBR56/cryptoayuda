@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { ArrowRight } from 'lucide-react';
 import { EXCHANGES_LIST, PAISES, PROBLEMAS, COINS, TOPICS, GUIAS_TITLES, SCAM_TOPICS, SECURITY_GUIDES, BINANCE_AFFILIATE_LINK } from '../lib/data';
+import { SEARCH_QUERIES } from '../lib/searchQueries';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ScoreCard from '../components/ScoreCard';
@@ -11,7 +12,7 @@ import PriceTicker from '../components/PriceTicker';
 import RobustImage from '../components/RobustImage'; // v2.0
 import SeoHead from '../components/SeoHead'; // v2.0
 import DiagnosticTool from '../components/DiagnosticTool';
-import { generateArticleContent, generateScamContent, getFaqForSubject, generateCoinComparisonContent } from '../lib/contentGen';
+import { generateArticleContent, generateScamContent, getFaqForSubject, generateCoinComparisonContent, generateSearchQueryContent } from '../lib/contentGen';
 
 // ==========================================
 // 2. HELPER FUNCTIONS & RNG
@@ -1078,6 +1079,38 @@ const VersusView = ({ data }: any) => (
     </div>
 );
 
+const SearchQueryView = ({ data }: any) => (
+    <div className="max-w-4xl mx-auto px-4 py-12">
+        <div className="mb-12">
+            <div className="inline-block px-3 py-1 bg-brand-500/10 text-brand-400 font-bold text-[10px] uppercase tracking-widest rounded-full mb-4 border border-brand-500/20">
+                Solución de Problemas Crypto
+            </div>
+            <h1 className="text-4xl md:text-6xl font-black mb-6 tracking-tighter leading-tight">
+                {data.title}
+            </h1>
+            <div className="flex items-center gap-4 text-slate-500 text-sm">
+                <span className="bg-slate-900 px-2 py-1 rounded text-xs font-bold">{data.category}</span>
+                <span>•</span>
+                <span>Actualizado: Diciembre 2025</span>
+            </div>
+        </div>
+
+        <article className="prose prose-invert prose-lg max-w-none mb-16" dangerouslySetInnerHTML={{ __html: data.content }} />
+
+        <div className="mt-16 p-8 bg-gradient-to-br from-brand-900/40 to-slate-900/60 rounded-3xl border border-white/10 text-center relative overflow-hidden group">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-brand-500/20 blur-3xl group-hover:bg-brand-500/40 transition-all duration-500" />
+            <h3 className="text-3xl font-black text-white mb-4 uppercase italic tracking-tighter">¿Problema persiste?</h3>
+            <p className="text-slate-400 mb-8 max-w-xl mx-auto">Nuestro equipo de soporte puede ayudarte a diagnosticar y solucionar cualquier incidente con tus fondos de manera profesional y segura.</p>
+            <Link
+                href="/diagnostico"
+                className="inline-flex items-center gap-3 bg-brand-500 hover:bg-brand-400 text-white font-black px-12 py-5 rounded-2xl text-xl transition-all shadow-xl shadow-brand-500/20 transform hover:-translate-y-1"
+            >
+                INICIAR DIAGNÓSTICO GRATUITO <ArrowRight size={24} />
+            </Link>
+        </div>
+    </div>
+);
+
 export default function Page({ data }: { data: any }) {
     if (!data) return null;
     return (
@@ -1113,9 +1146,11 @@ export default function Page({ data }: { data: any }) {
                 {data.type === 'review' && <ReviewView data={data} />}
                 {data.type === 'audit' && <AuditView data={data} />}
                 {data.type === 'comparison' && <ComparisonView data={data} />}
+                {data.type === 'comparison_coin' && <VersusView data={data} />}
                 {data.type === 'opinion' && <OpinionView data={data} />}
                 {data.type === 'scam' && <ScamView data={data} />}
                 {data.type === 'problem' && <ProblemView data={data} />}
+                {data.type === 'search_query' && <SearchQueryView data={data} />}
                 {data.type === 'diagnostico_landing' && (
                     <div className="max-w-7xl mx-auto px-4 py-12">
                         <div className="text-center mb-16">
@@ -1139,6 +1174,13 @@ export const getStaticPaths: GetStaticPaths = async () => {
     const top5 = EXCHANGES_LIST.slice(0, 5);
     const paths = top5.map(ex => ({ params: { slug: ['reviews', slugify(ex)] } }));
     paths.push({ params: { slug: ['estafas'] } }, { params: { slug: [] } });
+
+    // Add a few sample search queries to paths for faster dev builds
+    // In prod, fallBack: 'blocking' will handle the rest
+    SEARCH_QUERIES.slice(0, 10).forEach(q => {
+        paths.push({ params: { slug: ['busquedas-crypto', q.slug] } });
+    });
+
     return { paths, fallback: 'blocking' };
 };
 
@@ -1274,32 +1316,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
                 };
             }
         }
-        else if (section === 'vs') {
-            // Logic for /vs/coin1-vs-coin2
-            // p1 is "coin1-vs-coin2"
-            if (p1) {
-                const [slug1, slug2] = p1.split('-vs-');
-                if (slug1 && slug2) {
-                    const c1 = COINS.find(c => slugify(c.name) === slug1);
-                    const c2 = COINS.find(c => slugify(c.name) === slug2);
-                    if (c1 && c2) {
-                        const content = generateCoinComparisonContent(c1, c2);
-                        pageData = {
-                            type: 'comparison_coin', // Distinct from exchange comparison
-                            coin1: c1,
-                            coin2: c2,
-                            content: content,
-                            meta: {
-                                title: `${c1.name} vs ${c2.name}: ¿Cual es mejor inversión en 2025?`,
-                                desc: `Comparativa definitiva: ${c1.name} vs ${c2.name}. Analizamos velocidad, seguridad, consenso (${c1.consensus} vs ${c2.consensus}) y potencial de precio.`
-                            },
-                            hero: { title: `${c1.name} vs ${c2.name}`, subtitle: "Combate Crypto", image: getImage("ANALYSIS", getSeed(c1.name)) },
-                            faq: getFaqForSubject(`${c1.name} vs ${c2.name}`)
-                        };
-                    }
-                }
-            }
-        }
         else if (section === 'auditoria') {
             const ex = EXCHANGES_LIST.find(e => slugify(e) === p1);
             if (ex) {
@@ -1317,6 +1333,24 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
                     trustScore: score,
                     risk: parseFloat(score) > 8.5 ? 'Bajo' : 'Medio',
                     verdict: parseFloat(score) > 8.5 ? 'Plataforma Altamente Confiable' : 'Uso Recomendado con Precaución'
+                };
+            }
+        }
+        else if (section === 'busquedas-crypto') {
+            const query = SEARCH_QUERIES.find(q => q.slug === p1);
+            if (query) {
+                const content = generateSearchQueryContent(query.title, query.category, query.intent);
+                pageData = {
+                    type: 'search_query',
+                    title: query.title,
+                    category: query.category,
+                    intent: query.intent,
+                    content: content,
+                    meta: {
+                        title: `${query.title} - Solución y Guía 2025`,
+                        desc: `Descubre cómo solucionar problemas relacionados con ${query.title}. Guía paso a paso, análisis técnico y recomendaciones de seguridad.`
+                    },
+                    hero: { title: query.title, subtitle: query.category, image: getImage("SECURITY", getSeed(query.title)) }
                 };
             }
         }
