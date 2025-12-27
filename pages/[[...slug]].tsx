@@ -495,6 +495,22 @@ const HomeView = ({ data }: any) => (
                     </Link>
                 ))}
             </div>
+            {/* SEARCH QUERIES MINI-HUB */}
+            <div className="mt-20 mb-16 text-left max-w-5xl mx-auto">
+                <div className="flex items-center justify-between mb-8">
+                    <h2 className="text-2xl font-bold text-white">Centro de Consultas Rápidas</h2>
+                    <span className="text-slate-500 text-xs uppercase tracking-widest font-bold">5,000+ Soluciones</span>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {data.recentQueries?.map((q: any) => (
+                        <Link href={`/busquedas-crypto/${q.slug}`} key={q.slug} className="group p-4 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 hover:border-brand-500/30 transition-all flex items-center justify-between">
+                            <span className="text-slate-300 text-sm font-medium group-hover:text-white transition-colors">{q.title}</span>
+                            <ArrowRight size={16} className="text-slate-600 group-hover:text-brand-400 group-hover:translate-x-1 transition-all" />
+                        </Link>
+                    ))}
+                </div>
+            </div>
+
             <div className="mt-8">
                 <Link href="/reviews" className="inline-flex items-center gap-2 text-brand-400 font-bold hover:text-brand-300 transition-colors">
                     Ver todos los exchanges &rarr;
@@ -1187,7 +1203,16 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps = async ({ params }) => {
     const slug = params?.slug as string[] || [];
     let pageData = null;
-    if (slug.length === 0) { pageData = { type: 'home', exchanges: EXCHANGES_LIST.slice(0, 12), coins: COINS.slice(0, 6) }; }
+    if (slug.length === 0) {
+        // Randomly pick 10 queries for variety on each revalidation
+        const shuffled = [...SEARCH_QUERIES].sort(() => 0.5 - Math.random());
+        pageData = {
+            type: 'home',
+            exchanges: EXCHANGES_LIST.slice(0, 12),
+            coins: COINS.slice(0, 6),
+            recentQueries: shuffled.slice(0, 10)
+        };
+    }
     else {
         const [section, p1, p2] = slug;
         if (!p1) {
