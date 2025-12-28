@@ -1,5 +1,17 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { prisma } from '../../../lib/prisma';
+import fs from 'fs/promises';
+import path from 'path';
+
+const PAYMENTS_FILE = path.join('/tmp', 'payments.json');
+
+async function getPayments() {
+    try {
+        const data = await fs.readFile(PAYMENTS_FILE, 'utf-8');
+        return JSON.parse(data);
+    } catch {
+        return [];
+    }
+}
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method !== 'GET') {
@@ -7,12 +19,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     try {
-        const payments = await prisma.payment.findMany({
-            orderBy: {
-                createdAt: 'desc'
-            }
-        });
-
+        const payments = await getPayments();
         return res.status(200).json({ payments });
     } catch (error) {
         console.error('Error fetching payments:', error);
