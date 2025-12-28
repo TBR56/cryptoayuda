@@ -41,26 +41,41 @@ export default function PagoPage() {
         setUploading(true);
 
         try {
-            // Upload proof image
-            const formData = new FormData();
-            formData.append('file', proofFile);
-            formData.append('email', email);
-            formData.append('plan', plan as string);
-            formData.append('amount', planDetails.price.toString());
+            // Convert image to base64
+            const reader = new FileReader();
+            reader.readAsDataURL(proofFile);
 
-            const response = await fetch('/api/payments/submit', {
-                method: 'POST',
-                body: formData
-            });
+            reader.onload = async () => {
+                const base64Image = reader.result as string;
 
-            if (response.ok) {
-                setSubmitted(true);
-            } else {
-                alert('Error al enviar el comprobante. Intenta nuevamente.');
-            }
+                const response = await fetch('/api/payments/submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email,
+                        plan: plan as string,
+                        amount: planDetails.price,
+                        proofImageBase64: base64Image
+                    })
+                });
+
+                if (response.ok) {
+                    setSubmitted(true);
+                } else {
+                    const error = await response.json();
+                    console.error('Error:', error);
+                    alert('Error al enviar el comprobante. Intenta nuevamente.');
+                }
+                setUploading(false);
+            };
+
+            reader.onerror = () => {
+                alert('Error al leer la imagen. Intenta nuevamente.');
+                setUploading(false);
+            };
         } catch (error) {
+            console.error('Error:', error);
             alert('Error de conexión. Intenta nuevamente.');
-        } finally {
             setUploading(false);
         }
     };
