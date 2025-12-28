@@ -22,7 +22,7 @@ export default function PagoPage() {
     const [copied, setCopied] = useState(false);
 
     const planDetails = plan && typeof plan === 'string' ? PLAN_DETAILS[plan as keyof typeof PLAN_DETAILS] : undefined;
-    const MERCADOPAGO_ALIAS = 'ACADEMIA.CRYPTO.MP'; // Cambia esto por tu alias real
+    const MERCADOPAGO_ALIAS = 'brunsss.mp';
 
     if (!planDetails || !plan) {
         return null;
