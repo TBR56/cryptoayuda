@@ -1,7 +1,7 @@
 import { Resend } from 'resend';
 
 // NOTE: In production, the API key should be in process.env.RESEND_API_KEY
-const resend = new Resend(process.env.RESEND_API_KEY || 're_mock_key');
+export const resend = new Resend(process.env.RESEND_API_KEY || 're_mock_key');
 
 export async function sendWelcomeEmail(email: string, pass: string, plan: string) {
     try {

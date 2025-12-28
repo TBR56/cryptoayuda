@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '../../../lib/prisma';
+import bcrypt from 'bcryptjs';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method !== 'POST') {
@@ -17,7 +18,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             where: { email }
         });
 
-        if (!user || user.password !== password) {
+        if (!user) {
+            return res.status(401).json({ message: 'Invalid credentials' });
+        }
+
+        // Compare password with bcrypt
+        const isValid = await bcrypt.compare(password, user.password);
+
+        if (!isValid) {
             return res.status(401).json({ message: 'Invalid credentials' });
         }
 

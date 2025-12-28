@@ -27,4 +27,20 @@ model User {
   plan      String   @default("basic") // basic, advanced, professional
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  payments  Payment[]
+}
+
+model Payment {
+  id              String   @id @default(cuid())
+  email           String
+  plan            String   // basic, advanced, professional
+  amount          Float
+  proofImageUrl   String?  // URL to uploaded payment proof
+  status          String   @default("pending") // pending, approved, rejected
+  userId          String?
+  user            User?    @relation(fields: [userId], references: [id])
+  approvedBy      String?  // Admin email who approved
+  rejectionReason String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }

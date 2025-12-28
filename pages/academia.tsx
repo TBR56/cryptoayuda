@@ -20,7 +20,7 @@ export default function AcademiaLanding() {
     const plans = [
         {
             name: 'Básico',
-            price: '$4.500',
+            price: '$6.000',
             duration: '8 horas',
             features: [
                 'Acceso a plataforma privada',
@@ -34,7 +34,7 @@ export default function AcademiaLanding() {
         },
         {
             name: 'Avanzado',
-            price: '$8.500',
+            price: '$11.500',
             duration: '20 horas',
             popular: true,
             features: [
@@ -49,7 +49,7 @@ export default function AcademiaLanding() {
         },
         {
             name: 'Profesional',
-            price: '$15.000',
+            price: '$20.000',
             duration: '+30 horas',
             features: [
                 'Todo lo del Plan Avanzado',
@@ -183,30 +183,15 @@ export default function AcademiaLanding() {
                                         ))}
                                     </ul>
 
-                                    <button
-                                        onClick={() => {
-                                            alert(`Iniciando pago para Plan ${plan.name}. En producción esto redirigiría a la pasarela de pagos.`);
-                                            // Mocking the automated flow
-                                            setTimeout(() => {
-                                                const email = prompt("Ingresa tu email para recibir el acceso (MOCK):");
-                                                if (email) {
-                                                    fetch('/api/payments/webhook', {
-                                                        method: 'POST',
-                                                        headers: { 'Content-Type': 'application/json' },
-                                                        body: JSON.stringify({ email, plan: plan.name.toLowerCase(), status: 'approved' })
-                                                    }).then(r => r.json()).then(data => {
-                                                        alert(`¡Pago verificado! Tus credenciales han sido generadas.\n\nUser: ${data.credentials.email}\nPass: ${data.credentials.password}\n\nIngresa ahora en /acceso/login`);
-                                                    });
-                                                }
-                                            }, 500);
-                                        }}
-                                        className={`w-full py-5 rounded-2xl font-black uppercase tracking-widest text-sm transition-all shadow-xl ${plan.popular
-                                                ? 'bg-brand-500 hover:bg-brand-400 text-white shadow-brand-500/20'
-                                                : 'bg-white/5 hover:bg-white/10 text-white border border-white/10'
+                                    <Link
+                                        href={`/pago/${plan.name.toLowerCase()}`}
+                                        className={`w-full py-5 rounded-2xl font-black uppercase tracking-widest text-sm transition-all shadow-xl block text-center ${plan.popular
+                                            ? 'bg-brand-500 hover:bg-brand-400 text-white shadow-brand-500/20'
+                                            : 'bg-white/5 hover:bg-white/10 text-white border border-white/10'
                                             }`}
                                     >
                                         {plan.cta}
-                                    </button>
+                                    </Link>
                                 </div>
                             ))}
                         </div>
