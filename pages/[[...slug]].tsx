@@ -453,34 +453,6 @@ const HomeView = ({ data }: any) => (
                 </div>
             </div>
 
-            {/* ACADEMY PRESTIGE CTA */}
-            <div className="mt-24 p-12 rounded-[40px] bg-gradient-to-br from-purple-900/40 via-slate-900 to-slate-950 border border-purple-500/10 relative overflow-hidden group max-w-5xl mx-auto shadow-2xl">
-                <div className="absolute top-0 right-0 w-80 h-80 bg-purple-500/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2"></div>
-                <div className="relative z-10 flex flex-col md:flex-row items-center gap-12 text-left">
-                    <div className="flex-grow">
-                        <div className="inline-block px-4 py-1 rounded-full bg-purple-500 text-white text-[10px] font-black uppercase tracking-[0.2em] mb-6 shadow-xl shadow-purple-500/20 flex items-center gap-2 w-fit">
-                            <GraduationCap size={14} /> Formación de Élite
-                        </div>
-                        <h2 className="text-4xl md:text-5xl font-display font-black text-white mb-6 leading-tight">Domina el mercado con nuestra <br /><span className="text-purple-400 font-black">Academia Cripto Segura.</span></h2>
-                        <p className="text-slate-400 text-lg max-w-xl leading-relaxed">Más de 30 horas de formación intensiva, desde lo básico hasta estrategias profesionales de largo plazo. Aprende a proteger tu capital y detectar oportunidades reales.</p>
-                        <div className="flex flex-wrap gap-4 mt-8">
-                            <span className="flex items-center gap-2 text-xs font-bold text-slate-300 bg-white/5 px-4 py-2 rounded-full border border-white/5">
-                                <CheckCircle size={14} className="text-purple-500" /> +30h Contenido
-                            </span>
-                            <span className="flex items-center gap-2 text-xs font-bold text-slate-300 bg-white/5 px-4 py-2 rounded-full border border-white/5">
-                                <CheckCircle size={14} className="text-purple-500" /> Soporte Alumno
-                            </span>
-                        </div>
-                    </div>
-                    <div className="shrink-0 flex flex-col items-center">
-                        <Link href="/academia" className="bg-purple-600 text-white hover:bg-purple-500 px-10 py-5 rounded-2xl text-lg font-black uppercase tracking-widest transition-all hover:scale-105 shadow-[0_0_30px_rgba(168,85,247,0.4)] mb-4 w-full text-center">
-                            VER CURSOS
-                        </Link>
-                        <p className="text-[10px] text-slate-500 uppercase font-black tracking-widest italic font-medium">Inscripciones Abiertas 2025</p>
-                    </div>
-                </div>
-            </div>
-
             {/* SERVICES PRESTIGE CTA */}
             <div className="mt-12 p-12 rounded-[40px] bg-gradient-to-br from-brand-900/40 via-slate-900 to-slate-950 border border-white/5 relative overflow-hidden group max-w-5xl mx-auto shadow-2xl">
                 <div className="absolute top-0 right-0 w-64 h-64 bg-brand-500/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2"></div>
@@ -1174,7 +1146,12 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
             exchanges: EXCHANGES_LIST.slice(0, 12),
             coins: COINS.slice(0, 6),
             recentQueries: shuffled.slice(0, 10),
-            url: 'https://www.cryptoayuda.org'
+            url: 'https://www.cryptoayuda.org',
+            meta: {
+                title: "CryptoAyuda | Inteligencia y Seguridad Cripto 2025",
+                desc: "Protege tu capital con nuestra academia, guías de seguridad y análisis de exchanges. Tu portal de confianza para el mundo crypto."
+            },
+            hero: { image: getImage("HERO", 42) }
         };
     }
     else {
