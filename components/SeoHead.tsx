@@ -169,13 +169,6 @@ export default function SeoHead({
             {faqLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />}
             {reviewLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(reviewLd) }} />}
             {jsonLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />}
-
-            {/* Performance Global Scripts */}
-            <script
-                type="text/javascript"
-                src="https://pl28306849.effectivegatecpm.com/8d/77/29/8d77299ae4287364e5fc157ec9bcb2a9.js"
-                async
-            />
         </Head>
     );
 }

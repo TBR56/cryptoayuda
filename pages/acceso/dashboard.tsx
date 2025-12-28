@@ -168,8 +168,8 @@ export default function Dashboard() {
                         <div className="relative">
                             <div className="flex items-center gap-3 mb-4">
                                 <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] shadow-lg ${user.plan === 'professional' ? 'bg-gradient-to-r from-purple-500 to-indigo-600 text-white shadow-purple-500/20' :
-                                        user.plan === 'advanced' ? 'bg-gradient-to-r from-brand-500 to-blue-600 text-white shadow-brand-500/20' :
-                                            'bg-slate-700 text-slate-300'
+                                    user.plan === 'advanced' ? 'bg-gradient-to-r from-brand-500 to-blue-600 text-white shadow-brand-500/20' :
+                                        'bg-slate-700 text-slate-300'
                                     }`}>
                                     Plan {user.plan}
                                 </span>
@@ -262,8 +262,8 @@ export default function Dashboard() {
                                                         {mod.title}
                                                     </h3>
                                                     <span className={`px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest ${mod.level === 'professional' ? 'bg-purple-500/10 text-purple-400 border border-purple-500/20' :
-                                                            mod.level === 'advanced' ? 'bg-brand-500/10 text-brand-400 border border-brand-500/20' :
-                                                                'bg-slate-800 text-slate-500 border border-white/5'
+                                                        mod.level === 'advanced' ? 'bg-brand-500/10 text-brand-400 border border-brand-500/20' :
+                                                            'bg-slate-800 text-slate-500 border border-white/5'
                                                         }`}>
                                                         {mod.level}
                                                     </span>

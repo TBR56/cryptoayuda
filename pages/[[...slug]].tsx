@@ -71,81 +71,7 @@ const Breadcrumbs = ({ paths }: { paths: { label: string, href: string }[] }) =>
     </nav>
 );
 
-const NativeAd = () => {
-    const containerRef = React.useRef<HTMLDivElement>(null);
 
-    React.useEffect(() => {
-        if (typeof window !== 'undefined' && containerRef.current) {
-            containerRef.current.innerHTML = '';
-
-            const script = document.createElement('script');
-            script.async = true;
-            script.setAttribute('data-cfasync', 'false');
-            script.src = 'https://pl28306841.effectivegatecpm.com/80b4b647a59f9a27e664563197664a3e/invoke.js';
-
-            const div = document.createElement('div');
-            div.id = 'container-80b4b647a59f9a27e664563197664a3e';
-
-            containerRef.current.appendChild(script);
-            containerRef.current.appendChild(div);
-        }
-    }, []);
-
-    return (
-        <div className="my-16 flex flex-col items-center">
-            <span className="text-[10px] text-slate-600 font-black uppercase tracking-widest mb-4">Recomendado para ti</span>
-            <div ref={containerRef} className="w-full max-w-4xl min-h-[250px] bg-slate-900/20 rounded-2xl border border-white/5 overflow-hidden" />
-        </div>
-    );
-};
-
-const AdPlaceholder = ({ type }: { type: 'top' | 'mid' | 'bottom' }) => {
-    const containerRef = React.useRef<HTMLDivElement>(null);
-
-    // Configuración dinámica según el tipo de slot (mid | bottom)
-    const adConfig = {
-        key: 'ca45e640bcb1f7768f4cb6cf060aecaa',
-        width: 300,
-        height: 250,
-        className: 'min-h-[250px] min-w-[300px]'
-    };
-
-    React.useEffect(() => {
-        if (typeof window !== 'undefined' && containerRef.current) {
-            containerRef.current.innerHTML = '';
-
-            const scriptAt = document.createElement('script');
-            scriptAt.type = 'text/javascript';
-            scriptAt.innerHTML = `
-                atOptions = {
-                    'key' : '${adConfig.key}',
-                    'format' : 'iframe',
-                    'height' : ${adConfig.height},
-                    'width' : ${adConfig.width},
-                    'params' : {}
-                };
-            `;
-
-            const scriptInvoke = document.createElement('script');
-            scriptInvoke.type = 'text/javascript';
-            scriptInvoke.src = `//www.highperformanceformat.com/${adConfig.key}/invoke.js`;
-
-            containerRef.current.appendChild(scriptAt);
-            containerRef.current.appendChild(scriptInvoke);
-        }
-    }, [type, adConfig.key, adConfig.height, adConfig.width]);
-
-
-    return (
-        <div className="my-12 flex flex-col items-center justify-center max-w-full overflow-hidden">
-            <span className="text-[10px] text-slate-600 font-black uppercase tracking-widest mb-4">Anuncio Publicitario</span>
-            <div
-                ref={containerRef}
-                className={`${adConfig.className} bg-slate-900/40 rounded-xl border border-white/5 flex items-center justify-center overflow-hidden scale-90 md:scale-100 transition-transform origin-center`}
-            />
-        </div>
-    );
-};
 
 const getImage = (cat: keyof typeof IMAGES | string, seed: number) => {
     // 1. Try to find specific coin image if 'cat' matches a coin name
@@ -404,7 +330,6 @@ const ArticleView = ({ data }: any) => (
             </Link>
             <p className="mt-6 text-[10px] text-slate-600 font-bold uppercase tracking-widest">Enlace de afiliado oficial • Registro seguro</p>
         </div>
-        <NativeAd />
     </div>
 );
 
@@ -614,7 +539,6 @@ const ReviewView = ({ data }: any) => (
                 </div>
             </article>
         </div>
-        <NativeAd />
     </div>
 );
 
@@ -1163,7 +1087,6 @@ export default function Page({ data }: { data: any }) {
                     </div>
                 )}
                 {(data.type === 'news' || data.type === 'guide') && <ArticleView data={data} />}
-                {data.type !== 'home' && <div className="max-w-4xl mx-auto px-4 pb-20"><AdPlaceholder type="bottom" /></div>}
             </main>
             <Footer />
         </div>
