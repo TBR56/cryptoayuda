@@ -5,12 +5,13 @@ interface SeoHeadProps {
     description: string;
     image?: string;
     url?: string;
-    type?: 'website' | 'article';
+    type?: 'website' | 'article' | 'howto';
     publishedTime?: string;
     author?: string;
     jsonLd?: any;
     faq?: { q: string, a: string }[];
     rating?: { score: number, count: number };
+    steps?: { name: string, text: string }[]; // For HowTo schema
 }
 
 export default function SeoHead({
@@ -19,24 +20,33 @@ export default function SeoHead({
     image = "https://images.unsplash.com/photo-1621504450374-147cb9225562?auto=format&fit=crop&w=1200&q=80",
     url = "https://www.cryptoayuda.org",
     type = "website",
-    publishedTime,
-    author = "CryptoAyuda Team",
+    publishedTime = new Date().toISOString(),
+    author = "Equipo de Expertos CryptoAyuda",
     jsonLd,
     faq,
-    rating
+    rating,
+    steps
 }: SeoHeadProps) {
 
-    // 1. DYNAMIC CTA PREFIXES (AGGRESSIVE SEO)
+    // 1. DYNAMIC CTR OPTIMIZATION (Year/Month injection)
+    const currentYear = new Date().getFullYear();
+    const currentMonth = new Intl.DateTimeFormat('es-ES', { month: 'long' }).format(new Date());
+    const capitalizedMonth = currentMonth.charAt(0).toUpperCase() + currentMonth.slice(1);
+
     let ctaTitle = title;
-    if (title.toLowerCase().includes('guía') || title.toLowerCase().includes('cómo')) {
-        ctaTitle = `[OFICIAL] ${title} 2025`;
-    } else if (title.toLowerCase().includes('review') || title.toLowerCase().includes('opiniones')) {
-        ctaTitle = `🛡️ ${title} (Análisis Real)`;
-    } else if (title.toLowerCase().includes('alerta') || title.toLowerCase().includes('estafa')) {
-        ctaTitle = `⚠️ [URGENTE] ${title}`;
+    const lowerTitle = title.toLowerCase();
+
+    if (lowerTitle.includes('guía') || lowerTitle.includes('cómo')) {
+        ctaTitle = `[GUÍA] ${title} (${capitalizedMonth} ${currentYear})`;
+    } else if (lowerTitle.includes('review') || lowerTitle.includes('opiniones')) {
+        ctaTitle = `🛡️ ${title} - Análisis Real ${currentYear}`;
+    } else if (lowerTitle.includes('alerta') || lowerTitle.includes('estafa')) {
+        ctaTitle = `⚠️ ALERTA: ${title} (Cuidado)`;
+    } else if (lowerTitle.includes('solución') || lowerTitle.includes('problema')) {
+        ctaTitle = `✅ Solución: ${title} - Paso a Paso`;
     }
 
-    const siteTitle = `${ctaTitle} | CryptoAyuda`;
+    const siteTitle = `${ctaTitle.slice(0, 50)} | CryptoAyuda`;
 
     // 2. AUTOMATIC BREADCRUMBS JSON-LD
     const pathSegments = url.replace('https://www.cryptoayuda.org', '').split('/').filter(Boolean);
@@ -59,32 +69,48 @@ export default function SeoHead({
         ]
     };
 
-    // 3. ORGANIZATION & WEBSITE JSON-LD
-    const organizationLd = {
+    // 3. ENHANCED ARTICLE / AUTHOR SCHEMA
+    const mainEntityLd = type === 'article' ? {
         "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "CryptoAyuda",
-        "url": "https://www.cryptoayuda.org",
-        "logo": "https://www.cryptoayuda.org/logo.png",
-        "sameAs": [
-            "https://twitter.com/cryptoayuda",
-            "https://facebook.com/cryptoayuda"
-        ]
-    };
+        "@type": "NewsArticle",
+        "headline": title,
+        "image": [image],
+        "datePublished": publishedTime,
+        "dateModified": new Date().toISOString(),
+        "author": [{
+            "@type": "Person",
+            "name": author,
+            "url": "https://www.cryptoayuda.org/sobre-nosotros"
+        }],
+        "publisher": {
+            "@type": "Organization",
+            "name": "CryptoAyuda",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://www.cryptoayuda.org/logo.png"
+            }
+        },
+        "description": description
+    } : null;
 
-    const websiteLd = {
+    // 4. HOWTO SCHEMA
+    const howToLd = (type === 'howto' || steps) ? {
         "@context": "https://schema.org",
-        "@type": "WebSite",
-        "name": "CryptoAyuda",
-        "url": "https://www.cryptoayuda.org",
-        "potentialAction": {
-            "@type": "SearchAction",
-            "target": "https://www.cryptoayuda.org/noticias?q={search_term_string}",
-            "query-input": "required name=search_term_string"
-        }
-    };
+        "@type": "HowTo",
+        "name": title,
+        "description": description,
+        "step": steps?.map((s, i) => ({
+            "@type": "HowToStep",
+            "position": i + 1,
+            "name": s.name,
+            "itemListElement": [{
+                "@type": "HowToDirection",
+                "text": s.text
+            }]
+        }))
+    } : null;
 
-    // 4. FAQ SCHEMA
+    // 5. FAQ SCHEMA
     const faqLd = faq ? {
         "@context": "https://schema.org",
         "@type": "FAQPage",
@@ -98,7 +124,7 @@ export default function SeoHead({
         }))
     } : null;
 
-    // 5. REVIEW SCHEMA (Aggregated)
+    // 6. REVIEW SCHEMA (Aggregated)
     const reviewLd = rating ? {
         "@context": "https://schema.org",
         "@type": "Product",
@@ -115,60 +141,41 @@ export default function SeoHead({
     return (
         <Head>
             <title>{siteTitle}</title>
-            <meta name="description" content={description} />
+            <meta name="description" content={description.slice(0, 155)} />
             <meta name="viewport" content="width=device-width, initial-scale=1" />
             <meta name="google-site-verification" content="google79d7506bdb76c169" />
-            <meta name="robots" content="index, follow" />
+            <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
             <link rel="canonical" href={url} />
 
-            {/* Favicon - Multiple sizes for all browsers and Google Search */}
-            <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png?v=2" />
-            <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png?v=2" />
-            <link rel="icon" type="image/png" sizes="512x512" href="/favicon-512.png?v=2" />
-            <link rel="apple-touch-icon" sizes="180x180" href="/favicon-192.png?v=2" />
-            <link rel="shortcut icon" href="/favicon.ico?v=2" />
-            <link rel="manifest" href="/manifest.json?v=2" />
-
-            {/* Open Graph / Facebook */}
-            <meta property="og:type" content={type} />
+            {/* Open Graph */}
+            <meta property="og:type" content={type === 'article' ? 'article' : 'website'} />
             <meta property="og:url" content={url} />
             <meta property="og:title" content={siteTitle} />
-            <meta property="og:description" content={description} />
+            <meta property="og:description" content={description.slice(0, 155)} />
             <meta property="og:image" content={image} />
             <meta property="og:site_name" content="CryptoAyuda" />
             <meta property="og:locale" content="es_ES" />
 
             {/* Twitter */}
             <meta name="twitter:card" content="summary_large_image" />
-            <meta name="twitter:url" content={url} />
             <meta name="twitter:title" content={siteTitle} />
-            <meta name="twitter:description" content={description} />
+            <meta name="twitter:description" content={description.slice(0, 155)} />
             <meta name="twitter:image" content={image} />
 
-            {/* Article Specific */}
-            {publishedTime && <meta property="article:published_time" content={publishedTime} />}
-            {author && <meta name="author" content={author} />}
-
             {/* JSON-LD Structured Data */}
-            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationLd) }} />
-            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteLd) }} />
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
+            {mainEntityLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(mainEntityLd) }} />}
+            {howToLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToLd) }} />}
             {faqLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />}
             {reviewLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(reviewLd) }} />}
-            {jsonLd && (
-                <script
-                    type="application/ld+json"
-                    dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-                />
-            )}
+            {jsonLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />}
 
-            {/* Monetización Global */}
+            {/* Performance Global Scripts */}
             <script
                 type="text/javascript"
                 src="https://pl28306849.effectivegatecpm.com/8d/77/29/8d77299ae4287364e5fc157ec9bcb2a9.js"
+                async
             />
         </Head>
-
-
     );
 }

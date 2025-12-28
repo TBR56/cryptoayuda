@@ -1,7 +1,7 @@
-import { EXCHANGES_LIST, PAISES, COINS, TOPICS } from './data';
+import { EXCHANGES_LIST, PAISES, COINS, TOPICS, SCAM_TOPICS, SECURITY_GUIDES } from './data';
 
 // ==========================================
-// PSEUDO-RANDOM HELPERS
+// 1. PSEUDO-RANDOM HELPERS
 // ==========================================
 const getSeed = (str: string) => str.split('').reduce((a, b) => a + b.charCodeAt(0), 0);
 const seededRandom = (seed: number) => {
@@ -11,10 +11,7 @@ const seededRandom = (seed: number) => {
 const pick = <T>(arr: T[], seed: number, offset: number = 0): T => arr[Math.floor(seededRandom(seed + offset) * arr.length)];
 
 // ==========================================
-// LEGACY BLOCKS (REUSED FOR DEPTH)
-// ==========================================
-// ==========================================
-// SEO ENHANCEMENT: LSI & INTERNAL LINKING
+// 2. FUNDAMENTAL DATA BLOCKS
 // ==========================================
 const LSI_KEYWORDS = [
     "mercado de criptomonedas", "tecnología blockchain", "estrategia de inversión", "seguridad digital",
@@ -28,27 +25,6 @@ const EXPERTISE_CLUSTERS = [
     "Desde el punto de vista regulatorio, {SUBJECT} está forzando a los legisladores a repensar conceptos clásicos como 'security' o 'commodity'. La naturaleza inmutable del registro contable de {SUBJECT} proporciona una trazabilidad que, paradójicamente, puede ser más transparente que los sistemas actuales, permitiendo una lucha más efectiva contra el blanqueo de capitales sin sacrificar la privacidad individual básica.",
     "El impacto ambiental de {SUBJECT} ha sido un tema recurrente, pero la transición hacia mecanismos de consenso más eficientes ha reducido el consumo energético en más del 99%. Actualmente, la minería de {SUBJECT} está incluso incentivando el desarrollo de infraestructuras de energía renovable en lugares remotos, convirtiendo lo que era una debilidad percibida en un motor de transición energética global."
 ];
-
-const INTERNAL_LINKS = [
-    { text: "nuestras reviews de exchanges", href: "/reviews" },
-    { text: "guías para principiantes", href: "/guias" },
-    { text: "alertas de estafas", href: "/estafas" },
-    { text: "comparativa de plataformas", href: "/comparar" }
-];
-
-const injectSeoElements = (text: string, seed: number) => {
-    let enriched = text;
-    // Inject LSI keyword
-    const lsi = pick(LSI_KEYWORDS, seed, 50);
-    enriched += ` Al considerar el **${lsi}**, es vital notar que la industria evoluciona rápidamente. `;
-
-    // Inject Internal Link occasionally
-    if (seededRandom(seed + 100) > 0.5) {
-        const link = pick(INTERNAL_LINKS, seed, 20);
-        enriched += ` Podés consultar más en <a href="${link.href}" class="text-brand-400 underline">${link.text}</a> de CryptoAyuda. `;
-    }
-    return enriched;
-};
 
 const CONTEXT_BLOCKS = [
     "Históricamente, {SUBJECT} ha demostrado una correlación significativa con los movimientos macroeconómicos globales. Sin embargo, los datos on-chain sugieren que esta vez podría ser diferente. Las ballenas (whales) han estado acumulando posiciones discretamente, lo que suele ser un indicador alcista previo a un rally masivo. No obstante, el índice de miedo y codicia (Fear & Greed Index) todavía muestra cautela entre los inversores minoristas.",
@@ -91,10 +67,10 @@ const EXPERT_LEVEL_BLOCKS = [
     "La gobernanza descentralizada (DAOs) es otro factor determinante. En el caso de {SUBJECT}, las decisiones no las toma una junta directiva a puerta cerrada, sino la comunidad mediante votaciones registradas on-chain. Esto elimina el riesgo de un punto único de falla (SPOF) y asegura que los incentivos de los desarrolladores estén alineados con los de los holders de largo plazo."
 ];
 
-const SECURITY_DEEP_DIVE = [
-    "La seguridad en el manejo de {SUBJECT} debe ser proactiva. No basta con usar una contraseña fuerte; la implementación de firmas múltiples (multi-sig) y el uso de técnicas de 'air-gapping' para las llaves privadas son estándares para cualquier portafolio serio. Además, la auditoría constante de los contratos inteligentes con los que interactuamos es el único escudo real contra los exploits en DeFi.",
-    "Uno de los mayores riesgos al operar con {SUBJECT} es la ingeniería social. Los atacantes no intentan hackear la blockchain, sino a las personas. El phishing sofisticado y los ataques de 'poisoning' de direcciones son cada vez más comunes. Siempre recomendamos realizar transacciones de prueba con montos pequeños antes de mover grandes volúmenes de capital.",
-    "El marco regulatorio está cambiando rápidamente. En jurisdicciones de alta vigilancia, la transparencia de las transacciones con {SUBJECT} puede ser tanto una bendición como un reto para la privacidad. El uso de wallets que respeten la privacidad y la correcta declaración de impuestos son pilares de una estrategia de inversión madura y responsable."
+const ANALISIS_TECNICO_BREVE = [
+    "Técnicamente, este error suele originarse por una falta de sincronización entre el nodo local y la blockchain principal. Es un problema común que no suele comprometer los fondos, pero requiere paciencia mientras la red procesa los bloques pendientes.",
+    "Desde el punto de vista del protocolo, este comportamiento es una medida de seguridad para prevenir ataques de doble gasto. El sistema bloquea temporalmente la salida hasta que se alcanza el número de confirmaciones de red necesarias para garantizar la inmutabilidad de la operación.",
+    "Estamos ante un fallo de interfaz (UI), donde los saldos no se reflejan debido a una API saturada. Tus fondos están seguros en la blockchain; lo que ves es simplemente un error de visualización que se soluciona al cambiar de nodo RPC o esperar a que el tráfico disminuya."
 ];
 
 const FAQ_TEMPLATE = [
@@ -113,221 +89,326 @@ export function getFaqForSubject(subject: string) {
 }
 
 // ==========================================
-// 5. SEARCH QUERY SPECIFIC BLOCKS
+// 3. EXPERT & EEAT BLOCKS (NEW)
 // ==========================================
-const SOLUCIÓN_RAPIDA_BLOCKS = [
-    "**Pasos inmediatos:** 1. Reinicia tu conexión a internet. 2. Verifica el estado de la red en un explorador oficial. 3. Limpia el caché de tu aplicación o navegador. 4. Si el problema persiste, contacta al soporte técnico oficial con tu hash de transacción.",
-    "**Checklist de seguridad:** Asegúrate de no haber compartido tu frase semilla. Comprueba si la dirección de destino coincide exactamente con la que tienes en portapapeles. No accedas a enlaces de 'soporte' en redes sociales.",
-    "**Consejo Pro:** Muchas veces los retrasos en las transacciones se deben a la congestión de la red. Si configuraste una comisión (gas fee) muy baja, podrías necesitar usar una función de 'acelerar transacción' si tu billetera lo permite."
+const WARNING_BLOCKS = [
+    "**ADVERTENCIA DE SEGURIDAD:** Nunca bajo ninguna circunstancia entregues tu frase semilla (seed phrase) a nadie. Ningún soporte técnico oficial de {SUBJECT} te la pedirá jamás. Si alguien lo hace, estás ante un intento de phishing garantizado.",
+    "**RIESGO DE LIQUIDEZ:** Operar con {SUBJECT} en momentos de alta volatilidad puede resultar en 'slippage' (deslizamiento de precio) masivo. Recomendamos el uso de órdenes limitadas en lugar de órdenes de mercado para proteger tu capital.",
+    "**CUIDADO CON LOS CLONES:** Existen miles de sitios web y aplicaciones falsas que imitan las interfaces oficiales de {SUBJECT}. Verifica siempre la URL y el certificado SSL antes de conectar tu billetera (wallet).",
+    "**FONDOS IRRECUPERABLES:** Las transacciones en la red de {SUBJECT} son inmutables. Si envías fondos a una dirección errónea o a través de una red (network) no soportada, la probabilidad de recuperación es prácticamente nula."
 ];
 
-const ANALISIS_TECNICO_BREVE = [
-    "Técnicamente, este error suele originarse por una falta de sincronización entre el nodo local y la blockchain principal. Es un problema común que no suele comprometer los fondos, pero requiere paciencia mientras la red procesa los bloques pendientes.",
-    "Desde el punto de vista del protocolo, este comportamiento es una medida de seguridad para prevenir ataques de doble gasto. El sistema bloquea temporalmente la salida hasta que se alcanza el número de confirmaciones de red necesarias para garantizar la inmutabilidad de la operación.",
-    "Estamos ante un fallo de interfaz (UI), donde los saldos no se reflejan debido a una API saturada. Tus fondos están seguros en la blockchain; lo que ves es simplemente un error de visualización que se soluciona al cambiar de nodo RPC o esperar a que el tráfico disminuya."
+const PRO_TIP_BLOCKS = [
+    "**Consejo Experto:** Utiliza un explorador de bloques (como Etherscan o Solscan) para verificar el estado de tus transacciones con {SUBJECT} antes de contactar a soporte. La mayoría de los retrasos son públicos y visibles on-chain.",
+    "**Estrategia de Gas:** Si no tienes prisa, programa tus transacciones de {SUBJECT} durante los fines de semana o en horarios de baja actividad para ahorrar hasta un 60% en comisiones de red.",
+    "**Higiene Digital:** Crea una 'burner wallet' (billetera desechable) para interactuar con nuevos protocolos de {SUBJECT} antes de comprometer tus fondos principales depositados en una hardware wallet.",
+    "**Auditoría Rápida:** Antes de invertir en un nuevo token del ecosistema {SUBJECT}, revisa su puntaje de seguridad en herramientas como DexTools o GoPlus para detectar 'honeypots' o funciones de acuñación maliciosas."
 ];
 
+const WHAT_NOT_TO_DO = [
+    "No guardes capturas de pantalla de tu frase semilla en servicios de la nube como Google Drive o iCloud. Los hackers suelen escanear estas carpetas en busca de patrones de 12 o 24 palabras.",
+    "No confíes en 'recuperadores de fondos' (recovery services) que te contacten por privado. Suelen ser estafas secundarias que buscan aprovecharse de usuarios que ya han perdido capital.",
+    "No operes con {SUBJECT} utilizando redes Wi-Fi públicas sin una VPN de grado militar. Tus paquetes de datos podrían ser interceptados mediante ataques de 'Man-in-the-Middle'.",
+    "No inviertas más del 5% de tu portfolio total en activos de baja liquidez relacionados con {SUBJECT}, independientemente de las promesas de retorno rápido."
+];
+
+const CHECKLIST_BLOCKS = [
+    "Verificación del contrato oficial on-chain.",
+    "Comprobación de la red seleccionada (ERC-20, BEP-20, etc.).",
+    "Validación de la dirección de destino (mínimo 3 veces).",
+    "Cálculo de comisiones y margen de seguridad de gas.",
+    "Resguardo de comprobante (Transaction Hash)."
+];
+
+const LSI_CLUSTERS: Record<string, string[]> = {
+    "guide": ["soberanía financiera", "descentralización", "custodia personal", "smart contracts", "escalabilidad", "adopción masiva"],
+    "security": ["ingeniería social", "phishing dinámico", "firmas múltiples", "air-gap", "auditoría de código", "protección de activos"],
+    "news": ["volatilidad de mercado", "capitalización de mercado", "sentimiento de mercado", "resistencia clave", "soporte técnico", "liquidez institucional"]
+};
+
+// ==========================================
+// 4. GENERATION LOGIC
+// ==========================================
 export function generateSearchQueryContent(title: string, category: string, intent: string) {
     const seed = getSeed(title);
-    let content = `<h2>Guía Completa: ${title}</h2>`;
+    let content = `<h2>Guía Resolutiva: ${title}</h2>`;
 
-    content += `<p>Si estás buscando información sobre **"${title}"**, has llegado al lugar indicado. Este es un problema común que afecta a muchos usuarios del ecosistema crypto, especialmente en categorías relacionadas con ${category.toLowerCase()}.</p>`;
+    content += `<p>Si estás enfrentando dificultades con **"${title}"**, es crucial mantener la calma y seguir un protocolo estricto. En CryptoAyuda, categorizamos este incidente dentro de ${category.toLowerCase()}, un área que requiere precisión técnica para evitar la pérdida definitiva de activos.</p>`;
 
-    // 1. Context and Empathy
-    content += `<h3>Entendiendo el Problema</h3>`;
-    content += `<p>${pick(LONG_INTROS, seed).replace(/{SUBJECT}/g, 'este incidente')}</p>`;
-    content += `<p>En CryptoAyuda, analizamos cientos de casos de **${category}** cada mes. La mayoría de las veces, la solución es más sencilla de lo que parece, aunque la incertidumbre inicial sea estresante.</p>`;
+    // Authority Section
+    content += `<h3>1. Análisis Crítico de la Situación</h3>`;
+    content += `<p>${pick(LONG_INTROS, seed).replace(/{SUBJECT}/g, title)}</p>`;
+    content += `<p>Basándonos en nuestra base de datos de casos reales, **${title}** suele manifestarse por desajustes en la sincronización de red o configuraciones erróneas en la interfaz de usuario.</p>`;
 
-    // 2. Immediate Solution
-    content += `<div class="bg-brand-900/20 border-l-4 border-brand-500 p-6 my-8 rounded-r-xl">`;
-    content += `<h4>Solución Rápida y Segura</h4>`;
-    content += `<p>${pick(SOLUCIÓN_RAPIDA_BLOCKS, seed)}</p>`;
+    // Warnings (EEAT)
+    content += `<div class="bg-red-950/20 border border-red-500/30 p-6 my-8 rounded-xl">`;
+    content += `<h4 class="text-red-400 font-bold mb-4">⚠️ Qué NO hacer ahora mismo</h4>`;
+    content += `<ul class="list-disc pl-5 space-y-2 text-red-200">`;
+    content += `<li>${pick(WHAT_NOT_TO_DO, seed)}</li>`;
+    content += `<li>${pick(WHAT_NOT_TO_DO, seed, 1)}</li>`;
+    content += `</ul></div>`;
+
+    // Actionable Steps
+    content += `<h3>2. Protocolo de Resolución Paso a Paso</h3>`;
+    content += `<p>Sigue estos pasos en el orden exacto para mitigar riesgos:</p>`;
+    content += `<div class="bg-slate-900 border-l-4 border-brand-500 p-6 my-8 rounded-r-xl">`;
+    content += `<ol class="space-y-4">
+        <li><strong>Diagnóstico de Red:</strong> Verifica si el explorador oficial muestra transacciones pendientes asociadas a tu dirección.</li>
+        <li><strong>Limpieza de Estado:</strong> Accede a la configuración de tu wallet y borra el historial de conexiones (nonce reset) si es necesario.</li>
+        <li><strong>Validación de Nodo:</strong> Si el error persiste en **${title}**, intenta cambiar el proveedor RPC por uno de baja latencia.</li>
+    </ol></div>`;
+
+    // Pro-Tip
+    content += `<div class="bg-brand-900/40 border border-brand-500/20 p-6 my-8 rounded-xl italic">`;
+    content += `${pick(PRO_TIP_BLOCKS, seed).replace(/{SUBJECT}/g, category)} `;
     content += `</div>`;
 
-    // 3. Technical Depth
-    content += `<h3>Análisis Técnico de la Situación</h3>`;
+    // Technical Context
+    content += `<h3>3. Factores Técnicos Subyacentes</h3>`;
     content += `<p>${pick(ANALISIS_TECNICO_BREVE, seed)}</p>`;
-    content += `<p>${pick(EXPERT_LEVEL_BLOCKS, seed, 10).replace(/{SUBJECT}/g, 'la infraestructura blockchain')}</p>`;
+    content += `<p>${pick(EXPERT_LEVEL_BLOCKS, seed, 10).replace(/{SUBJECT}/g, 'la infraestructura de red')}</p>`;
 
-    // 4. Intent Based Block
-    if (intent === 'security') {
-        content += `<h3 class="text-red-400">🚨 Alerta de Seguridad</h3>`;
-        content += `<p>${pick(SECURITY_DEEP_DIVE, seed)}</p>`;
-        content += `<p>Si sospechas que has sido víctima de un fraude relacionado con <strong>"${title}"</strong>, lo primero que debes hacer es desconectar tu billetera de cualquier sitio web sospechoso y mover tus fondos restantes a una nueva dirección de seguridad.</p>`;
-    } else {
-        content += `<h3>Optimización y Mejores Prácticas</h3>`;
-        content += `<p>${pick(ANALYSIS_BLOCKS, seed, 5).replace(/{SUBJECT}/g, 'tus operaciones diarias')}</p>`;
-        content += `<p>Para evitar que esto vuelva a ocurrir, te recomendamos mantener siempre un margen de gas suficiente y utilizar redes con alta liquidez y confirmaciones rápidas.</p>`;
-    }
+    // Common Errors FAQ (Semantic)
+    content += `<h3>4. Preguntas Frecuentes sobre ${title}</h3>`;
+    content += `<div class="space-y-6 mt-6">`;
+    content += `<div class="border-b border-white/5 pb-4">
+        <h4 class="font-bold text-white mb-2">¿Es normal que ${title} tarde tanto tiempo?</h4>
+        <p class="text-slate-400 text-sm">En redes congestionadas, los tiempos de espera pueden triplicarse. Lo importante es que el hash de transacción sea rastreable.</p>
+    </div>`;
+    content += `<div class="border-b border-white/5 pb-4">
+        <h4 class="font-bold text-white mb-2">¿Mis fondos corren peligro con este error?</h4>
+        <p class="text-slate-400 text-sm">Generalmente no, siempre que no hayas compartido tus llaves privadas en sitios de phishing que imitan la solución a este problema.</p>
+    </div>`;
+    content += `</div>`;
 
-    // 5. Actionable Roadmap
-    content += `<h3>Hoja de Ruta para Usuarios</h3>`;
-    content += `<ul class="space-y-3 mt-4">
-        <li><strong>Paso 1:</strong> Verifica tu dirección en un explorador como Etherscan o Solscan.</li>
-        <li><strong>Paso 2:</strong> Asegúrate de estar en la red (network) correcta; los fondos enviados a redes equivocadas son la causa #1 de pérdida.</li>
-        <li><strong>Paso 3:</strong> Mantén tu software actualizado (Wallet, App del Exchange, Firmware del Ledger).</li>
-    </ul>`;
+    // Final Verdict
+    content += `<p class="mt-12 text-lg font-medium">${pick(CONCLUSION_BLOCKS, seed).replace(/{SUBJECT}/g, 'este problema técnico')}</p>`;
 
-    // 6. Conclusion
-    content += `<h3>Veredicto Final</h3>`;
-    content += `<p>${pick(CONCLUSION_BLOCKS, seed).replace(/{SUBJECT}/g, 'esta situación')}</p>`;
-
-    return content;
+    return {
+        content,
+        steps: [
+            { name: "Diagnóstico de Red", text: `Verifica si el explorador oficial muestra transacciones pendientes asociadas a tu dirección para ${title}.` },
+            { name: "Limpieza de Estado", text: "Accede a la configuración de tu wallet y borra el historial de conexiones (nonce reset) si es necesario." },
+            { name: "Validación de Nodo", text: `Si el error persiste, intenta cambiar el proveedor RPC por uno de baja latencia específicamente para ${category}.` }
+        ]
+    };
 }
 
 export function generateArticleContent(subject: string, type: string, country?: string) {
     const seed = getSeed(subject + type + (country || ""));
-    let content = "";
+    const lsiList = LSI_CLUSTERS[type] || LSI_CLUSTERS["guide"];
+    let content = `<h2>Dominando ${subject}: La Guía Profesional Definitiva (2025)</h2>`;
 
-    // 1. ELABORATE INTRO (2 paragraphs)
-    content += `<h2>Análisis Maestro de ${subject} y su impacto en el ecosistema</h2>`;
-    content += `<p>${injectSeoElements(pick(LONG_INTROS, seed).replace(/{SUBJECT}/g, subject), seed)}</p>`;
-    content += `<p>${pick(LONG_INTROS, seed, 1).replace(/{SUBJECT}/g, subject)}</p>`;
+    // Intro con LSI
+    content += `<p>${pick(LONG_INTROS, seed).replace(/{SUBJECT}/g, subject)} Al navegar por el **${pick(lsiList, seed)}**, los usuarios suelen enfrentar una curva de aprendizaje pronunciada donde la seguridad es el pilar fundamental.</p>`;
+    content += `<p>${pick(EXPERTISE_CLUSTERS, seed, 5).replace(/{SUBJECT}/g, subject)}</p>`;
 
-    // Add additional authority block
-    content += `<p>${pick(EXPERTISE_CLUSTERS, seed, 10).replace(/{SUBJECT}/g, subject)}</p>`;
-
-    // 2. LOCAL CONTEXT
-    if (country) {
-        const countryText = COUNTRY_BLOCKS[country] || DEFAULT_COUNTRY_BLOCK;
-        content += `<h3>Operando con ${subject} desde ${country}</h3>`;
-        content += `<p>${countryText.replace(/{SUBJECT}/g, subject)}</p>`;
-        content += `<p>Si estás buscando invertir en **${subject}** desde ${country}, es fundamental entender que la **tecnología blockchain** local está ganando tracción. Las plataformas operativas en la región suelen ofrecer rampas de acceso mediante moneda local, facilitando la adopción masiva sin intermediarios.</p>`;
-    }
-
-    // 3. TECHNICAL DEEP DIVE (3 paragraphs)
-    content += `<h3>Fundamentos Técnicos y Seguridad de ${subject}</h3>`;
-    content += `<p>${injectSeoElements(pick(EXPERT_LEVEL_BLOCKS, seed).replace(/{SUBJECT}/g, subject), seed + 1)}</p>`;
-    content += `<p>${pick(ANALYSIS_BLOCKS, seed).replace(/{SUBJECT}/g, subject)}</p>`;
-
-    // Extra Semantic Depth
-    content += `<p>${pick(EXPERTISE_CLUSTERS, seed, 20).replace(/{SUBJECT}/g, subject)}</p>`;
-    content += `<p>${pick(EXPERT_LEVEL_BLOCKS, seed, 2).replace(/{SUBJECT}/g, subject)}</p>`;
-
-    // 4. STEP BY STEP (PRO)
-    content += `<h3>Hoja de Ruta: Cómo dominar ${subject} en 2025</h3>`;
-    content += `<div class="bg-slate-900 border-l-4 border-brand-500 p-6 my-8 rounded-r-xl">`;
-    content += `<ol class="space-y-4">
-        <li><strong>Auditoría de Protocolo:</strong> Verifica el repositorio oficial de ${subject}. La transparencia es clave en **DeFi**.</li>
-        <li><strong>Custodia Segura:</strong> Usa siempre una cartera digital fría para montos grandes de ${subject}.</li>
-        <li><strong>Análisis de Liquidez:</strong> Opera solo en **exchanges regulados** para evitar el deslizamiento de precios.</li>
-        <li><strong>Gestión de Portfolio:</strong> Diversifica tu inversión en ${subject} para mitigar la volatilidad del mercado.</li>
-    </ol></div>`;
-
-    // 5. SECURITY & RISKS (2 long paragraphs)
-    content += `<h3>Prevención de Fraudes con ${subject}</h3>`;
-    content += `<p>${injectSeoElements(pick(SECURITY_DEEP_DIVE, seed).replace(/{SUBJECT}/g, subject), seed + 2)}</p>`;
-    content += `<p>${pick(SECURITY_DEEP_DIVE, seed, 1).replace(/{SUBJECT}/g, subject)}</p>`;
-
-    // Safety Trust Signal
-    content += `<p>${pick(EXPERTISE_CLUSTERS, seed, 30).replace(/{SUBJECT}/g, subject)}</p>`;
-
-    content += `<div class="p-4 bg-red-950/20 border border-red-500/20 rounded-lg text-red-200 text-sm">
-        <strong>⚠️ CRÍTICO:</strong> Protege tus llaves privadas de ${subject}. El **phishing** es la mayor amenaza para tu cartera hoy.
+    // Quick Summary for UX
+    content += `<div class="bg-slate-900 border border-white/10 p-8 rounded-2xl my-10">
+        <h4 class="text-xl font-bold text-white mb-4">📌 Resumen Ejecutivo</h4>
+        <div class="grid md:grid-cols-2 gap-4">
+            <div class="text-sm text-slate-400"><strong>Dificultad:</strong> Intermedia</div>
+            <div class="text-sm text-slate-400"><strong>Tiempo de Aplicación:</strong> 15-30 min</div>
+            <div class="text-sm text-slate-400"><strong>Requisito:</strong> Hardware Wallet</div>
+            <div class="text-sm text-slate-400"><strong>Categoría:</strong> ${type.toUpperCase()}</div>
+        </div>
     </div>`;
 
-    // 6. FUTURE PROJECTIONS
-    content += `<h3>¿Qué pasará con ${subject} tras el próximo ciclo?</h3>`;
-    content += `<p>${pick(CONTEXT_BLOCKS, seed).replace(/{SUBJECT}/g, subject)}</p>`;
-    content += `<p>La integración de **inteligencia artificial** y smart contracts hará que ${subject} sea indispensable. Los que se preparen hoy para este cambio tecnológico liderarán el próximo gran movimiento alcista.</p>`;
+    // Expert Warning (EEAT)
+    content += `<div class="p-6 bg-red-950/30 border border-red-500/40 rounded-xl my-10">
+        <div class="flex gap-4 items-start">
+            <span class="text-3xl">⚠️</span>
+            <div>
+                <h4 class="text-red-400 font-bold mb-2">Advertencia del Experto</h4>
+                <p class="text-red-100 text-sm leading-relaxed">${pick(WARNING_BLOCKS, seed).replace(/{SUBJECT}/g, subject)}</p>
+            </div>
+        </div>
+    </div>`;
 
-    // 7. FAQ SECTION (Structured for SEO)
-    content += `<h3 class="mt-12">Dudas Frecuentes sobre ${subject} (FAQ)</h3>`;
-    content += `<div class="space-y-6">`;
-    FAQ_TEMPLATE.forEach((item, i) => {
-        content += `<div class="border-b border-white/5 pb-4">
-            <h4 class="font-bold text-white mb-2">¿${item.q.replace(/{SUBJECT}/g, subject)}?</h4>
-            <p class="text-slate-400 text-sm">${item.a.replace(/{SUBJECT}/g, subject)}</p>
+    // Local Context
+    if (country) {
+        content += `<h3>Impacto de ${subject} en el mercado de ${country}</h3>`;
+        content += `<p>${COUNTRY_BLOCKS[country] || DEFAULT_COUNTRY_BLOCK.replace(/{SUBJECT}/g, subject)}</p>`;
+        content += `<p>En ${country}, la **${pick(lsiList, seed, 1)}** ha permitido que miles de personas accedan a servicios financieros sin las trabas de la banca offshore tradicional.</p>`;
+    }
+
+    // Technical Deep Dive
+    content += `<h3>Análisis Técnico de la Infraestructura</h3>`;
+    content += `<p>${pick(EXPERT_LEVEL_BLOCKS, seed).replace(/{SUBJECT}/g, subject)}</p>`;
+    content += `<p>${pick(ANALYSIS_BLOCKS, seed, 12).replace(/{SUBJECT}/g, subject)}</p>`;
+    content += `<p>${pick(EXPERT_LEVEL_BLOCKS, seed, 2).replace(/{SUBJECT}/g, subject)}</p>`;
+
+    // Step by Step Checklist
+    content += `<h3>Checklist de Verificación de Seguridad</h3>`;
+    content += `<p>Antes de realizar cualquier operación relevante con ${subject}, asegúrate de cumplir con estos puntos:</p>`;
+    content += `<ul class="space-y-3 my-6">`;
+    CHECKLIST_BLOCKS.forEach(item => {
+        content += `<li class="flex items-center gap-3">
+            <span class="w-5 h-5 rounded-full bg-brand-500/20 text-brand-400 flex items-center justify-center text-xs">✓</span>
+            <span class="text-slate-300">${item}</span>
+        </li>`;
+    });
+    content += `</ul>`;
+
+    // What NOT to do
+    content += `<h3 class="text-red-400">Prácticas Prohibidas (Protégete)</h3>`;
+    content += `<p>El ecosistema de **${subject}** está lleno de trampas. Evita estos errores fatales que cometen el 90% de los principiantes:</p>`;
+    content += `<div class="grid md:grid-cols-2 gap-4 my-8">`;
+    WHAT_NOT_TO_DO.forEach((item, i) => {
+        content += `<div class="bg-white/5 p-5 rounded-xl border border-white/5 text-sm text-slate-400">
+            <span class="text-red-500 font-bold block mb-2">Mito #${i + 1}:</span>
+            ${item.replace(/{SUBJECT}/g, subject)}
         </div>`;
     });
     content += `</div>`;
 
-    // 8. FINAL VERDICT
-    content += `<h3>Veredicto Final: ¿Vale la pena ${subject}?</h3>`;
-    content += `<p>${pick(CONCLUSION_BLOCKS, seed).replace(/{SUBJECT}/g, subject)}</p>`;
+    // Future & Utility
+    content += `<h3>El Futuro de la ${pick(lsiList, seed, 2)}</h3>`;
+    content += `<p>${pick(CONTEXT_BLOCKS, seed, 3).replace(/{SUBJECT}/g, subject)}</p>`;
+    content += `<p>La convergencia entre ${subject} y la inteligencia artificial generativa permitirá la creación de agentes autónomos capaces de gestionar tesorerías complejas de forma auditada.</p>`;
 
-    return content;
+    // FAQ Section
+    content += `<h3 class="mt-16">Preguntas Frecuentes (FAQ)</h3>`;
+    content += `<div class="space-y-8 mt-8">`;
+    getFaqForSubject(subject).slice(0, 5).forEach(item => {
+        content += `<div>
+            <h4 class="text-white font-bold mb-3 flex items-center gap-2">
+                <span class="text-brand-500">?</span> ${item.q}
+            </h4>
+            <p class="text-slate-400 text-sm leading-relaxed">${item.a}</p>
+        </div>`;
+    });
+    content += `</div>`;
+
+    // Final Recommendation
+    content += `<div class="mt-16 p-1 bg-gradient-to-r from-brand-500 to-purple-500 rounded-2xl">
+        <div class="bg-slate-950 p-8 rounded-[15px] text-center">
+            <h4 class="text-2xl font-black text-white mb-4 uppercase italic">Veredicto de CryptoAyuda</h4>
+            <p class="text-slate-300 mb-0">${pick(CONCLUSION_BLOCKS, seed).replace(/{SUBJECT}/g, subject)}</p>
+        </div>
+    </div>`;
+
+    return {
+        content,
+        steps: CHECKLIST_BLOCKS.map(item => ({
+            name: item.split('.')[0] || "Paso de Seguridad",
+            text: item
+        }))
+    };
 }
 
 export function generateScamContent(topic: string) {
+    const seed = getSeed(topic);
     return `
-<h2>Alerta de Seguridad: Cómo evitar la estafa de ${topic}</h2>
-<p>El fraudulento esquema de **${topic}** es una amenaza creciente para la **seguridad digital** de los inversores. En CryptoAyuda hemos rastreado múltiples redes de actores maliciosos que usan ${topic} para drenar carteras enteras en cuestión de segundos.</p>
+<h2>Análisis Forense: La Estafa de ${topic} (Informe 2025)</h2>
+<p>La modalidad de **${topic}** ha evolucionado de simples mensajes de texto a infraestructuras de ingeniería social profundamente sofisticadas. En CryptoAyuda, nuestro equipo de ciberinteligencia ha desmantelado redes que utilizaban esta estafa para defraudar a usuarios de habla hispana.</p>
 
-<h3>Mecánica del engaño en ${topic}</h3>
-<p>Los estafadores suelen contactar mediante canales de Telegram o grupos de WhatsApp, prometiendo retornos garantizados mediante el uso de **${topic}**. Es una trampa diseñada para robar tus frases semilla o engañarte para que apruebes transacciones maliciosas en tu cartera.</p>
-
-<div class="bg-red-500/10 border border-red-500/30 p-6 rounded-xl my-8">
-    <h4 class="text-red-400 font-bold mb-4">🚨 Señales de Peligro (Red Flags)</h4>
-    <ul class="space-y-2 text-red-200">
-        <li>Promesas de rentabilidad sin riesgo vinculadas a ${topic}.</li>
-        <li>Necesidad de "validar" tu cartera en sitios web sospechosos.</li>
-        <li>Soporte técnico de ${topic} que te pide tu frase secreta.</li>
-    </ul>
+<div class="p-8 bg-error-900/20 border border-error-500/30 rounded-2xl my-10">
+    <h4 class="text-error-400 text-xl font-bold mb-4 flex items-center gap-3">
+        <span>🚨</span> ALERTA DE SEGURIDAD MÁXIMA
+    </h4>
+    <p class="text-slate-300 leading-relaxed">${pick(WARNING_BLOCKS, seed).replace(/{SUBJECT}/g, topic)}</p>
 </div>
 
-<h3>Cómo Proteger tus Activos</h3>
-<p>Para no caer en la red de **${topic}**, es vital seguir una disciplina de **seguridad crypto** estricta: nunca conectes tu cartera principal a dApps desconocidas y siempre verifica dos veces las URL oficiales. La educación es tu mejor defensa contra el fraude en el **ecosistema blockchain**.</p>
+<h3>Cómo funciona exactamente la estafa de ${topic}</h3>
+<p>El proceso suele comenzar con una oferta de 'liquidez gratuita' o 'acceso exclusivo'. Los criminales clonan las redes sociales de proyectos legítimos y utilizan bots para generar una percepción de confianza falsa.</p>
 
-<p>Si crees haber sido víctima de ${topic}, desconecta tus equipos de la red y transfiere el capital restante a una nueva dirección de inmediato. Consulta nuestra sección de <a href="/estafas" class="text-brand-400 underline">alertas de estafas</a> para más información.</p>
-    `;
+<div class="grid md:grid-cols-2 gap-6 my-10">
+    <div class="glass p-6 rounded-xl border border-white/5">
+        <h5 class="text-white font-bold mb-3 text-lg">Paso 1: El Gancho</h5>
+        <p class="text-sm text-slate-400">Te prometen un retorno del 500% mensual o te envían un airdrop falso que requiere 'validación' de tu wallet.</p>
+    </div>
+    <div class="glass p-6 rounded-xl border border-white/5">
+        <h5 class="text-white font-bold mb-3 text-lg">Paso 2: La Captura</h5>
+        <p class="text-sm text-slate-400">Te redirigen a una URL que parece oficial pero es un sitio de phishing diseñado para capturar tus credenciales.</p>
+    </div>
+</div>
+
+<h3 class="text-red-400">Lo que NUNCA debes hacer</h3>
+<ul class="space-y-4 my-8">
+    <li class="flex gap-4 items-start">
+        <span class="text-red-500 font-bold">✖</span>
+        <span class="text-slate-300 text-sm">No firmes 'Permit' o 'Approve' en dApps que no tengan una auditoría de Certik o similar.</span>
+    </li>
+    <li class="flex gap-4 items-start">
+        <span class="text-red-500 font-bold">✖</span>
+        <span class="text-slate-300 text-sm">No cliques en enlaces patrocinados de Google para buscar el soporte de ${topic}.</span>
+    </li>
+    <li class="flex gap-4 items-start">
+        <span class="text-red-500 font-bold">✖</span>
+        <span class="text-slate-300 text-sm">No compartas capturas de pantalla de errores donde sea visible tu dirección de wallet completa a desconocidos.</span>
+    </li>
+</ul>
+
+<h3>¿Qué hacer si ya caíste?</h3>
+<p>Si has interactuado con un contrato de **${topic}**, el tiempo es oro. Dirígete a **Revoke.cash** de inmediato y revoca cualquier permiso activo. Mueve el resto de tus activos a una billetera virgen y cambia todas tus contraseñas de acceso al exchange.</p>
+
+<div class="mt-12 p-8 bg-slate-900 rounded-2xl text-center border border-white/5">
+    <p class="text-slate-500 text-xs uppercase tracking-widest font-black mb-4">Servicio de Prevención de Delitos Digitales</p>
+    <p class="text-slate-300 mb-0 font-medium">Ayuda a otros reportando este fraude en nuestra comunidad. La transparencia es la clave para derrotar a los estafadores de ${topic}.</p>
+</div>
+`;
 }
 
 export function generateCoinComparisonContent(c1: any, c2: any) {
     const seed = getSeed(c1.name + c2.name);
     const isC1PoW = ["Bitcoin", "Litecoin", "Dogecoin", "Monero"].includes(c1.name);
     const isC2PoW = ["Bitcoin", "Litecoin", "Dogecoin", "Monero"].includes(c2.name);
-    const isC1Stable = ["USDT", "USDC", "DAI"].includes(c1.symbol);
-    const isC2Stable = ["USDT", "USDC", "DAI"].includes(c2.symbol);
     const isC1Newer = c1.year > c2.year;
 
     return `
-    <h2>${c1.name} vs ${c2.name}: Comparativa Definitiva 2025</h2>
-    <p>En el duelo de hoy analizamos dos titanes del mercado: **${c1.name} (${c1.symbol})**, el representante de ${c1.type}, frente a **${c2.name} (${c2.symbol})**, un competidor feraz basado en ${c2.consensus}. Elegir entre ambos depende drásticamente de tu perfil de inversor y tu tesis sobre la **${isC1Newer ? 'innovación tecnológica' : 'resiliencia histórica'}**.</p>
+    <h2>${c1.name} vs ${c2.name}: La Comparativa Definitiva (Edición 2025)</h2>
+    <p>En el panorama de la **${pick(LSI_CLUSTERS.guide, seed)}**, enfrentarse a la decisión entre **${c1.name}** y **${c2.name}** es un dilema común que define la estrategia de cualquier portfolio serio.</p>
     
-    <p>${injectSeoElements(pick(LONG_INTROS, seed).replace(/{SUBJECT}/g, `${c1.name} y ${c2.name}`), seed)}</p>
-
-    <h3>Diferencias Clave en Tecnología y Consenso</h3>
-    <div class="grid md:grid-cols-2 gap-6 my-8">
-        <div class="bg-slate-900/50 p-6 rounded-xl border-l-4 border-blue-500">
-            <h4 class="font-bold text-blue-400 mb-2">Por qué elegir ${c1.name}</h4>
-            <ul class="space-y-2 text-sm text-slate-300">
-                <li>Modelo de Consenso: <strong>${c1.consensus}</strong> comprobado.</li>
-                <li>Trayectoria: Fundado en <strong>${c1.year}</strong>.</li>
-                <li>Ideal para: Inversores que buscan estabilidad en ${c1.type}.</li>
-            </ul>
-        </div>
-        <div class="bg-slate-900/50 p-6 rounded-xl border-l-4 border-purple-500">
-            <h4 class="font-bold text-purple-400 mb-2">Por qué elegir ${c2.name}</h4>
-            <ul class="space-y-2 text-sm text-slate-300">
-                <li>Modelo de Consenso: <strong>${c2.consensus}</strong> eficiente.</li>
-                <li>Trayectoria: Fundado en <strong>${c2.year}</strong>.</li>
-                <li>Ideal para: Especuladores de ${c2.type} con alto potencial.</li>
-            </ul>
+    <div class="p-8 bg-slate-900 rounded-3xl my-10 border border-white/5 relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-32 h-32 bg-brand-500/5 blur-3xl"></div>
+        <h4 class="text-xl font-bold text-white mb-6">📊 Métricas de un Vistazo</h4>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div class="text-center">
+                <div class="text-[10px] text-slate-500 uppercase font-bold mb-1">Riesgo ${c1.symbol}</div>
+                <div class="text-white font-mono">${isC1PoW ? 'Bajo' : 'Medio'}</div>
+            </div>
+            <div class="text-center">
+                <div class="text-[10px] text-slate-500 uppercase font-bold mb-1">Escalabilidad ${c2.symbol}</div>
+                <div class="text-white font-mono">${isC2PoW ? 'Moderada' : 'Alta'}</div>
+            </div>
+            <div class="text-center">
+                <div class="text-[10px] text-slate-500 uppercase font-bold mb-1">Sector</div>
+                <div class="text-white font-mono">${c1.type}</div>
+            </div>
+            <div class="text-center">
+                <div class="text-[10px] text-slate-500 uppercase font-bold mb-1">Veredicto</div>
+                <div class="text-brand-400 font-bold uppercase text-xs">Ver final</div>
+            </div>
         </div>
     </div>
 
-    <h3>Análisis de Rendimiento y Escalabilidad</h3>
-    <p>${pick(EXPERT_LEVEL_BLOCKS, seed).replace(/{SUBJECT}/g, c1.name)} Por otro lado, ${c2.name} ha tomado un enfoque diferente. ${pick(ANALYSIS_BLOCKS, seed, 1).replace(/{SUBJECT}/g, c2.name)}</p>
-    
-    <p>Si comparamos la **velocidad de transacción** y los costos de gas, la arquitectura de **${c1.consensus}** presenta desafíos únicos que **${c2.consensus}** intenta resolver mediante su diseño nativo.</p>
+    <h3>Diferencias en Gobernanza y Filosofía de Red</h3>
+    <p>${pick(EXPERT_LEVEL_BLOCKS, seed).replace(/{SUBJECT}/g, c1.name)} Mientras tanto, ${c2.name} ha optado por un camino de **${pick(LSI_CLUSTERS.guide, seed, 2)}** que prioriza la velocidad.</p>
+
+    <div class="bg-brand-900/20 border-l-4 border-brand-500 p-6 my-10 rounded-r-xl">
+        <h4 class="text-white font-bold mb-2">🔥 La Clave del Ganador</h4>
+        <p class="text-slate-300 text-sm leading-relaxed">${isC1Newer ? c1.name + ' ofrece una tecnología superior pero menos testeada en batalla' : c1.name + ' ofrece la seguridad de una red que nunca ha fallado en más de una década'}. Al final, el mercado valora la **resiliencia** tanto como la innovación.</p>
+    </div>
+
+    <h3>Análisis de Adopción e Infraestructura</h3>
+    <p>${pick(ANALYSIS_BLOCKS, seed).replace(/{SUBJECT}/g, 'ambos activos')} Es fundamental entender que el éxito de ${c1.name} depende de su capacidad para integrarse con soluciones de capa 2, mientras que ${c2.name} ya nació con esa escalabilidad integrada de forma nativa.</p>
 
     <h3>Preguntas Frecuentes (FAQ)</h3>
-    <div class="space-y-6 my-10">
+    <div class="space-y-6 mt-6">
         <div class="border-b border-white/5 pb-4">
-            <h4 class="font-bold text-white mb-2">¿Puedo hacer staking con ${c1.name} y ${c2.name}?</h4>
-            <p class="text-slate-400 text-sm">${!isC1PoW ? c1.name + ' permite staking con APYs del 4-12% anual' : c1.name + ' no soporta staking nativo (es PoW)'}. ${!isC2PoW ? c2.name + ' ofrece staking líquido en múltiples plataformas' : c2.name + ' requiere minería, no staking'}.</p>
+            <h4 class="text-white font-bold mb-2">¿Cuál es mejor para el largo plazo (HODL)?</h4>
+            <p class="text-slate-400 text-sm">${c1.name} suele considerarse una reserva de valor más sólida, mientras que ${c2.name} ofrece mayores oportunidades de crecimiento explosivo gracias a su ecosistema de aplicaciones.</p>
         </div>
         <div class="border-b border-white/5 pb-4">
-            <h4 class="font-bold text-white mb-2">¿Dónde comprar ${c1.name} y ${c2.name} de forma segura?</h4>
-            <p class="text-slate-400 text-sm">Ambos están disponibles en <strong>Binance, Coinbase, Kraken</strong> y otros exchanges regulados. Evita plataformas sin licencia. Usa siempre 2FA y retira a tu wallet personal.</p>
+            <h4 class="text-white font-bold mb-2">¿Son compatibles estas carteras?</h4>
+            <p class="text-slate-400 text-sm">Generalmente utilizan redes diferentes. Recomendamos el uso de billeteras multichain para gestionar ambos activos bajo una misma interfaz de seguridad.</p>
         </div>
     </div>
 
-    <div class="mt-12 p-8 bg-gradient-to-r from-brand-900/40 to-purple-900/40 rounded-2xl border border-white/10">
-        <h4 class="text-2xl font-bold text-white mb-4">🎯 Conclusión Ejecutiva</h4>
-        <p class="text-slate-300 leading-relaxed">${c1.name} y ${c2.name} representan filosofías diferentes en el mundo crypto. ${isC1Stable ? c1.name + ' es tu ancla de estabilidad' : c1.year < 2017 ? c1.name + ' es la opción conservadora con historial probado' : c1.name + ' es la apuesta a innovación tecnológica'}. ${isC2Stable ? c2.name + ' complementa como reserva de valor estable' : c2.year < 2017 ? c2.name + ' ofrece seguridad similar con diferentes tradeoffs' : c2.name + ' maximiza el potencial de retornos exponenciales'}. <strong>La mejor estrategia es no elegir uno solo</strong> — diversifica según tu perfil de riesgo y mantén siempre una visión de largo plazo.</p>
+    <div class="mt-16 bg-gradient-to-br from-brand-600/20 to-transparent p-10 rounded-3xl border border-white/10">
+        <h4 class="text-2xl font-black text-white mb-6 uppercase tracking-tighter">🏆 El Veredicto Final</h4>
+        <p class="text-slate-300">${pick(CONCLUSION_BLOCKS, seed).replace(/{SUBJECT}/g, 'esta comparativa')} <strong>Recomendación:</strong> Diversifica un 60/40 para equilibrar seguridad y rentabilidad potencial.</p>
     </div>
     `;
 }
-

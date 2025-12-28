@@ -102,20 +102,13 @@ const NativeAd = () => {
 const AdPlaceholder = ({ type }: { type: 'top' | 'mid' | 'bottom' }) => {
     const containerRef = React.useRef<HTMLDivElement>(null);
 
-    // Configuración dinámica según el tipo de slot
-    const adConfig = type === 'top'
-        ? {
-            key: 'a3f81690fa23f2516bd6dc449bd7e262',
-            width: 728,
-            height: 90,
-            className: 'min-h-[90px] min-w-[728px]'
-        }
-        : {
-            key: 'ca45e640bcb1f7768f4cb6cf060aecaa',
-            width: 300,
-            height: 250,
-            className: 'min-h-[250px] min-w-[300px]'
-        };
+    // Configuración dinámica según el tipo de slot (mid | bottom)
+    const adConfig = {
+        key: 'ca45e640bcb1f7768f4cb6cf060aecaa',
+        width: 300,
+        height: 250,
+        className: 'min-h-[250px] min-w-[300px]'
+    };
 
     React.useEffect(() => {
         if (typeof window !== 'undefined' && containerRef.current) {
@@ -142,18 +135,6 @@ const AdPlaceholder = ({ type }: { type: 'top' | 'mid' | 'bottom' }) => {
         }
     }, [type, adConfig.key, adConfig.height, adConfig.width]);
 
-    // Ocultar el banner de 728x90 en móviles (demasiado ancho)
-    if (type === 'top') {
-        return (
-            <div className="hidden md:flex my-12 flex-col items-center justify-center">
-                <span className="text-[10px] text-slate-600 font-black uppercase tracking-widest mb-4">Anuncio Publicitario</span>
-                <div
-                    ref={containerRef}
-                    className={`${adConfig.className} bg-slate-900/40 rounded-xl border border-white/5 flex items-center justify-center overflow-hidden`}
-                />
-            </div>
-        );
-    }
 
     return (
         <div className="my-12 flex flex-col items-center justify-center max-w-full overflow-hidden">
@@ -290,12 +271,13 @@ const getBreadcrumbs = (data: any) => {
 
 function generateNewsPage(coin: any, topic: string) {
     const title = `${topic}: ¿Qué está pasando con ${coin.name}? Análisis 2025`;
-    const content = generateArticleContent(`${coin.name} y el ${topic}`, 'news');
+    const { content, steps } = generateArticleContent(`${coin.name} y el ${topic}`, 'news');
     return {
         type: 'news',
         meta: { title, desc: `Últimas noticias sobre ${coin.name}.` },
         hero: { title, subtitle: "Noticias de Última Hora", image: getImage("TRADING", getSeed(coin.name + topic)) },
         content,
+        steps,
         data: { coin: coin.name, topic }
     };
 }
@@ -310,17 +292,18 @@ function generateGuidePage(coin: any, guideTitle: string, country?: string) {
         ? `Aprende todo sobre ${coin.name} específicamente para usuarios residentes en ${country}.`
         : `Aprende todo sobre ${coin.name} con nuestra guía avanzada y actualizada.`;
 
-    const content = generateArticleContent(coin.name, 'guide', country);
+    const { content, steps } = generateArticleContent(coin.name, 'guide', country);
 
     return {
         type: 'guide',
         meta: { title, desc },
         hero: {
             title,
-            subtitle: country ? `Edición Especial: ${country}` : "Centro de Aprendizaje",
-            image: getImage("OFFICE", getSeed(coin.name + guideTitle + (country || "")))
+            subtitle: country ? `Edición Especial ${country}` : "Academia Crypto 2025",
+            image: getImage(coin.name, getSeed(coin.name + guideTitle))
         },
         content,
+        steps,
         data: { coin: coin.name, guide: guideTitle, country }
     };
 }
@@ -377,7 +360,7 @@ const ArticleView = ({ data }: any) => (
 
         {/* Content Body */}
         <article className="prose prose-invert prose-lg md:prose-xl max-w-none prose-headings:font-display prose-headings:font-bold prose-a:text-brand-400 hover:prose-a:text-brand-300 prose-img:rounded-2xl">
-            <div dangerouslySetInnerHTML={{ __html: data.content.replace(/\n/g, '<br/>') }} />
+            <div dangerouslySetInnerHTML={{ __html: data.content }} />
         </article>
 
         {/* Post-Article Engagement */}
@@ -848,7 +831,7 @@ const ScamView = ({ data }: any) => (
         </div>
 
         <article className="prose prose-invert prose-lg mx-auto prose-headings:text-brand-400">
-            <div dangerouslySetInnerHTML={{ __html: data.content.replace(/\n/g, '<br/>') }} />
+            <div dangerouslySetInnerHTML={{ __html: data.content }} />
         </article>
 
         <div className="mt-16 p-8 bg-brand-900/20 rounded-2xl border border-brand-500/30 text-center">
@@ -1134,15 +1117,16 @@ export default function Page({ data }: { data: any }) {
             <SeoHead
                 title={data.meta?.title || 'CryptoAyuda'}
                 description={data.meta?.desc}
-                type={data.type === 'news' || data.type === 'guide' ? 'article' : 'website'}
+                type={data.type === 'guide' ? 'howto' : (data.type === 'news' ? 'article' : 'website')}
                 image={data.hero?.image}
                 faq={data.faq}
                 rating={data.rating}
+                steps={data.steps}
+                url={data.url}
             />
             <PriceTicker />
             <Navbar />
             <main className="relative">
-                <div className="max-w-7xl mx-auto px-4 mt-8"><AdPlaceholder type="top" /></div>
                 {data.type === 'home' && <HomeView data={data} />}
                 {data.type !== 'home' && <div className="max-w-7xl mx-auto px-4 pt-12"><Breadcrumbs paths={getBreadcrumbs(data)} /></div>}
                 {data.type === 'hub_news' && <HubNewsView data={data} />}
@@ -1210,7 +1194,8 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
             type: 'home',
             exchanges: EXCHANGES_LIST.slice(0, 12),
             coins: COINS.slice(0, 6),
-            recentQueries: shuffled.slice(0, 10)
+            recentQueries: shuffled.slice(0, 10),
+            url: 'https://www.cryptoayuda.org'
         };
     }
     else {
@@ -1364,13 +1349,14 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         else if (section === 'busquedas-crypto') {
             const query = SEARCH_QUERIES.find(q => q.slug === p1);
             if (query) {
-                const content = generateSearchQueryContent(query.title, query.category, query.intent);
+                const { content, steps } = generateSearchQueryContent(query.title, query.category, query.intent);
                 pageData = {
                     type: 'search_query',
                     title: query.title,
                     category: query.category,
                     intent: query.intent,
                     content: content,
+                    steps: steps,
                     meta: {
                         title: `${query.title} - Solución y Guía 2025`,
                         desc: `Descubre cómo solucionar problemas relacionados con ${query.title}. Guía paso a paso, análisis técnico y recomendaciones de seguridad.`
@@ -1381,5 +1367,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         }
     }
     if (!pageData) return { notFound: true };
-    return { props: { data: pageData }, revalidate: 3600 };
+    const finalData = pageData as any;
+    if (!finalData.url) finalData.url = `https://www.cryptoayuda.org/${slug.join('/')}`;
+    return { props: { data: finalData }, revalidate: 3600 };
 };
