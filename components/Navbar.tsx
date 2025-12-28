@@ -35,12 +35,18 @@ export default function Navbar() {
                             <Link href="/comparar" className="text-slate-300 hover:text-white hover:bg-white/5 px-3 py-2 rounded-md text-sm font-bold uppercase tracking-wide transition-all">
                                 Comparar
                             </Link>
+                            <Link href="/academia" className="text-white hover:text-brand-400 px-3 py-2 rounded-md text-sm font-black uppercase tracking-tighter transition-all bg-white/5 border border-white/10 flex items-center gap-2">
+                                <span className="text-brand-500">🎓</span> Academia
+                            </Link>
                             <Link href="/diagnostico" className="text-brand-400 hover:text-brand-300 hover:bg-brand-500/10 px-3 py-2 rounded-md text-sm font-black uppercase tracking-wide transition-all border border-brand-500/30">
                                 🔥 Diagnóstico
                             </Link>
                         </div>
                     </div>
-                    <div className="hidden md:block">
+                    <div className="hidden md:flex items-center space-x-4">
+                        <Link href="/acceso/login" className="text-slate-500 hover:text-white text-xs font-bold uppercase tracking-widest transition-colors mr-2">
+                            Login
+                        </Link>
                         <Link href="/problemas">
                             <button className="bg-white text-slate-950 hover:bg-slate-200 px-6 py-2.5 rounded-full text-xs font-black uppercase tracking-widest transition-all hover:scale-105 shadow-[0_0_20px_rgba(255,255,255,0.3)]">
                                 Necesito Ayuda
@@ -61,10 +67,12 @@ export default function Navbar() {
             {mobileMenuOpen && (
                 <div className="md:hidden bg-slate-900 border-b border-white/5">
                     <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                        <Link href="/academia" className="text-brand-400 hover:text-brand-300 block px-3 py-2 rounded-md text-base font-black uppercase italic">🎓 Academia Cripto</Link>
                         <Link href="/noticias" className="text-slate-300 hover:text-white block px-3 py-2 rounded-md text-base font-bold">Noticias</Link>
                         <Link href="/guias" className="text-slate-300 hover:text-white block px-3 py-2 rounded-md text-base font-bold">Guías</Link>
                         <Link href="/reviews" className="text-slate-300 hover:text-white block px-3 py-2 rounded-md text-base font-bold">Reviews</Link>
                         <Link href="/estafas" className="text-red-400 hover:text-red-300 block px-3 py-2 rounded-md text-base font-bold">Alertas de Estafa</Link>
+                        <Link href="/acceso/login" className="text-slate-500 hover:text-white block px-3 py-2 rounded-md text-base font-bold">Acceso Miembros</Link>
                         <Link href="/problemas" className="text-slate-300 hover:text-white block px-3 py-2 rounded-md text-base font-bold">Soporte</Link>
                     </div>
                 </div>
