@@ -618,7 +618,7 @@ const HubReviewsView = ({ data }: any) => (
         <h1 className="text-5xl font-black mb-8 text-center">Reviews de Exchanges</h1>
         <p className="text-xl text-slate-400 text-center mb-12">Análisis profundos de los principales exchanges de criptomonedas.</p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {data.exchanges.map((ex: string) => (
+            {data.exchanges?.map((ex: string) => (
                 <Link href={`/reviews/${slugify(ex)}`} key={ex} className="glass-card p-6 rounded-xl group hover:bg-white/5 transition-colors">
                     <h3 className="font-bold text-xl text-white mb-2">{ex}</h3>
                     <p className="text-slate-500 text-sm">Lee nuestra review completa y opiniones.</p>
@@ -633,8 +633,8 @@ const HubCompareView = ({ data }: any) => (
         <h1 className="text-5xl font-black mb-8 text-center">Comparador de Exchanges</h1>
         <p className="text-xl text-slate-400 text-center mb-12">Encuentra el exchange perfecto para ti comparando características clave.</p>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {data.exchanges.slice(0, 6).map((ex1: string, i: number) => (
-                data.exchanges.slice(i + 1, i + 2).map((ex2: string) => (
+            {data.exchanges?.slice(0, 6).map((ex1: string, i: number) => (
+                data.exchanges?.slice(i + 1, i + 2).map((ex2: string) => (
                     <Link href={`/comparar/${slugify(ex1)}-vs-${slugify(ex2)}`} key={`${ex1}-${ex2}`} className="glass-card p-6 rounded-xl group hover:bg-white/5 transition-colors">
                         <h3 className="font-bold text-xl text-white mb-2">{ex1} vs {ex2}</h3>
                         <p className="text-slate-500 text-sm">¿Cuál es mejor para tus necesidades?</p>
@@ -650,8 +650,8 @@ const HubOpinionsView = ({ data }: any) => (
         <h1 className="text-5xl font-black mb-8 text-center">Opiniones por País</h1>
         <p className="text-xl text-slate-400 text-center mb-12">Descubre cómo funcionan los exchanges en tu país.</p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {data.exchanges.slice(0, 3).flatMap((ex: string) =>
-                data.paises.slice(0, 3).map((pais: string) => (
+            {data.exchanges?.slice(0, 3).flatMap((ex: string) =>
+                data.paises?.slice(0, 3).map((pais: string) => (
                     <Link href={`/opiniones/${slugify(ex)}/${slugify(pais)}`} key={`${ex}-${pais}`} className="glass-card p-6 rounded-xl group hover:bg-white/5 transition-colors">
                         <h3 className="font-bold text-xl text-white mb-2">{ex} en {capitalize(pais)}</h3>
                         <p className="text-slate-500 text-sm">Experiencias de usuarios locales.</p>
@@ -667,7 +667,7 @@ const HubProblemsView = ({ data }: any) => (
         <h1 className="text-5xl font-black mb-8 text-center">Centro de Ayuda y Problemas Comunes</h1>
         <p className="text-xl text-slate-400 text-center mb-12">Encuentra soluciones a los problemas más frecuentes con exchanges.</p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {data.problems.map((problem: any) => (
+            {data.problems?.map((problem: any) => (
                 <Link href={`/problemas/${slugify(problem.title)}`} key={problem.title} className="glass-card p-6 rounded-xl group hover:bg-white/5 transition-colors">
                     <h3 className="font-bold text-xl text-white mb-2">{problem.title}</h3>
                     <p className="text-slate-500 text-sm">{problem.description}</p>
@@ -683,8 +683,8 @@ const HubNewsView = ({ data }: any) => (
         <p className="text-xl text-slate-400 text-center mb-12">Cobertura en tiempo real de los eventos que mueven el mercado.</p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {data.topics.flatMap((topic: string, i: number) =>
-                data.coins.slice(i, i + 3).map((coin: any, k: number) => ( // Increased density
+            {data.topics?.flatMap((topic: string, i: number) =>
+                data.coins?.slice(i, i + 3).map((coin: any, k: number) => ( // Increased density
                     <Link href={`/noticias/${slugify(coin.name)}/${slugify(topic)}`} key={coin.name + topic} className="glass-card p-0 rounded-xl overflow-hidden hover:scale-[1.02] transition-transform group">
                         <div className="h-40 bg-slate-800 relative overflow-hidden">
                             {/* Placeholder gradient for instant feel */}
@@ -715,8 +715,8 @@ const HubGuidesView = ({ data }: any) => (
         <p className="text-xl text-slate-400 text-center mb-12">Domina el mercado con nuestras guías paso a paso.</p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {data.guides.flatMap((guide: string, i: number) =>
-                data.coins.slice(0, 15).flatMap((coin: any, j: number) => {
+            {data.guides?.flatMap((guide: string, i: number) =>
+                data.coins?.slice(0, 15).flatMap((coin: any, j: number) => {
                     // Inject countries to multiply content (every 3rd item is localized)
                     const country = (j % 3 === 0) ? PAISES[j % PAISES.length] : null;
                     const href = country
@@ -746,7 +746,7 @@ const HubScamsView = ({ data }: any) => (
 
         <h2 className="text-2xl font-bold text-white mb-6 pl-2 border-l-4 border-red-500">Alertas de Estafas Activas</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
-            {data.scams.map((scam: string) => (
+            {data.scams?.map((scam: string) => (
                 <Link href={`/estafas/${slugify(scam)}`} key={scam} className="glass-card p-6 rounded-xl hover:bg-red-950/30 transition-colors group border border-red-500/10">
                     <div className="flex items-center gap-4 mb-4">
                         <span className="text-3xl">🚨</span>
@@ -759,7 +759,7 @@ const HubScamsView = ({ data }: any) => (
 
         <h2 className="text-2xl font-bold text-white mb-6 pl-2 border-l-4 border-emerald-500">Guías de Protección</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {data.guides.map((guide: string) => (
+            {data.guides?.map((guide: string) => (
                 <div key={guide} className="glass-card p-4 rounded-lg bg-emerald-900/10 border-emerald-500/20">
                     <div className="text-emerald-400 text-xs font-bold uppercase mb-2">Recomendado</div>
                     <h4 className="font-bold text-white">{guide}</h4>
@@ -1130,194 +1130,199 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-    const slug = params?.slug as string[] || [];
-    let pageData = null;
-    if (slug.length === 0) {
-        // Randomly pick 10 queries for variety on each revalidation
-        const shuffled = [...SEARCH_QUERIES].sort(() => 0.5 - Math.random());
-        pageData = {
-            type: 'home',
-            exchanges: EXCHANGES_LIST.slice(0, 12),
-            coins: COINS.slice(0, 6),
-            recentQueries: shuffled.slice(0, 10),
-            url: 'https://www.cryptoayuda.org',
-            meta: {
-                title: "CryptoAyuda | Inteligencia y Seguridad Cripto 2025",
-                desc: "Protege tu capital con nuestra academia, guías de seguridad y análisis de exchanges. Tu portal de confianza para el mundo crypto."
-            },
-            hero: { image: getImage("HERO", 42) }
-        };
-    }
-    else {
-        const [section, p1, p2] = slug;
-        if (!p1) {
-            if (section === 'reviews') pageData = { type: 'hub_reviews', exchanges: EXCHANGES_LIST };
-            else if (section === 'comparar') pageData = { type: 'hub_compare', exchanges: EXCHANGES_LIST };
-            else if (section === 'noticias') pageData = { type: 'hub_news', coins: COINS, topics: TOPICS };
-            else if (section === 'guias') pageData = { type: 'hub_guides', coins: COINS, guides: GUIAS_TITLES };
+    try {
+        const slug = params?.slug as string[] || [];
+        let pageData = null;
+        if (slug.length === 0) {
+            // Randomly pick 10 queries for variety on each revalidation
+            const shuffled = [...SEARCH_QUERIES].sort(() => 0.5 - Math.random());
+            pageData = {
+                type: 'home',
+                exchanges: EXCHANGES_LIST.slice(0, 12),
+                coins: COINS.slice(0, 6),
+                recentQueries: shuffled.slice(0, 10),
+                url: 'https://www.cryptoayuda.org',
+                meta: {
+                    title: "CryptoAyuda | Inteligencia y Seguridad Cripto 2025",
+                    desc: "Protege tu capital con nuestra academia, guías de seguridad y análisis de exchanges. Tu portal de confianza para el mundo crypto."
+                },
+                hero: { image: getImage("HERO", 42) }
+            };
+        }
+        else {
+            const [section, p1, p2] = slug;
+            if (!p1) {
+                if (section === 'reviews') pageData = { type: 'hub_reviews', exchanges: EXCHANGES_LIST };
+                else if (section === 'comparar') pageData = { type: 'hub_compare', exchanges: EXCHANGES_LIST };
+                else if (section === 'noticias') pageData = { type: 'hub_news', coins: COINS, topics: TOPICS };
+                else if (section === 'guias') pageData = { type: 'hub_guides', coins: COINS, guides: GUIAS_TITLES };
+                else if (section === 'estafas') {
+                    pageData = {
+                        type: 'hub_scams',
+                        scams: SCAM_TOPICS,
+                        guides: SECURITY_GUIDES,
+                        meta: { title: "Alerta de Estafas Crypto 2025", desc: "Reportes actualizados sobre fraudes, phishing y esquemas Ponzi." },
+                        faq: getFaqForSubject("Seguridad Crypto")
+                    };
+                }
+                else if (section === 'seguridad') pageData = { type: 'hub_security', guides: SECURITY_GUIDES };
+                else if (section === 'wallets') pageData = { type: 'hub_wallets', coins: COINS };
+                else if (section === 'comparativas') pageData = { type: 'hub_compare_all', exchanges: EXCHANGES_LIST };
+                else if (section === 'faq') pageData = { type: 'hub_faq' };
+                else if (section === 'contacto') pageData = { type: 'static_contact' };
+                else if (section === 'sobre-nosotros') pageData = { type: 'static_about' };
+                else if (section === 'privacidad') pageData = { type: 'static_legal', title: 'Política de Privacidad', content: LEGAL_TEXTS['privacidad'] };
+                else if (section === 'terminos') pageData = { type: 'static_legal', title: 'Términos y Condiciones', content: LEGAL_TEXTS['terminos'] };
+                else if (section === 'disclaimer') pageData = { type: 'static_legal', title: 'Descargo de Responsabilidad', content: LEGAL_TEXTS['disclaimer'] };
+            }
+            else if (section === 'reviews') {
+                const ex = EXCHANGES_LIST.find(e => slugify(e) === p1);
+                if (ex) {
+                    pageData = generateReviewPage(getExchangeData(ex));
+                    (pageData as any).faq = getFaqForSubject(ex);
+                    (pageData as any).rating = { score: 4.7, count: rangeSeeded(200, 1000, getSeed(ex)) };
+                }
+            }
+            else if (section === 'comparar') {
+                const parts = p1.split('-vs-');
+                if (parts.length === 2) {
+                    const ex1 = EXCHANGES_LIST.find(e => slugify(e) === parts[0]);
+                    const ex2 = EXCHANGES_LIST.find(e => slugify(e) === parts[1]);
+                    if (ex1 && ex2) pageData = generateComparisonPage(getExchangeData(ex1), getExchangeData(ex2));
+                }
+            }
+            else if (section === 'opiniones') {
+                const ex = EXCHANGES_LIST.find(e => slugify(e) === p1);
+                const pais = PAISES.find(p => slugify(p) === p2);
+                if (ex && pais) pageData = generateOpinionPage(getExchangeData(ex), pais);
+            }
+            else if (section === 'problemas') {
+                const ex = EXCHANGES_LIST.find(e => slugify(e) === p1);
+                const prob = PROBLEMAS.find(p => p.slug === p2);
+                if (ex && prob) {
+                    pageData = generateProblemPage(getExchangeData(ex), prob);
+                    (pageData as any).faq = getFaqForSubject(prob.title);
+                    (pageData as any).rating = { score: 4.8, count: rangeSeeded(50, 200, getSeed(ex + prob.slug)) };
+                }
+            }
+            else if (section === 'noticias') {
+                const coin = COINS.find(c => slugify(c.name) === p1);
+                const topic = TOPICS.find(t => slugify(t) === p2);
+                if (coin && topic) {
+                    pageData = generateNewsPage(coin, topic);
+                    (pageData as any).faq = getFaqForSubject(coin.name);
+                }
+            }
+            else if (section === 'guias') {
+                const guideTitle = GUIAS_TITLES.find(g => slugify(g) === p1);
+                const coin = COINS.find(c => slugify(c.name) === p2);
+                const country = slug[3] ? PAISES.find(p => slugify(p) === slug[3]) : undefined;
+                if (guideTitle && coin) {
+                    pageData = generateGuidePage(coin, guideTitle, country);
+                    (pageData as any).faq = getFaqForSubject(guideTitle);
+                    (pageData as any).rating = { score: 4.9, count: rangeSeeded(100, 500, getSeed(guideTitle + coin.name)) };
+                }
+            }
             else if (section === 'estafas') {
-                pageData = {
-                    type: 'hub_scams',
-                    scams: SCAM_TOPICS,
-                    guides: SECURITY_GUIDES,
-                    meta: { title: "Alerta de Estafas Crypto 2025", desc: "Reportes actualizados sobre fraudes, phishing y esquemas Ponzi." },
-                    faq: getFaqForSubject("Seguridad Crypto")
-                };
+                const topic = SCAM_TOPICS.find(t => slugify(t) === p1);
+                if (topic) {
+                    pageData = generateScamPage(topic);
+                    (pageData as any).faq = getFaqForSubject(topic);
+                }
             }
-            else if (section === 'seguridad') pageData = { type: 'hub_security', guides: SECURITY_GUIDES };
-            else if (section === 'wallets') pageData = { type: 'hub_wallets', coins: COINS };
-            else if (section === 'comparativas') pageData = { type: 'hub_compare_all', exchanges: EXCHANGES_LIST };
-            else if (section === 'faq') pageData = { type: 'hub_faq' };
-            else if (section === 'contacto') pageData = { type: 'static_contact' };
-            else if (section === 'sobre-nosotros') pageData = { type: 'static_about' };
-            else if (section === 'privacidad') pageData = { type: 'static_legal', title: 'Política de Privacidad', content: LEGAL_TEXTS['privacidad'] };
-            else if (section === 'terminos') pageData = { type: 'static_legal', title: 'Términos y Condiciones', content: LEGAL_TEXTS['terminos'] };
-            else if (section === 'disclaimer') pageData = { type: 'static_legal', title: 'Descargo de Responsabilidad', content: LEGAL_TEXTS['disclaimer'] };
-        }
-        else if (section === 'reviews') {
-            const ex = EXCHANGES_LIST.find(e => slugify(e) === p1);
-            if (ex) {
-                pageData = generateReviewPage(getExchangeData(ex));
-                (pageData as any).faq = getFaqForSubject(ex);
-                (pageData as any).rating = { score: 4.7, count: rangeSeeded(200, 1000, getSeed(ex)) };
-            }
-        }
-        else if (section === 'comparar') {
-            const parts = p1.split('-vs-');
-            if (parts.length === 2) {
-                const ex1 = EXCHANGES_LIST.find(e => slugify(e) === parts[0]);
-                const ex2 = EXCHANGES_LIST.find(e => slugify(e) === parts[1]);
-                if (ex1 && ex2) pageData = generateComparisonPage(getExchangeData(ex1), getExchangeData(ex2));
-            }
-        }
-        else if (section === 'opiniones') {
-            const ex = EXCHANGES_LIST.find(e => slugify(e) === p1);
-            const pais = PAISES.find(p => slugify(p) === p2);
-            if (ex && pais) pageData = generateOpinionPage(getExchangeData(ex), pais);
-        }
-        else if (section === 'problemas') {
-            const ex = EXCHANGES_LIST.find(e => slugify(e) === p1);
-            const prob = PROBLEMAS.find(p => p.slug === p2);
-            if (ex && prob) {
-                pageData = generateProblemPage(getExchangeData(ex), prob);
-                (pageData as any).faq = getFaqForSubject(prob.title);
-                (pageData as any).rating = { score: 4.8, count: rangeSeeded(50, 200, getSeed(ex + prob.slug)) };
-            }
-        }
-        else if (section === 'noticias') {
-            const coin = COINS.find(c => slugify(c.name) === p1);
-            const topic = TOPICS.find(t => slugify(t) === p2);
-            if (coin && topic) {
-                pageData = generateNewsPage(coin, topic);
-                (pageData as any).faq = getFaqForSubject(coin.name);
-            }
-        }
-        else if (section === 'guias') {
-            const guideTitle = GUIAS_TITLES.find(g => slugify(g) === p1);
-            const coin = COINS.find(c => slugify(c.name) === p2);
-            const country = slug[3] ? PAISES.find(p => slugify(p) === slug[3]) : undefined;
-            if (guideTitle && coin) {
-                pageData = generateGuidePage(coin, guideTitle, country);
-                (pageData as any).faq = getFaqForSubject(guideTitle);
-                (pageData as any).rating = { score: 4.9, count: rangeSeeded(100, 500, getSeed(guideTitle + coin.name)) };
-            }
-        }
-        else if (section === 'estafas') {
-            const topic = SCAM_TOPICS.find(t => slugify(t) === p1);
-            if (topic) {
-                pageData = generateScamPage(topic);
-                (pageData as any).faq = getFaqForSubject(topic);
-            }
-        }
-        else if (section === 'vs') {
-            if (p1) {
-                const [slug1, slug2] = p1.split('-vs-');
-                if (slug1 && slug2) {
-                    const c1 = COINS.find(c => slugify(c.name) === slug1);
-                    const c2 = COINS.find(c => slugify(c.name) === slug2);
-                    if (c1 && c2) {
-                        const content = generateCoinComparisonContent(c1, c2);
-                        pageData = {
-                            type: 'comparison_coin',
-                            coin1: c1,
-                            coin2: c2,
-                            content: content,
-                            meta: {
-                                title: `${c1.name} vs ${c2.name}: ¿Cual es mejor inversión en 2025?`,
-                                desc: `Comparativa definitiva: ${c1.name} vs ${c2.name}. Analizamos velocidad, seguridad, consenso (${c1.consensus} vs ${c2.consensus}) y potencial de precio.`
-                            },
-                            hero: { title: `${c1.name} vs ${c2.name}`, subtitle: "Combate Crypto", image: getImage("ANALYSIS", getSeed(c1.name)) },
-                            faq: getFaqForSubject(`${c1.name} vs ${c2.name}`)
-                        };
+            else if (section === 'vs') {
+                if (p1) {
+                    const [slug1, slug2] = p1.split('-vs-');
+                    if (slug1 && slug2) {
+                        const c1 = COINS.find(c => slugify(c.name) === slug1);
+                        const c2 = COINS.find(c => slugify(c.name) === slug2);
+                        if (c1 && c2) {
+                            const content = generateCoinComparisonContent(c1, c2);
+                            pageData = {
+                                type: 'comparison_coin',
+                                coin1: c1,
+                                coin2: c2,
+                                content: content,
+                                meta: {
+                                    title: `${c1.name} vs ${c2.name}: ¿Cual es mejor inversión en 2025?`,
+                                    desc: `Comparativa definitiva: ${c1.name} vs ${c2.name}. Analizamos velocidad, seguridad, consenso (${c1.consensus} vs ${c2.consensus}) y potencial de precio.`
+                                },
+                                hero: { title: `${c1.name} vs ${c2.name}`, subtitle: "Combate Crypto", image: getImage("ANALYSIS", getSeed(c1.name)) },
+                                faq: getFaqForSubject(`${c1.name} vs ${c2.name}`)
+                            };
+                        }
                     }
                 }
             }
-        }
-        else if (section === 'diagnostico') {
-            const ex = EXCHANGES_LIST.find(e => slugify(e) === p1);
-            const prob = PROBLEMAS.find(p => p.slug === p2);
-            if (ex && prob) {
-                pageData = {
-                    type: 'diagnostico_landing',
-                    meta: {
-                        title: `[OFICIAL] Solución: ${prob.title} en ${ex}`,
-                        desc: `¿Tienes problemas con ${prob.title} en ${ex}? Nuestro diagnóstico avanzado te ayuda a recuperar el acceso a tus fondos de forma segura.`
-                    },
-                    hero: { title: ex, subtitle: prob.title, image: getImage("SECURITY", getSeed(ex + prob.slug)) },
-                    selection: { exchange: ex, country: 'España', problem: prob, kycVerified: true }
-                };
-            } else if (ex) {
-                // Secondary fallback for exchange-only diagnostic
-                pageData = {
-                    type: 'diagnostico_landing',
-                    meta: { title: `Centro de Diagnóstico: ${ex}`, desc: `Soluciona problemas de seguridad y bloqueos en ${ex}.` },
-                    hero: { title: ex, subtitle: "Centro de Soporte", image: getImage("SECURITY", getSeed(ex)) },
-                    selection: { exchange: ex, country: 'España', problem: null, kycVerified: true }
-                };
+            else if (section === 'diagnostico') {
+                const ex = EXCHANGES_LIST.find(e => slugify(e) === p1);
+                const prob = PROBLEMAS.find(p => p.slug === p2);
+                if (ex && prob) {
+                    pageData = {
+                        type: 'diagnostico_landing',
+                        meta: {
+                            title: `[OFICIAL] Solución: ${prob.title} en ${ex}`,
+                            desc: `¿Tienes problemas con ${prob.title} en ${ex}? Nuestro diagnóstico avanzado te ayuda a recuperar el acceso a tus fondos de forma segura.`
+                        },
+                        hero: { title: ex, subtitle: prob.title, image: getImage("SECURITY", getSeed(ex + prob.slug)) },
+                        selection: { exchange: ex, country: 'España', problem: prob, kycVerified: true }
+                    };
+                } else if (ex) {
+                    // Secondary fallback for exchange-only diagnostic
+                    pageData = {
+                        type: 'diagnostico_landing',
+                        meta: { title: `Centro de Diagnóstico: ${ex}`, desc: `Soluciona problemas de seguridad y bloqueos en ${ex}.` },
+                        hero: { title: ex, subtitle: "Centro de Soporte", image: getImage("SECURITY", getSeed(ex)) },
+                        selection: { exchange: ex, country: 'España', problem: null, kycVerified: true }
+                    };
+                }
+            }
+            else if (section === 'auditoria') {
+                const ex = EXCHANGES_LIST.find(e => slugify(e) === p1);
+                if (ex) {
+                    const seed = getSeed(ex + (p2 || ''));
+                    const score = (7.5 + (seed % 25) / 10).toFixed(1);
+                    pageData = {
+                        type: 'audit',
+                        meta: {
+                            title: `¿Es ${ex} Seguro en 2025? Auditoría de Confianza`,
+                            desc: `Analizamos la seguridad y fiabilidad de ${ex}. ¿Es una estafa o una plataforma legítima?`
+                        },
+                        hero: { title: ex, subtitle: "Auditoría de Confianza", image: getImage("VAULT", seed) },
+                        exchange: ex,
+                        factor: p2 || null,
+                        trustScore: score,
+                        risk: parseFloat(score) > 8.5 ? 'Bajo' : 'Medio',
+                        verdict: parseFloat(score) > 8.5 ? 'Plataforma Altamente Confiable' : 'Uso Recomendado con Precaución'
+                    };
+                }
+            }
+            else if (section === 'busquedas-crypto') {
+                const query = SEARCH_QUERIES.find(q => q.slug === p1);
+                if (query) {
+                    const { content, steps } = generateSearchQueryContent(query.title, query.category, query.intent);
+                    pageData = {
+                        type: 'search_query',
+                        title: query.title,
+                        category: query.category,
+                        intent: query.intent,
+                        content: content,
+                        steps: steps,
+                        meta: {
+                            title: `${query.title} - Solución y Guía 2025`,
+                            desc: `Descubre cómo solucionar problemas relacionados con ${query.title}. Guía paso a paso, análisis técnico y recomendaciones de seguridad.`
+                        },
+                        hero: { title: query.title, subtitle: query.category, image: getImage("SECURITY", getSeed(query.title)) }
+                    };
+                }
             }
         }
-        else if (section === 'auditoria') {
-            const ex = EXCHANGES_LIST.find(e => slugify(e) === p1);
-            if (ex) {
-                const seed = getSeed(ex + (p2 || ''));
-                const score = (7.5 + (seed % 25) / 10).toFixed(1);
-                pageData = {
-                    type: 'audit',
-                    meta: {
-                        title: `¿Es ${ex} Seguro en 2025? Auditoría de Confianza`,
-                        desc: `Analizamos la seguridad y fiabilidad de ${ex}. ¿Es una estafa o una plataforma legítima?`
-                    },
-                    hero: { title: ex, subtitle: "Auditoría de Confianza", image: getImage("VAULT", seed) },
-                    exchange: ex,
-                    factor: p2 || null,
-                    trustScore: score,
-                    risk: parseFloat(score) > 8.5 ? 'Bajo' : 'Medio',
-                    verdict: parseFloat(score) > 8.5 ? 'Plataforma Altamente Confiable' : 'Uso Recomendado con Precaución'
-                };
-            }
-        }
-        else if (section === 'busquedas-crypto') {
-            const query = SEARCH_QUERIES.find(q => q.slug === p1);
-            if (query) {
-                const { content, steps } = generateSearchQueryContent(query.title, query.category, query.intent);
-                pageData = {
-                    type: 'search_query',
-                    title: query.title,
-                    category: query.category,
-                    intent: query.intent,
-                    content: content,
-                    steps: steps,
-                    meta: {
-                        title: `${query.title} - Solución y Guía 2025`,
-                        desc: `Descubre cómo solucionar problemas relacionados con ${query.title}. Guía paso a paso, análisis técnico y recomendaciones de seguridad.`
-                    },
-                    hero: { title: query.title, subtitle: query.category, image: getImage("SECURITY", getSeed(query.title)) }
-                };
-            }
-        }
+        if (!pageData) return { notFound: true };
+        const finalData = pageData as any;
+        if (!finalData.url) finalData.url = `https://www.cryptoayuda.org/${slug.join('/')}`;
+        return { props: { data: finalData }, revalidate: 3600 };
+    } catch (error) {
+        console.error("Error generating page:", error);
+        return { notFound: true };
     }
-    if (!pageData) return { notFound: true };
-    const finalData = pageData as any;
-    if (!finalData.url) finalData.url = `https://www.cryptoayuda.org/${slug.join('/')}`;
-    return { props: { data: finalData }, revalidate: 3600 };
 };
