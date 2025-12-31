@@ -28,6 +28,7 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   payments  Payment[]
+  enrollments Enrollment[]
 }
 
 model Payment {
@@ -43,4 +44,55 @@ model Payment {
   rejectionReason String?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+}
+
+model Enrollment {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  courseId  String   // e.g. "plan_pro_v2"
+  progress  Float    @default(0) // 0-100%
+  completed Boolean  @default(false)
+  
+  modules   ModuleProgress[]
+  cert      Certificate?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, courseId])
+}
+
+model ModuleProgress {
+  id           String     @id @default(cuid())
+  enrollmentId String
+  enrollment   Enrollment @relation(fields: [enrollmentId], references: [id])
+  moduleId     String     // e.g. "m1_fund"
+  completed    Boolean    @default(false)
+  lessons      String     // JSON array of completed lesson IDs ["l1", "l3"]
+  
+  examAttempts ExamAttempt[]
+}
+
+model ExamAttempt {
+  id               String         @id @default(cuid())
+  moduleProgressId String
+  moduleProgress   ModuleProgress @relation(fields: [moduleProgressId], references: [id])
+  
+  score            Float
+  passed           Boolean
+  startedAt        DateTime
+  completedAt      DateTime
+  
+  flags            String?   // JSON of suspicious activity logs ["tab_switch", "fast_answer"]
+}
+
+model Certificate {
+  id            String     @id @default(cuid())
+  enrollmentId  String     @unique
+  enrollment    Enrollment @relation(fields: [enrollmentId], references: [id])
+  
+  publicId      String     @unique // "CYKA-PRO-12345"
+  issuedAt      DateTime   @default(now())
+  signature     String     // Cryptographic signature hash
 }

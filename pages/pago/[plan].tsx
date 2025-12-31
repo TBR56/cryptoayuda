@@ -32,15 +32,17 @@ export default function PaymentPage() {
     const [loading, setLoading] = useState(false);
     const [copied, setCopied] = useState(false);
 
-    // Plan Details (Should match academia.tsx)
-    const PLANS: Record<string, { price: number, name: string }> = {
-        'crypto base': { price: 29, name: 'Crypto Base' },
-        'crypto pro': { price: 59, name: 'Crypto Pro' },
-        'crypto mastery': { price: 99, name: 'Crypto Mastery' }
-    };
+    import { COURSES } from '../../lib/courseData';
 
-    const currentPlan = PLANS[typeof plan === 'string' ? plan.toLowerCase().replace(/%20/g, ' ') : ''] || PLANS['crypto base'];
-    const arsAmount = usdtPrice ? Math.ceil(currentPlan.price * usdtPrice) : null;
+    // ...
+
+    // Plan Details (Dynamic from source of truth)
+    const planKey = typeof plan === 'string' ? plan : 'base';
+    const currentPlan = COURSES[planKey] || COURSES['base'];
+
+    // Safety check for price access
+    const usdPrice = currentPlan.price ? currentPlan.price.usd : 0;
+    const arsAmount = usdtPrice ? Math.ceil(usdPrice * usdtPrice) : null;
 
     const handleCopy = (text: string) => {
         navigator.clipboard.writeText(text);
@@ -59,7 +61,7 @@ export default function PaymentPage() {
                 body: JSON.stringify({
                     email,
                     plan: currentPlan.name,
-                    amount: currentPlan.price,
+                    amount: usdPrice,
                     method,
                     txHash: method === 'crypto' ? txHash : undefined,
                     // For MP we would handle proof upload in a real version, here just mimicking
@@ -123,7 +125,7 @@ export default function PaymentPage() {
                                 <div className="space-y-4 mb-6 pb-6 border-b border-white/5">
                                     <div className="flex justify-between items-center">
                                         <span className="font-bold">{currentPlan.name}</span>
-                                        <span className="text-brand-400 font-bold">${currentPlan.price} USD</span>
+                                        <span className="text-brand-400 font-bold">${usdPrice} USD</span>
                                     </div>
                                     <div className="flex justify-between items-center text-sm text-slate-500">
                                         <span>Aprox. en Pesos</span>

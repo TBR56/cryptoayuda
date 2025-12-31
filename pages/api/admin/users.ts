@@ -27,6 +27,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                         amount: true,
                         status: true
                     }
+                },
+                enrollments: {
+                    select: {
+                        courseId: true,
+                        progress: true,
+                        completed: true,
+                        cert: {
+                            select: {
+                                publicId: true,
+                                issuedAt: true
+                            }
+                        }
+                    }
                 }
             }
         });

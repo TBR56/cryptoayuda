@@ -5,7 +5,7 @@ import Footer from '../../components/Footer';
 import {
     Users, CreditCard, BookOpen, Activity,
     CheckCircle, XCircle, Eye, Clock, Search, ShieldAlert,
-    ChevronDown, ChevronRight
+    ChevronDown, ChevronRight, Award
 } from 'lucide-react';
 import { COURSES } from '../../lib/courseData';
 
@@ -35,9 +35,11 @@ export default function AdminDashboard() {
     const ADMIN_PASSWORD = 'admin2025';
 
     // Data State
-    const [activeTab, setActiveTab] = useState<'dashboard' | 'payments' | 'users' | 'courses'>('dashboard');
+    const [activeTab, setActiveTab] = useState<'dashboard' | 'payments' | 'users' | 'courses' | 'audit'>('dashboard');
     const [payments, setPayments] = useState<Payment[]>([]);
     const [users, setUsers] = useState<User[]>([]);
+    const [metrics, setMetrics] = useState<any>(null);
+    const [recentActivity, setRecentActivity] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
     const [selectedProof, setSelectedProof] = useState<string | null>(null);
 
@@ -55,16 +57,20 @@ export default function AdminDashboard() {
     const loadData = async () => {
         setLoading(true);
         try {
-            const [payRes, userRes] = await Promise.all([
+            const [payRes, userRes, metricRes] = await Promise.all([
                 fetch('/api/admin/payments'),
-                fetch('/api/admin/users', { headers: { 'x-admin-auth': ADMIN_PASSWORD } })
+                fetch('/api/admin/users', { headers: { 'x-admin-auth': ADMIN_PASSWORD } }),
+                fetch('/api/admin/metrics', { headers: { 'x-admin-auth': ADMIN_PASSWORD } })
             ]);
 
             const payData = await payRes.json();
             const userData = await userRes.json();
+            const metricData = await metricRes.json();
 
             setPayments(payData.payments || []);
             setUsers(userData.users || []);
+            setMetrics(metricData.metrics);
+            setRecentActivity(metricData.recentActivity || []);
         } catch (error) {
             console.error('Error loading data', error);
         } finally {
@@ -111,7 +117,7 @@ export default function AdminDashboard() {
                             <p className="text-slate-400">{course.description}</p>
                         </div>
                         <span className="bg-brand-500/20 text-brand-400 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest">
-                            {course.totalDuration}
+                            {course.totalHours}
                         </span>
                     </div>
                     <div className="space-y-4">
@@ -192,21 +198,21 @@ export default function AdminDashboard() {
                             <div className="p-3 bg-blue-500/10 rounded-lg text-blue-400"><Users /></div>
                             <span className="text-xs text-slate-500 font-bold uppercase">Alumnos Activos</span>
                         </div>
-                        <div className="text-3xl font-black">{users.length}</div>
+                        <div className="text-3xl font-black">{metrics?.totalUsers || 0}</div>
                     </div>
                     <div className="bg-slate-900/50 p-6 rounded-2xl border border-white/5">
                         <div className="flex justify-between items-start mb-4">
-                            <div className="p-3 bg-yellow-500/10 rounded-lg text-yellow-400"><Activity /></div>
-                            <span className="text-xs text-slate-500 font-bold uppercase">Pendientes</span>
+                            <div className="p-3 bg-yellow-500/10 rounded-lg text-yellow-400"><Award /></div>
+                            <span className="text-xs text-slate-500 font-bold uppercase">Certificados</span>
                         </div>
-                        <div className="text-3xl font-black">{pendingCount}</div>
+                        <div className="text-3xl font-black">{metrics?.certificationsIssued || 0}</div>
                     </div>
                     <div className="bg-slate-900/50 p-6 rounded-2xl border border-white/5">
                         <div className="flex justify-between items-start mb-4">
-                            <div className="p-3 bg-purple-500/10 rounded-lg text-purple-400"><BookOpen /></div>
-                            <span className="text-xs text-slate-500 font-bold uppercase">Cursos Activos</span>
+                            <div className="p-3 bg-purple-500/10 rounded-lg text-purple-400"><ShieldAlert /></div>
+                            <span className="text-xs text-slate-500 font-bold uppercase">Intentos Examen</span>
                         </div>
-                        <div className="text-3xl font-black">3</div>
+                        <div className="text-3xl font-black">{recentActivity.length}</div>
                     </div>
                 </div>
 
@@ -215,8 +221,9 @@ export default function AdminDashboard() {
                     {[
                         { id: 'dashboard', label: 'Resumen', icon: Activity },
                         { id: 'payments', label: 'Pagos', icon: CreditCard },
-                        { id: 'users', label: 'Usuarios', icon: Users },
-                        { id: 'courses', label: 'Estructura Cursos', icon: BookOpen },
+                        { id: 'users', label: 'Alumnos', icon: Users },
+                        { id: 'audit', label: 'Auditoría Anti-Trampas', icon: ShieldAlert },
+                        { id: 'courses', label: 'Estructura', icon: BookOpen },
                     ].map(tab => (
                         <button
                             key={tab.id}
@@ -231,13 +238,57 @@ export default function AdminDashboard() {
 
                 {/* Content */}
                 {activeTab === 'dashboard' && (
-                    <div className="text-center py-20 text-slate-500">
-                        <Activity size={64} className="mx-auto mb-4 opacity-20" />
-                        <p>Selecciona una pestaña para gestionar la plataforma.</p>
+                    <div className="space-y-8">
+                        <div className="flex items-center gap-2 mb-4">
+                            <Activity className="text-brand-400" />
+                            <h3 className="text-xl font-black uppercase italic">Actividad Reciente (Exámenes)</h3>
+                        </div>
+                        <div className="bg-slate-900/50 border border-white/5 rounded-3xl overflow-hidden">
+                            <table className="w-full text-left">
+                                <thead className="bg-white/5 text-slate-400 text-xs uppercase font-bold tracking-widest">
+                                    <tr>
+                                        <th className="p-4">Usuario</th>
+                                        <th className="p-4">Módulo</th>
+                                        <th className="p-4">Nota</th>
+                                        <th className="p-4">Flags</th>
+                                        <th className="p-4">Fecha</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-white/5">
+                                    {recentActivity.map((act: any) => (
+                                        <tr key={act.id} className="hover:bg-white/5">
+                                            <td className="p-4 text-sm font-medium">{act.user}</td>
+                                            <td className="p-4 text-xs text-slate-400">{act.module}</td>
+                                            <td className="p-4">
+                                                <span className={`px-2 py-1 rounded text-xs font-bold ${act.passed ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
+                                                    {act.score.toFixed(1)}%
+                                                </span>
+                                            </td>
+                                            <td className="p-4">
+                                                {act.flags.length > 0 ? (
+                                                    <span className="flex items-center gap-1 text-red-500 text-xs font-bold">
+                                                        <ShieldAlert size={12} /> {act.flags.length} Alertas
+                                                    </span>
+                                                ) : <span className="text-green-500/50 text-xs">Limpio</span>}
+                                            </td>
+                                            <td className="p-4 text-xs text-slate-500">{new Date(act.timestamp).toLocaleDateString()}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 )}
 
                 {activeTab === 'courses' && <CourseViewer />}
+
+                {activeTab === 'audit' && (
+                    <div className="text-center py-20 text-slate-500">
+                        <ShieldAlert size={64} className="mx-auto mb-4 text-brand-500/50" />
+                        <h3 className="text-xl font-bold text-white mb-2">Auditoría Anti-Trampas</h3>
+                        <p className="max-w-md mx-auto">Aquí aparecerán los intentos de examen con comportamiento sospechoso (cambios de pestaña, tiempos imposibles, patrones de respuesta repetidos).</p>
+                    </div>
+                )}
 
                 {activeTab === 'users' && (
                     <div className="bg-slate-900/50 border border-white/5 rounded-3xl overflow-hidden">
@@ -246,7 +297,8 @@ export default function AdminDashboard() {
                                 <tr>
                                     <th className="p-6">Usuario</th>
                                     <th className="p-6">Plan</th>
-                                    <th className="p-6">Fecha Registro</th>
+                                    <th className="p-6">Progreso</th>
+                                    <th className="p-6">Certificado</th>
                                     <th className="p-6">Estado</th>
                                 </tr>
                             </thead>
@@ -255,7 +307,15 @@ export default function AdminDashboard() {
                                     <tr key={user.id} className="hover:bg-white/5 transition-colors">
                                         <td className="p-6 font-medium">{user.email}</td>
                                         <td className="p-6 capitalize text-brand-400 font-bold">{user.plan}</td>
-                                        <td className="p-6 text-slate-400">{new Date(user.createdAt).toLocaleDateString()}</td>
+                                        <td className="p-6 text-sm">
+                                            {(user as any).enrollments?.[0]?.progress || 0}%
+                                            <div className="w-20 h-1 bg-slate-800 rounded-full mt-1 overflow-hidden">
+                                                <div className="h-full bg-brand-500" style={{ width: `${(user as any).enrollments?.[0]?.progress || 0}%` }}></div>
+                                            </div>
+                                        </td>
+                                        <td className="p-6 font-mono text-xs text-slate-400">
+                                            {(user as any).enrollments?.[0]?.cert?.publicId || '-'}
+                                        </td>
                                         <td className="p-6">
                                             <span className="inline-flex items-center gap-1 px-2 py-1 rounded bg-green-500/20 text-green-400 text-xs font-bold uppercase">
                                                 Activo

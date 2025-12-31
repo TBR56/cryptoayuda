@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import PriceTicker from '../components/PriceTicker';
+import { COURSES } from '../lib/courseData';
 import {
     Check,
     ShieldCheck,
@@ -23,47 +24,40 @@ export default function AcademiaLanding() {
 
     const plans = [
         {
-            name: 'Crypto Base',
-            priceUsd: 29,
-            duration: '6-8 horas',
+            key: 'base',
+            ...COURSES['base'],
+            popular: false,
             features: [
-                'Acceso a plataforma privada',
-                'Intro: Bitcoin y Blockchain',
-                'Wallets y Seguridad Básica',
-                'Prevención de Estafas',
-                'Glosario Cripto',
-                'Certificado Digital Básico'
+                'Certificado: ' + COURSES['base'].certification.name,
+                ...COURSES['base'].competencies,
+                'Acceso de por vida',
+                'Simulaciones de Seguridad'
             ],
             color: 'slate',
             cta: 'Empezar Seguro'
         },
         {
-            name: 'Crypto Pro',
-            priceUsd: 59,
-            duration: '15-20 horas',
+            key: 'pro',
+            ...COURSES['pro'],
             popular: true,
             features: [
-                'Todo lo del Plan Base',
-                'Análisis de Proyectos',
-                'Uso de Exchanges y DeFi',
-                'Gestión de Riesgo y Psicología',
-                'Casos Reales de Mercado',
-                'Soporte Prioritario'
+                'Certificado: ' + COURSES['pro'].certification.name,
+                ...COURSES['pro'].competencies,
+                'Simulador de Trading',
+                'Casos de Estudio Reales'
             ],
             color: 'brand',
             cta: 'El Más Elegido'
         },
         {
-            name: 'Crypto Mastery',
-            priceUsd: 99,
-            duration: '+25 horas',
+            key: 'mastery',
+            ...COURSES['mastery'],
+            popular: false,
             features: [
-                'Todo lo del Plan Pro',
-                'DeFi Avanzado y Web3',
-                'NFTs (Utilidad Real)',
-                'Bridges y Layer 2',
-                'Estrategias de Ciclo',
-                'Comunidad Privada'
+                'Certificado: ' + COURSES['mastery'].certification.name,
+                ...COURSES['mastery'].competencies,
+                'Auditoría de Smart Contracts',
+                'Estrategias Institucionales'
             ],
             color: 'purple',
             cta: 'Carrera Profesional'
@@ -179,15 +173,15 @@ export default function AcademiaLanding() {
                                         <h3 className="text-2xl font-black uppercase italic tracking-tighter mb-2">{plan.name}</h3>
                                         <div className="flex flex-col">
                                             <div className="flex items-baseline gap-2">
-                                                <span className="text-5xl font-black tracking-tighter">${plan.priceUsd}</span>
+                                                <span className="text-5xl font-black tracking-tighter">${plan.price.usd}</span>
                                                 <span className="text-slate-500 text-xs font-bold uppercase tracking-widest">USD</span>
                                             </div>
                                             <div className="text-sm font-bold text-brand-400 mt-1">
-                                                ≈ {usdtPrice ? formatCurrency(plan.priceUsd * usdtPrice) : '...'} ARS
+                                                ≈ {usdtPrice ? formatCurrency(plan.price.usd * usdtPrice) : '...'} ARS
                                             </div>
                                         </div>
                                         <p className="text-slate-500 text-xs mt-4 flex items-center gap-2">
-                                            <Clock size={12} /> {plan.duration}
+                                            <Clock size={12} /> {plan.totalHours}
                                         </p>
                                     </div>
 
@@ -205,7 +199,7 @@ export default function AcademiaLanding() {
                                     </ul>
 
                                     <Link
-                                        href={`/pago/${plan.name.toLowerCase()}`}
+                                        href={`/pago/${plan.key}`}
                                         className={`w-full py-5 rounded-2xl font-black uppercase tracking-widest text-sm transition-all shadow-xl block text-center ${plan.popular
                                             ? 'bg-brand-500 hover:bg-brand-400 text-white shadow-brand-500/20'
                                             : 'bg-white/5 hover:bg-white/10 text-white border border-white/10'
