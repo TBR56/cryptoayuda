@@ -1,9 +1,14 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '../../../lib/prisma';
 import { Resend } from 'resend';
 
-const prisma = new PrismaClient();
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Lazy init or safe check
+const getResend = () => {
+    if (process.env.RESEND_API_KEY) {
+        return new Resend(process.env.RESEND_API_KEY);
+    }
+    return null;
+};
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method !== 'POST') {
@@ -13,7 +18,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
         const { email, plan, amount, method, txHash, proofImageBase64, metadata } = req.body;
 
-        // Basic validation
         if (!email || !plan || !amount) {
             return res.status(400).json({ message: 'Missing required fields' });
         }
@@ -25,11 +29,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         if (!user) {
             isNewUser = true;
-            tempPassword = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8); // Stronger temp password
+            tempPassword = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8);
             user = await prisma.user.create({
                 data: {
                     email,
-                    password: tempPassword, // In production, hash this!
+                    password: tempPassword,
                     plan: 'none'
                 }
             });
@@ -43,14 +47,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 amount: Number(amount),
                 status: 'pending',
                 userId: user.id,
-                // Unified proof storage: either txHash, uploaded Image, or manual reference
                 proofImageUrl: txHash || proofImageBase64 || `manual_${Date.now()}`
             }
         });
 
-        // 3. Email Automation (Welcome + Credentials)
-        // Only attempt to send if we have a key (prevents crashing in dev if missing)
-        if (process.env.RESEND_API_KEY) {
+        // 3. Email Automation
+        const resend = getResend();
+        if (resend) {
             const emailHtml = `
                 <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; background: #0f172a; color: white; padding: 40px; border-radius: 20px;">
                     <h1 style="color: #818cf8; margin-bottom: 20px;">¡Inscripción Recibida! 🚀</h1>
@@ -83,7 +86,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
             await resend.emails.send({
                 from: 'CryptoAyuda <onboarding@cryptoayuda.org>',
-                to: email, // In production, this goes to the user
+                to: email,
                 subject: `Recibida: Inscripción Plan ${plan} - CryptoAyuda`,
                 html: emailHtml
             });
