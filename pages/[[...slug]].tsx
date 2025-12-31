@@ -3,7 +3,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { ArrowRight, CheckCircle, GraduationCap, Play } from 'lucide-react';
-import { EXCHANGES_LIST, PAISES, PROBLEMAS, COINS, TOPICS, GUIAS_TITLES, SCAM_TOPICS, SECURITY_GUIDES, BINANCE_AFFILIATE_LINK } from '../lib/data';
+import { EXCHANGES_LIST, PAISES, PROBLEMAS, COINS, TOPICS, GUIAS_TITLES, SCAM_TOPICS, SECURITY_GUIDES, BINANCE_AFFILIATE_LINK, LEGAL_TEXTS } from '../lib/data';
 import { SEARCH_QUERIES } from '../lib/searchQueries';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -846,16 +846,10 @@ const ProblemView = ({ data }: any) => (
 );
 
 const LegalView = ({ data }: any) => (
-    <div className="max-w-4xl mx-auto px-4 py-12 prose prose-invert">
+    <div className="max-w-4xl mx-auto px-4 py-12 prose prose-invert prose-lg">
         <h1>{data.title}</h1>
-        <p className="text-slate-400">Última actualización: Diciembre 2025</p>
-        <p>En CryptoAyuda.org, la integridad de nuestra información y la privacidad de nuestros usuarios son nuestras máximas prioridades. Esta página detalla los términos operativos y las políticas de datos de nuestro portal.</p>
-        <h3>1. Información General</h3>
-        <p>CryptoAyuda es un portal educativo e informativo. No proporcionamos asesoramiento financiero, legal o fiscal. Todo el contenido generado es para fines ilustrativos y debe ser verificado de forma independiente por el usuario. La inversión en criptoactivos conlleva riesgos significativos de pérdida de capital.</p>
-        <h3>2. Transparencia de Afiliados</h3>
-        <p>Este sitio puede contener enlaces de afiliación. Si utilizas nuestros enlaces para registrarte en plataformas como Binance o Bybit, es posible que recibamos una comisión sin coste adicional para ti. Esto nos permite financiar la investigación profunda y mantener este recurso gratuito para la comunidad.</p>
-        <h3>3. Limitación de Responsabilidad</h3>
-        <p>No nos hacemos responsables por pérdidas derivadas de estafas externas, fallos técnicos de terceros o decisiones de inversión basadas en el contenido de este sitio. Recuerda: No tus llaves, no tus criptos.</p>
+        <p className="text-slate-400 text-sm mb-8">Última actualización: Diciembre 2025</p>
+        <div dangerouslySetInnerHTML={{ __html: data.content || '<p>Contenido no disponible.</p>' }} />
     </div>
 );
 
@@ -1176,9 +1170,9 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
             else if (section === 'faq') pageData = { type: 'hub_faq' };
             else if (section === 'contacto') pageData = { type: 'static_contact' };
             else if (section === 'sobre-nosotros') pageData = { type: 'static_about' };
-            else if (section === 'privacidad') pageData = { type: 'static_legal', title: 'Política de Privacidad' };
-            else if (section === 'terminos') pageData = { type: 'static_legal', title: 'Términos y Condiciones' };
-            else if (section === 'disclaimer') pageData = { type: 'static_legal', title: 'Descargo de Responsabilidad' };
+            else if (section === 'privacidad') pageData = { type: 'static_legal', title: 'Política de Privacidad', content: LEGAL_TEXTS['privacidad'] };
+            else if (section === 'terminos') pageData = { type: 'static_legal', title: 'Términos y Condiciones', content: LEGAL_TEXTS['terminos'] };
+            else if (section === 'disclaimer') pageData = { type: 'static_legal', title: 'Descargo de Responsabilidad', content: LEGAL_TEXTS['disclaimer'] };
         }
         else if (section === 'reviews') {
             const ex = EXCHANGES_LIST.find(e => slugify(e) === p1);

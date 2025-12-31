@@ -16,52 +16,65 @@ import {
     Play
 } from 'lucide-react';
 
+import { useCryptoPrice } from '../hooks/useCryptoPrice';
+
 export default function AcademiaLanding() {
+    const { price: usdtPrice, loading: loadingPrice } = useCryptoPrice();
+
     const plans = [
         {
-            name: 'Básico',
-            price: '$6.000',
-            duration: '8 horas',
+            name: 'Crypto Base',
+            priceUsd: 29,
+            duration: '6-8 horas',
             features: [
                 'Acceso a plataforma privada',
-                'Fundamentos cripto desde cero',
-                'Seguridad básica y wallets',
-                'Cómo comprar tu primer activo',
-                'Glosario completo'
+                'Intro: Bitcoin y Blockchain',
+                'Wallets y Seguridad Básica',
+                'Prevención de Estafas',
+                'Glosario Cripto',
+                'Certificado Digital Básico'
             ],
             color: 'slate',
-            cta: 'Empezar ahora'
+            cta: 'Empezar Seguro'
         },
         {
-            name: 'Avanzado',
-            price: '$11.500',
-            duration: '20 horas',
+            name: 'Crypto Pro',
+            priceUsd: 59,
+            duration: '15-20 horas',
             popular: true,
             features: [
-                'Todo lo del Plan Básico',
-                'Análisis de estafas reales',
-                'Uso experto de exchanges',
-                'Gestión de riesgo avanzada',
-                'Psicología del inversor'
+                'Todo lo del Plan Base',
+                'Análisis de Proyectos',
+                'Uso de Exchanges y DeFi',
+                'Gestión de Riesgo y Psicología',
+                'Casos Reales de Mercado',
+                'Soporte Prioritario'
             ],
             color: 'brand',
-            cta: 'El más elegido'
+            cta: 'El Más Elegido'
         },
         {
-            name: 'Profesional',
-            price: '$20.000',
-            duration: '+30 horas',
+            name: 'Crypto Mastery',
+            priceUsd: 99,
+            duration: '+25 horas',
             features: [
-                'Todo lo del Plan Avanzado',
-                'Estrategias de largo plazo',
-                'Recursos descargables',
-                'Actualizaciones futuras',
-                'Soporte prioritario'
+                'Todo lo del Plan Pro',
+                'DeFi Avanzado y Web3',
+                'NFTs (Utilidad Real)',
+                'Bridges y Layer 2',
+                'Estrategias de Ciclo',
+                'Comunidad Privada'
             ],
             color: 'purple',
-            cta: 'Dominio total'
+            cta: 'Carrera Profesional'
         }
     ];
+
+    const formatCurrency = (amount: number) => {
+        return new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 }).format(amount);
+    };
+
+
 
     return (
         <div className="min-h-screen bg-slate-950 text-white selection:bg-brand-500/30">
@@ -148,6 +161,9 @@ export default function AcademiaLanding() {
                             <p className="text-slate-400 max-w-2xl mx-auto">
                                 Selecciona el plan que mejor se adapte a tus objetivos actuales. Todos incluyen acceso instantáneo tras el pago.
                             </p>
+                            <div className="mt-4 inline-block px-4 py-2 bg-slate-800 rounded-full text-xs font-bold text-slate-300 border border-slate-700">
+                                Cotización Dólar Crypto: {usdtPrice ? formatCurrency(usdtPrice) : 'Cargando...'}
+                            </div>
                         </div>
 
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -161,12 +177,17 @@ export default function AcademiaLanding() {
 
                                     <div className="mb-8">
                                         <h3 className="text-2xl font-black uppercase italic tracking-tighter mb-2">{plan.name}</h3>
-                                        <div className="flex items-baseline gap-2">
-                                            <span className="text-5xl font-black tracking-tighter">{plan.price}</span>
-                                            <span className="text-slate-500 text-xs font-bold uppercase tracking-widest">ARS</span>
+                                        <div className="flex flex-col">
+                                            <div className="flex items-baseline gap-2">
+                                                <span className="text-5xl font-black tracking-tighter">${plan.priceUsd}</span>
+                                                <span className="text-slate-500 text-xs font-bold uppercase tracking-widest">USD</span>
+                                            </div>
+                                            <div className="text-sm font-bold text-brand-400 mt-1">
+                                                ≈ {usdtPrice ? formatCurrency(plan.priceUsd * usdtPrice) : '...'} ARS
+                                            </div>
                                         </div>
-                                        <p className="text-slate-500 text-xs mt-2 flex items-center gap-2">
-                                            <Clock size={12} /> {plan.duration} de formación
+                                        <p className="text-slate-500 text-xs mt-4 flex items-center gap-2">
+                                            <Clock size={12} /> {plan.duration}
                                         </p>
                                     </div>
 

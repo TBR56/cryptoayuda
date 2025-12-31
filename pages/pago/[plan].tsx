@@ -1,245 +1,276 @@
-import React, { useState } from 'react';
-import Head from 'next/head';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import Head from 'next/head';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
-import { ArrowLeft, Upload, CheckCircle, Copy, AlertCircle } from 'lucide-react';
-import Link from 'next/link';
+import { useCryptoPrice } from '../../hooks/useCryptoPrice';
+import { Copy, Check, CreditCard, Wallet, AlertTriangle, ArrowRight, ShieldCheck, Upload } from 'lucide-react';
 
-const PLAN_DETAILS = {
-    'básico': { name: 'Plan Básico', price: 6000, duration: '8 horas' },
-    'avanzado': { name: 'Plan Avanzado', price: 11500, duration: '20 horas' },
-    'profesional': { name: 'Plan Profesional', price: 20000, duration: '+30 horas' }
-};
+const WALLET_ADDRESS = "0xf1f6033B91DA339b100118aB4493153b8dd67d8F";
+const MP_ALIAS = "brunsss.mp";
 
-export default function PagoPage() {
+const NETWORKS = [
+    { name: 'Ethereum', color: 'bg-blue-600', coins: ['ETH', 'USDT', 'USDC'] },
+    { name: 'BNB Chain', color: 'bg-yellow-500', coins: ['BNB', 'USDT', 'USDC'] },
+    { name: 'Polygon', color: 'bg-purple-600', coins: ['MATIC', 'USDT', 'USDC'] },
+    { name: 'Arbitrum', color: 'bg-blue-400', coins: ['ETH', 'USDT', 'USDC'] },
+    { name: 'Optimism', color: 'bg-red-500', coins: ['ETH', 'USDT', 'USDC'] },
+    { name: 'Base', color: 'bg-blue-500', coins: ['ETH', 'USDC'] },
+];
+
+export default function PaymentPage() {
     const router = useRouter();
     const { plan } = router.query;
+    const { price: usdtPrice } = useCryptoPrice();
+
+    // State
+    const [method, setMethod] = useState<'crypto' | 'mp'>('crypto');
+    const [selectedNetwork, setSelectedNetwork] = useState(NETWORKS[1]); // Default BNB (Low fees)
     const [email, setEmail] = useState('');
-    const [proofFile, setProofFile] = useState<File | null>(null);
-    const [uploading, setUploading] = useState(false);
-    const [submitted, setSubmitted] = useState(false);
+    const [step, setStep] = useState(1); // 1: Details, 2: Payment, 3: Success
+    const [txHash, setTxHash] = useState('');
+    const [loading, setLoading] = useState(false);
     const [copied, setCopied] = useState(false);
 
-    const planDetails = plan && typeof plan === 'string' ? PLAN_DETAILS[plan as keyof typeof PLAN_DETAILS] : undefined;
-    const MERCADOPAGO_ALIAS = 'brunsss.mp';
-
-    if (!planDetails || !plan) {
-        return null;
-    }
-
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files && e.target.files[0]) {
-            setProofFile(e.target.files[0]);
-        }
+    // Plan Details (Should match academia.tsx)
+    const PLANS: Record<string, { price: number, name: string }> = {
+        'crypto base': { price: 29, name: 'Crypto Base' },
+        'crypto pro': { price: 59, name: 'Crypto Pro' },
+        'crypto mastery': { price: 99, name: 'Crypto Mastery' }
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!email || !proofFile) return;
+    const currentPlan = PLANS[typeof plan === 'string' ? plan.toLowerCase().replace(/%20/g, ' ') : ''] || PLANS['crypto base'];
+    const arsAmount = usdtPrice ? Math.ceil(currentPlan.price * usdtPrice) : null;
 
-        setUploading(true);
-
-        try {
-            // Convert image to base64
-            const reader = new FileReader();
-            reader.readAsDataURL(proofFile);
-
-            reader.onload = async () => {
-                const base64Image = reader.result as string;
-
-                const response = await fetch('/api/payments/submit', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        email,
-                        plan: plan as string,
-                        amount: planDetails.price,
-                        proofImageBase64: base64Image
-                    })
-                });
-
-                if (response.ok) {
-                    setSubmitted(true);
-                } else {
-                    const error = await response.json();
-                    console.error('Error:', error);
-                    alert('Error al enviar el comprobante. Intenta nuevamente.');
-                }
-                setUploading(false);
-            };
-
-            reader.onerror = () => {
-                alert('Error al leer la imagen. Intenta nuevamente.');
-                setUploading(false);
-            };
-        } catch (error) {
-            console.error('Error:', error);
-            alert('Error de conexión. Intenta nuevamente.');
-            setUploading(false);
-        }
-    };
-
-    const copyAlias = () => {
-        navigator.clipboard.writeText(MERCADOPAGO_ALIAS);
+    const handleCopy = (text: string) => {
+        navigator.clipboard.writeText(text);
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
     };
 
-    if (submitted) {
-        return (
-            <div className="min-h-screen bg-slate-950 text-white">
-                <Head>
-                    <title>Pago Enviado - Academia Cripto Segura</title>
-                </Head>
-                <Navbar />
-                <main className="max-w-2xl mx-auto px-4 py-24">
-                    <div className="bg-slate-900/50 border border-green-500/20 rounded-3xl p-12 text-center">
-                        <div className="w-20 h-20 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                            <CheckCircle size={48} className="text-green-500" />
-                        </div>
-                        <h1 className="text-4xl font-black mb-4 uppercase italic tracking-tighter">¡Comprobante Recibido!</h1>
-                        <p className="text-slate-400 mb-8 leading-relaxed">
-                            Hemos recibido tu comprobante de pago. Nuestro equipo lo verificará en las próximas <strong className="text-white">24 horas</strong>.
-                        </p>
-                        <div className="bg-brand-500/10 border border-brand-500/20 rounded-2xl p-6 mb-8">
-                            <p className="text-sm text-slate-300 mb-2">📧 Recibirás un email en:</p>
-                            <p className="text-xl font-bold text-brand-400">{email}</p>
-                        </div>
-                        <p className="text-xs text-slate-500 mb-8">
-                            El email contendrá tus credenciales de acceso a la plataforma. Revisa también tu carpeta de spam.
-                        </p>
-                        <Link href="/" className="inline-block bg-white/5 hover:bg-white/10 px-8 py-4 rounded-2xl font-bold transition-all border border-white/10">
-                            Volver al Inicio
-                        </Link>
-                    </div>
-                </main>
-                <Footer />
-            </div>
-        );
-    }
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setLoading(true);
+
+        try {
+            const res = await fetch('/api/payments/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email,
+                    plan: currentPlan.name,
+                    amount: currentPlan.price,
+                    method,
+                    txHash: method === 'crypto' ? txHash : undefined,
+                    // For MP we would handle proof upload in a real version, here just mimicking
+                    metadata: { network: selectedNetwork.name }
+                })
+            });
+
+            if (res.ok) {
+                setStep(3);
+                // Trigger auto-email from backend
+            } else {
+                alert('Hubo un error al procesar tu solicitud. Intenta nuevamente.');
+            }
+        } catch (err) {
+            console.error(err);
+            alert('Error de conexión.');
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
-        <div className="min-h-screen bg-slate-950 text-white">
+        <div className="min-h-screen bg-slate-950 text-white selection:bg-brand-500/30">
             <Head>
-                <title>Pago - {planDetails.name} | Academia Cripto Segura</title>
+                <title>Finalizar Inscripción | {currentPlan.name}</title>
             </Head>
             <Navbar />
-            <main className="max-w-5xl mx-auto px-4 py-12">
-                <Link href="/academia" className="inline-flex items-center gap-2 text-slate-400 hover:text-white mb-8 transition-colors">
-                    <ArrowLeft size={20} /> Volver a Planes
-                </Link>
 
-                <div className="grid md:grid-cols-2 gap-8">
-                    {/* Left: Plan Summary */}
-                    <div className="bg-gradient-to-br from-purple-900/40 via-slate-900 to-slate-950 border border-purple-500/20 rounded-3xl p-8">
-                        <div className="inline-block px-4 py-1 rounded-full bg-purple-500 text-white text-[10px] font-black uppercase tracking-widest mb-6">
-                            Resumen de Compra
-                        </div>
-                        <h2 className="text-3xl font-black mb-2 uppercase italic tracking-tighter">{planDetails.name}</h2>
-                        <p className="text-slate-400 text-sm mb-8">{planDetails.duration} de formación intensiva</p>
-
-                        <div className="bg-white/5 rounded-2xl p-6 mb-8">
-                            <div className="flex justify-between items-center mb-4">
-                                <span className="text-slate-400">Precio</span>
-                                <span className="text-3xl font-black">${planDetails.price.toLocaleString()}</span>
-                            </div>
-                            <div className="text-xs text-slate-500 border-t border-white/10 pt-4">
-                                Pago único • Acceso de por vida
-                            </div>
-                        </div>
-
-                        <div className="bg-brand-500/10 border border-brand-500/20 rounded-2xl p-6">
-                            <h3 className="font-bold text-sm mb-4 flex items-center gap-2">
-                                <AlertCircle size={16} className="text-brand-400" />
-                                Importante
-                            </h3>
-                            <ul className="text-xs text-slate-400 space-y-2">
-                                <li>✓ Verificación manual en 24hs</li>
-                                <li>✓ Credenciales enviadas por email</li>
-                                <li>✓ Acceso inmediato tras aprobación</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    {/* Right: Payment Instructions */}
-                    <div className="bg-slate-900/50 border border-white/5 rounded-3xl p-8">
-                        <h2 className="text-2xl font-black mb-6 uppercase italic tracking-tighter">Instrucciones de Pago</h2>
-
-                        <div className="space-y-6 mb-8">
-                            <div className="bg-white/5 rounded-2xl p-6">
-                                <div className="text-xs text-slate-500 uppercase tracking-widest font-bold mb-2">Paso 1: Transferir a</div>
-                                <div className="flex items-center justify-between bg-slate-950 rounded-xl p-4 border border-white/10">
-                                    <div>
-                                        <div className="text-xs text-slate-500 mb-1">Alias de Mercado Pago</div>
-                                        <div className="text-xl font-black text-brand-400">{MERCADOPAGO_ALIAS}</div>
-                                    </div>
-                                    <button
-                                        onClick={copyAlias}
-                                        className="bg-white/5 hover:bg-white/10 p-3 rounded-lg transition-colors"
-                                        title="Copiar alias"
-                                    >
-                                        {copied ? <CheckCircle size={20} className="text-green-500" /> : <Copy size={20} />}
-                                    </button>
-                                </div>
-                                <p className="text-xs text-slate-500 mt-3">
-                                    Monto exacto: <strong className="text-white">${planDetails.price.toLocaleString()} ARS</strong>
-                                </p>
-                            </div>
-
-                            <div className="bg-white/5 rounded-2xl p-6">
-                                <div className="text-xs text-slate-500 uppercase tracking-widest font-bold mb-4">Paso 2: Subir Comprobante</div>
-                                <form onSubmit={handleSubmit} className="space-y-4">
-                                    <div>
-                                        <label className="block text-sm font-bold mb-2">Tu Email</label>
-                                        <input
-                                            type="email"
-                                            value={email}
-                                            onChange={(e) => setEmail(e.target.value)}
-                                            placeholder="tu@email.com"
-                                            required
-                                            className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-brand-500 transition-colors"
-                                        />
-                                    </div>
-
-                                    <div>
-                                        <label className="block text-sm font-bold mb-2">Comprobante de Pago</label>
-                                        <div className="relative">
-                                            <input
-                                                type="file"
-                                                accept="image/*"
-                                                onChange={handleFileChange}
-                                                required
-                                                className="hidden"
-                                                id="proof-upload"
-                                            />
-                                            <label
-                                                htmlFor="proof-upload"
-                                                className="flex items-center justify-center gap-3 w-full bg-slate-950 border-2 border-dashed border-white/20 hover:border-brand-500/50 rounded-xl px-4 py-8 cursor-pointer transition-all group"
-                                            >
-                                                <Upload size={24} className="text-slate-600 group-hover:text-brand-400 transition-colors" />
-                                                <span className="text-sm text-slate-400 group-hover:text-white transition-colors">
-                                                    {proofFile ? proofFile.name : 'Seleccionar imagen'}
-                                                </span>
-                                            </label>
-                                        </div>
-                                        <p className="text-xs text-slate-500 mt-2">Captura de pantalla del pago realizado</p>
-                                    </div>
-
-                                    <button
-                                        type="submit"
-                                        disabled={!email || !proofFile || uploading}
-                                        className="w-full bg-brand-500 hover:bg-brand-400 disabled:bg-slate-800 disabled:text-slate-600 text-white font-black py-4 rounded-2xl uppercase tracking-widest transition-all shadow-xl disabled:shadow-none"
-                                    >
-                                        {uploading ? 'Enviando...' : 'Enviar Comprobante'}
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
+            <main className="max-w-4xl mx-auto px-4 py-20">
+                {/* Progress Steps */}
+                <div className="flex justify-center mb-12">
+                    <div className="flex items-center gap-4">
+                        <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${step >= 1 ? 'bg-brand-500 text-white' : 'bg-slate-800 text-slate-500'}`}>1</div>
+                        <div className={`w-20 h-1 bg-slate-800 ${step >= 2 ? 'bg-brand-500' : ''}`} />
+                        <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${step >= 2 ? 'bg-brand-500 text-white' : 'bg-slate-800 text-slate-500'}`}>2</div>
+                        <div className={`w-20 h-1 bg-slate-800 ${step >= 3 ? 'bg-brand-500' : ''}`} />
+                        <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${step >= 3 ? 'bg-brand-500 text-white' : 'bg-slate-800 text-slate-500'}`}>3</div>
                     </div>
                 </div>
+
+                {step === 3 ? (
+                    <div className="text-center animate-fade-in">
+                        <div className="w-24 h-24 bg-green-500/20 text-green-500 rounded-full flex items-center justify-center mx-auto mb-8">
+                            <ShieldCheck size={48} />
+                        </div>
+                        <h1 className="text-4xl font-black mb-4 uppercase italic">¡Inscripción Recibida!</h1>
+                        <p className="text-slate-400 max-w-lg mx-auto mb-8">
+                            Hemos recibido los detalles de tu pago. Nuestro sistema automatizado está verificando la transacción. <br /><br />
+                            Una vez confirmada (aprox. 10-30 min), recibirás tus credenciales de acceso en: <span className="text-white font-bold">{email}</span>.
+                        </p>
+                        <button onClick={() => router.push('/')} className="bg-slate-800 hover:bg-slate-700 px-8 py-3 rounded-xl font-bold uppercase tracking-widest transition-colors">
+                            Volver al Inicio
+                        </button>
+                    </div>
+                ) : (
+                    <div className="grid md:grid-cols-3 gap-8">
+                        {/* Summary Column */}
+                        <div className="md:col-span-1">
+                            <div className="bg-slate-900 border border-white/10 rounded-2xl p-6 sticky top-24">
+                                <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Resumen</h3>
+                                <div className="space-y-4 mb-6 pb-6 border-b border-white/5">
+                                    <div className="flex justify-between items-center">
+                                        <span className="font-bold">{currentPlan.name}</span>
+                                        <span className="text-brand-400 font-bold">${currentPlan.price} USD</span>
+                                    </div>
+                                    <div className="flex justify-between items-center text-sm text-slate-500">
+                                        <span>Aprox. en Pesos</span>
+                                        <span>≈ {arsAmount ? `$${arsAmount.toLocaleString('es-AR')}` : 'Calculando...'} ARS</span>
+                                    </div>
+                                </div>
+                                <div className="space-y-2">
+                                    <div className="flex items-center gap-2 text-xs text-green-400">
+                                        <Check size={12} /> Acceso Inmediato
+                                    </div>
+                                    <div className="flex items-center gap-2 text-xs text-green-400">
+                                        <Check size={12} /> Garantía de Seguridad
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Payment Column */}
+                        <div className="md:col-span-2">
+                            {step === 1 && (
+                                <div className="bg-slate-900/50 border border-white/5 rounded-3xl p-8">
+                                    <h2 className="text-2xl font-black mb-6 uppercase italic">tus datos</h2>
+                                    <form onSubmit={(e) => { e.preventDefault(); setStep(2); }} className="space-y-6">
+                                        <div>
+                                            <label className="block text-sm font-bold mb-2">Email para recibir el acceso</label>
+                                            <input
+                                                type="email"
+                                                required
+                                                value={email}
+                                                onChange={e => setEmail(e.target.value)}
+                                                className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 focus:border-brand-500 outline-none"
+                                                placeholder="tu@email.com"
+                                            />
+                                            <p className="text-xs text-slate-500 mt-2">Asegúrate de tener acceso a este correo.</p>
+                                        </div>
+                                        <button type="submit" className="w-full bg-brand-500 hover:bg-brand-400 py-4 rounded-xl font-bold uppercase tracking-widest transition-all">
+                                            Continuar al Pago
+                                        </button>
+                                    </form>
+                                </div>
+                            )}
+
+                            {step === 2 && (
+                                <div className="space-y-6">
+                                    {/* Method Selector */}
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <button
+                                            onClick={() => setMethod('crypto')}
+                                            className={`p-4 rounded-xl border flex flex-col items-center gap-3 transition-all ${method === 'crypto' ? 'bg-brand-500/10 border-brand-500 text-white' : 'bg-slate-900 border-transparent text-slate-500 hover:bg-slate-800'}`}
+                                        >
+                                            <Wallet size={24} />
+                                            <span className="font-bold text-sm uppercase">Criptomonedas</span>
+                                        </button>
+                                        <button
+                                            onClick={() => setMethod('mp')}
+                                            className={`p-4 rounded-xl border flex flex-col items-center gap-3 transition-all ${method === 'mp' ? 'bg-blue-500/10 border-blue-500 text-white' : 'bg-slate-900 border-transparent text-slate-500 hover:bg-slate-800'}`}
+                                        >
+                                            <CreditCard size={24} />
+                                            <span className="font-bold text-sm uppercase">Mercado Pago</span>
+                                        </button>
+                                    </div>
+
+                                    {/* Crypto View */}
+                                    {method === 'crypto' && (
+                                        <div className="bg-slate-900 border border-white/10 rounded-3xl p-8 animate-fade-in">
+                                            <div className="flex items-center gap-2 mb-6">
+                                                <AlertTriangle size={16} className="text-yellow-500" />
+                                                <p className="text-xs text-yellow-500 font-bold uppercase">Envía solo por redes compatibles (EVM)</p>
+                                            </div>
+
+                                            <div className="mb-8">
+                                                <label className="block text-sm font-bold mb-3">Red Seleccionada</label>
+                                                <div className="flex flex-wrap gap-2">
+                                                    {NETWORKS.map(net => (
+                                                        <button
+                                                            key={net.name}
+                                                            onClick={() => setSelectedNetwork(net)}
+                                                            className={`px-3 py-1 rounded-lg text-xs font-bold uppercase border transition-all ${selectedNetwork.name === net.name
+                                                                ? `${net.color} border-transparent text-white`
+                                                                : 'border-white/10 text-slate-400 hover:border-white/30'
+                                                                }`}
+                                                        >
+                                                            {net.name}
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            </div>
+
+                                            <div className="bg-slate-950 p-6 rounded-xl border border-white/5 mb-8 text-center break-all">
+                                                <p className="text-xs text-slate-500 uppercase font-bold mb-2">Dirección de Depósito (Unificada)</p>
+                                                <div className="font-mono text-lg text-white mb-4">{WALLET_ADDRESS}</div>
+                                                <button onClick={() => handleCopy(WALLET_ADDRESS)} className="mx-auto flex items-center gap-2 text-brand-400 text-sm font-bold hover:text-brand-300">
+                                                    {copied ? <Check size={16} /> : <Copy size={16} />}
+                                                    {copied ? 'Copiado' : 'Copiar Dirección'}
+                                                </button>
+                                            </div>
+
+                                            <form onSubmit={handleSubmit}>
+                                                <label className="block text-sm font-bold mb-2">Hash de Transacción (ID)</label>
+                                                <input
+                                                    type="text"
+                                                    required
+                                                    value={txHash}
+                                                    onChange={e => setTxHash(e.target.value)}
+                                                    className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 focus:border-brand-500 outline-none mb-2"
+                                                    placeholder="0x..."
+                                                />
+                                                <p className="text-xs text-slate-500 mb-6">Pega el ID de tu transacción aquí para verificación automática.</p>
+
+                                                <button disabled={loading} type="submit" className="w-full bg-brand-500 hover:bg-brand-400 py-4 rounded-xl font-bold uppercase tracking-widest transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                                                    {loading ? 'Verificando...' : 'Confirmar Pago'}
+                                                </button>
+                                            </form>
+                                        </div>
+                                    )}
+
+                                    {/* Mercado Pago View */}
+                                    {method === 'mp' && (
+                                        <div className="bg-slate-900 border border-white/10 rounded-3xl p-8 animate-fade-in">
+                                            <div className="text-center mb-8">
+                                                <p className="text-xs text-slate-500 uppercase font-bold mb-2">Alias CVU / Mercado Pago</p>
+                                                <h3 className="text-3xl font-black text-blue-400 mb-4">{MP_ALIAS}</h3>
+                                                <p className="text-sm text-slate-400">Envía exactamente: <span className="text-white font-bold">${arsAmount ? arsAmount.toLocaleString('es-AR') : '...'} ARS</span></p>
+                                                <p className="text-xs text-slate-600 mt-2">Conversion cotizada al momento: 1 USDT = ${usdtPrice} ARS</p>
+                                            </div>
+
+                                            <form onSubmit={handleSubmit}>
+                                                <div className="bg-slate-950 border border-dashed border-white/10 rounded-xl p-8 text-center mb-6 hover:border-blue-500/50 transition-colors cursor-pointer">
+                                                    <Upload size={32} className="mx-auto text-slate-600 mb-3" />
+                                                    <p className="text-sm text-slate-400 font-bold">Subir Comprobante</p>
+                                                    <p className="text-xs text-slate-600 mt-1">(Opcional si envías desde mismo titular)</p>
+                                                </div>
+
+                                                <button disabled={loading} type="submit" className="w-full bg-blue-600 hover:bg-blue-500 py-4 rounded-xl font-bold uppercase tracking-widest transition-all disabled:opacity-50">
+                                                    {loading ? 'Procesando...' : 'Informar Transferencia'}
+                                                </button>
+                                            </form>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                )}
             </main>
             <Footer />
         </div>
     );
 }
+
