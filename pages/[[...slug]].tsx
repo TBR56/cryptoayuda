@@ -1152,28 +1152,29 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         else {
             const [section, p1, p2] = slug;
             if (!p1) {
-                if (section === 'reviews') pageData = { type: 'hub_reviews', exchanges: EXCHANGES_LIST };
-                else if (section === 'comparar') pageData = { type: 'hub_compare', exchanges: EXCHANGES_LIST };
-                else if (section === 'noticias') pageData = { type: 'hub_news', coins: COINS, topics: TOPICS };
-                else if (section === 'guias') pageData = { type: 'hub_guides', coins: COINS, guides: GUIAS_TITLES };
+                if (section === 'reviews') pageData = { type: 'hub_reviews', exchanges: EXCHANGES_LIST || [] };
+                else if (section === 'comparar') pageData = { type: 'hub_compare', exchanges: EXCHANGES_LIST || [] };
+                else if (section === 'noticias') pageData = { type: 'hub_news', coins: COINS || [], topics: TOPICS || [] };
+                else if (section === 'guias') pageData = { type: 'hub_guides', coins: COINS || [], guides: GUIAS_TITLES || [] };
                 else if (section === 'estafas') {
                     pageData = {
                         type: 'hub_scams',
-                        scams: SCAM_TOPICS,
-                        guides: SECURITY_GUIDES,
+                        scams: SCAM_TOPICS || [],
+                        guides: SECURITY_GUIDES || [],
                         meta: { title: "Alerta de Estafas Crypto 2025", desc: "Reportes actualizados sobre fraudes, phishing y esquemas Ponzi." },
                         faq: getFaqForSubject("Seguridad Crypto")
                     };
                 }
-                else if (section === 'seguridad') pageData = { type: 'hub_security', guides: SECURITY_GUIDES };
-                else if (section === 'wallets') pageData = { type: 'hub_wallets', coins: COINS };
-                else if (section === 'comparativas') pageData = { type: 'hub_compare_all', exchanges: EXCHANGES_LIST };
+                else if (section === 'seguridad') pageData = { type: 'hub_security', guides: SECURITY_GUIDES || [] };
+                else if (section === 'wallets') pageData = { type: 'hub_wallets', coins: COINS || [] };
+                else if (section === 'comparativas') pageData = { type: 'hub_compare_all', exchanges: EXCHANGES_LIST || [] };
+                else if (section === 'problemas') pageData = { type: 'hub_problems', problems: PROBLEMAS || [], exchanges: EXCHANGES_LIST || [] };
                 else if (section === 'faq') pageData = { type: 'hub_faq' };
                 else if (section === 'contacto') pageData = { type: 'static_contact' };
                 else if (section === 'sobre-nosotros') pageData = { type: 'static_about' };
-                else if (section === 'privacidad') pageData = { type: 'static_legal', title: 'Política de Privacidad', content: LEGAL_TEXTS['privacidad'] };
-                else if (section === 'terminos') pageData = { type: 'static_legal', title: 'Términos y Condiciones', content: LEGAL_TEXTS['terminos'] };
-                else if (section === 'disclaimer') pageData = { type: 'static_legal', title: 'Descargo de Responsabilidad', content: LEGAL_TEXTS['disclaimer'] };
+                else if (section === 'privacidad') pageData = { type: 'static_legal', title: 'Política de Privacidad', content: LEGAL_TEXTS['privacidad'] || '' };
+                else if (section === 'terminos') pageData = { type: 'static_legal', title: 'Términos y Condiciones', content: LEGAL_TEXTS['terminos'] || '' };
+                else if (section === 'disclaimer') pageData = { type: 'static_legal', title: 'Descargo de Responsabilidad', content: LEGAL_TEXTS['disclaimer'] || '' };
             }
             else if (section === 'reviews') {
                 const ex = EXCHANGES_LIST.find(e => slugify(e) === p1);
@@ -1206,8 +1207,8 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
                 }
             }
             else if (section === 'noticias') {
-                const coin = COINS.find(c => slugify(c.name) === p1);
-                const topic = TOPICS.find(t => slugify(t) === p2);
+                const coin = COINS.find(c => slugify(c.name) === p1) || COINS[0];
+                const topic = TOPICS.find(t => slugify(t) === p2) || TOPICS[0];
                 if (coin && topic) {
                     pageData = generateNewsPage(coin, topic);
                     (pageData as any).faq = getFaqForSubject(coin.name);
@@ -1215,7 +1216,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
             }
             else if (section === 'guias') {
                 const guideTitle = GUIAS_TITLES.find(g => slugify(g) === p1);
-                const coin = COINS.find(c => slugify(c.name) === p2);
+                const coin = COINS.find(c => slugify(c.name) === p2) || COINS[0]; // Default to BTC if coin missing
                 const country = slug[3] ? PAISES.find(p => slugify(p) === slug[3]) : undefined;
                 if (guideTitle && coin) {
                     pageData = generateGuidePage(coin, guideTitle, country);
@@ -1319,10 +1320,11 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         }
         if (!pageData) return { notFound: true };
         const finalData = pageData as any;
-        if (!finalData.url) finalData.url = `https://www.cryptoayuda.org/${slug.join('/')}`;
+        if (!finalData.url) finalData.url = `https://www.cryptoayuda.org/${slug.filter(Boolean).join('/')}`;
         return { props: { data: finalData }, revalidate: 3600 };
     } catch (error) {
         console.error("Error generating page:", error);
+        // Better error handling for production: return notFound instead of crashing with 500
         return { notFound: true };
     }
 };
