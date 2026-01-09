@@ -14,13 +14,17 @@ import {
     Zap,
     Award,
     ArrowRight,
-    Play
+    Play,
+    Star,
+    GraduationCap,
+    Lock,
+    CheckCircle
 } from 'lucide-react';
-
+import { motion } from 'framer-motion';
 import { useCryptoPrice } from '../hooks/useCryptoPrice';
 
 export default function AcademiaLanding() {
-    const { price: usdtPrice, loading: loadingPrice } = useCryptoPrice();
+    const { price: usdtPrice } = useCryptoPrice();
 
     const plans = [
         {
@@ -34,6 +38,7 @@ export default function AcademiaLanding() {
                 'Simulaciones de Seguridad'
             ],
             color: 'slate',
+            accent: 'blue',
             cta: 'Empezar Seguro'
         },
         {
@@ -47,6 +52,7 @@ export default function AcademiaLanding() {
                 'Casos de Estudio Reales'
             ],
             color: 'brand',
+            accent: 'brand',
             cta: 'El Más Elegido'
         },
         {
@@ -60,6 +66,7 @@ export default function AcademiaLanding() {
                 'Estrategias Institucionales'
             ],
             color: 'purple',
+            accent: 'purple',
             cta: 'Carrera Profesional'
         }
     ];
@@ -68,174 +75,211 @@ export default function AcademiaLanding() {
         return new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 }).format(amount);
     };
 
-
-
     return (
         <div className="min-h-screen bg-slate-950 text-white selection:bg-brand-500/30">
             <Head>
-                <title>Academia Cripto Segura | Formación Profesional desde Cero</title>
-                <meta name="description" content="Aprende criptomonedas de forma segura. Curso desde cero para evitar estafas, proteger tus activos y entender el mercado financiero del futuro." />
-                <meta name="keywords" content="curso criptomonedas desde cero, aprender criptomonedas seguro, como evitar estafas cripto, academia crypto argentina" />
+                <title>Academia Cripto Segura | Formación Profesional de Élite</title>
+                <meta name="description" content="Domina las criptomonedas con seguridad institucional. Formación técnica para inversores que buscan excelencia y protección de capital." />
             </Head>
 
             <Navbar />
-            <PriceTicker />
 
-            <main>
+            <main className="relative overflow-hidden">
+                {/* Visual Energy Background */}
+                <div className="absolute top-0 left-1/4 w-[800px] h-[800px] bg-brand-500/5 blur-[150px] rounded-full pointer-events-none" />
+                <div className="absolute top-[500px] right-0 w-[600px] h-[600px] bg-purple-600/5 blur-[150px] rounded-full pointer-events-none" />
+
                 {/* Hero Section */}
-                <section className="relative pt-40 pb-24 px-4 overflow-hidden">
-                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-brand-500/10 blur-[150px] rounded-full -z-10" />
+                <section className="relative pt-48 pb-32 px-4 shadow-2xl">
+                    <div className="max-w-7xl mx-auto text-center relative z-10">
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="inline-flex items-center gap-2 bg-brand-500/10 border border-brand-500/20 px-6 py-2 rounded-full mb-12"
+                        >
+                            <Zap size={14} className="text-brand-500 animate-pulse" />
+                            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-brand-400">Educational Excellence 2025</span>
+                        </motion.div>
 
-                    <div className="max-w-6xl mx-auto text-center">
-                        <div className="inline-flex items-center gap-2 bg-brand-500/10 text-brand-400 px-6 py-2 rounded-full border border-brand-500/20 mb-8 animate-fade-in">
-                            <Zap size={16} /> <span className="text-xs font-black uppercase tracking-widest">Inscripciones Abiertas 2025</span>
-                        </div>
-                        <h1 className="text-5xl md:text-7xl font-black mb-8 tracking-tighter uppercase italic leading-[1.1]">
-                            Domina el Mundo Cripto <br />
-                            <span className="text-brand-500">Sin Correr Riesgos</span>
-                        </h1>
-                        <p className="text-xl text-slate-400 max-w-3xl mx-auto mb-12 leading-relaxed">
-                            La educación es tu mayor protección. Aprende a operar, almacenar y entender las criptomonedas con nuestra formación profesional diseñada para tu seguridad financiera.
-                        </p>
-                        <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-                            <a href="#planes" className="bg-brand-500 hover:bg-brand-400 text-white font-black px-12 py-6 rounded-2xl text-xl transition-all shadow-xl shadow-brand-500/20 transform hover:-translate-y-1 flex items-center gap-3">
-                                VER PLANES DE ESTUDIO <ArrowRight size={24} />
+                        <motion.h1
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.1 }}
+                            className="text-6xl md:text-8xl font-black mb-10 tracking-tighter uppercase italic leading-[0.9]"
+                        >
+                            Domina el Futuro <br />
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-500 to-purple-500">Sin Concesiones</span>
+                        </motion.h1>
+
+                        <motion.p
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.2 }}
+                            className="text-xl text-slate-400 max-w-3xl mx-auto mb-16 leading-relaxed"
+                        >
+                            La educación es el activo más valioso en el mercado cripto. Nuestra academia ofrece formación técnica de alto nivel para que operes con la seguridad de un profesional.
+                        </motion.p>
+
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ delay: 0.3 }}
+                            className="flex flex-col sm:flex-row items-center justify-center gap-6"
+                        >
+                            <a href="#planes" className="bg-white text-slate-950 hover:bg-brand-500 hover:text-white font-black px-12 py-6 rounded-2xl text-lg transition-all shadow-2xl hover:shadow-brand-500/30 transform hover:-translate-y-1 flex items-center gap-3 decoration-none">
+                                EXPLORAR PROGRAMAS <ArrowRight size={20} />
                             </a>
-                            <Link href="/acceso/login" className="text-slate-500 hover:text-white font-bold uppercase tracking-widest text-sm transition-colors border-b-2 border-transparent hover:border-brand-500 pb-1">
-                                Ya soy alumno →
+                            <Link href="/acceso/login" className="px-10 py-5 rounded-2xl border border-white/10 hover:bg-white/5 text-xs font-black uppercase tracking-widest transition-all">
+                                Portal Alumnos
                             </Link>
-                        </div>
+                        </motion.div>
+                    </div>
+                </section>
 
-                        {/* Social Proof */}
-                        <div className="mt-20 flex flex-wrap justify-center gap-12 opacity-40 grayscale hover:grayscale-0 transition-all duration-700">
-                            {[1, 2, 3, 4].map(i => (
-                                <div key={i} className="flex items-center gap-3">
-                                    <ShieldCheck size={24} />
-                                    <span className="font-black uppercase tracking-tighter text-xl">Certificado {i}</span>
+                {/* Elite Stats */}
+                <section className="py-20 border-y border-white/5 bg-white/[0.01]">
+                    <div className="max-w-7xl mx-auto px-4 grid grid-cols-2 lg:grid-cols-4 gap-12">
+                        {[
+                            { label: 'Alumnos Formados', value: '12,400+', icon: <Users size={20} /> },
+                            { label: 'Horas de Contenido', value: '80h+', icon: <Clock size={20} /> },
+                            { label: 'Tasa de Éxito', value: '98.4%', icon: <Award size={20} /> },
+                            { label: 'Soporte 24/7', value: 'Elite', icon: <ShieldCheck size={20} /> }
+                        ].map((stat, i) => (
+                            <div key={i} className="text-center group">
+                                <div className="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center text-slate-500 mx-auto mb-4 group-hover:text-brand-500 transition-colors">
+                                    {stat.icon}
                                 </div>
-                            ))}
+                                <div className="text-3xl font-black text-white italic mb-1 uppercase tracking-tighter">{stat.value}</div>
+                                <div className="text-[10px] font-black uppercase tracking-widest text-slate-600">{stat.label}</div>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+
+                {/* Methodology Grid */}
+                <section className="py-32 px-4">
+                    <div className="max-w-7xl mx-auto">
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+                            <div className="lg:col-span-1">
+                                <h2 className="text-4xl md:text-5xl font-black uppercase italic tracking-tighter mb-8 leading-none">
+                                    Ingeniería <br /><span className="text-brand-500">Pedagógica</span>
+                                </h2>
+                                <p className="text-slate-500 text-lg mb-8">
+                                    No solo enseñamos a comprar cripto. Formamos el criterio necesario para sobrevivir y prosperar en un mercado hostil.
+                                </p>
+                            </div>
+                            <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-8">
+                                {[
+                                    { title: 'Simulacros de Ataque', desc: 'Aprende a defenderte de estafas en entornos controlados.' },
+                                    { title: 'Auditoría On-Chain', desc: 'Analiza la salud de los protocolos antes de invertir.' },
+                                    { title: 'Custodia Privada', desc: 'Configuración experta de hardware wallets y seguridad fría.' },
+                                    { title: 'Psicología de Mercado', desc: 'Domina tus emociones bajo presión extrema.' }
+                                ].map((step, i) => (
+                                    <div key={i} className="p-8 bg-slate-900/40 border border-white/5 rounded-3xl hover:border-brand-500/20 transition-all">
+                                        <div className="text-brand-500 font-black mb-4">0{i + 1} //</div>
+                                        <h3 className="text-xl font-black text-white uppercase italic mb-2 tracking-tight">{step.title}</h3>
+                                        <p className="text-slate-500 text-sm">{step.desc}</p>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </section>
 
-                {/* Features Grid */}
-                <section className="py-24 px-4 bg-slate-900/20 border-y border-white/5">
-                    <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12">
-                        <div className="text-center">
-                            <div className="w-16 h-16 bg-brand-500/10 rounded-2xl flex items-center justify-center text-brand-400 mx-auto mb-6">
-                                <BookOpen size={32} />
-                            </div>
-                            <h3 className="text-xl font-bold mb-4 uppercase italic">Contenido Actualizado</h3>
-                            <p className="text-slate-500 text-sm leading-relaxed">Módulos renovados mensualmente para seguir el ritmo veloz del ecosistema blockchain.</p>
-                        </div>
-                        <div className="text-center">
-                            <div className="w-16 h-16 bg-blue-500/10 rounded-2xl flex items-center justify-center text-blue-400 mx-auto mb-6">
-                                <Clock size={32} />
-                            </div>
-                            <h3 className="text-xl font-bold mb-4 uppercase italic">A Tu Propio Ritmo</h3>
-                            <p className="text-slate-500 text-sm leading-relaxed">Sin horarios ni prisas. Accede de por vida a tu material de estudio desde cualquier dispositivo.</p>
-                        </div>
-                        <div className="text-center">
-                            <div className="w-16 h-16 bg-purple-500/10 rounded-2xl flex items-center justify-center text-purple-400 mx-auto mb-6">
-                                <Users size={32} />
-                            </div>
-                            <h3 className="text-xl font-bold mb-4 uppercase italic">Enfoque Realista</h3>
-                            <p className="text-slate-500 text-sm leading-relaxed">Sin falsas promesas. Educación pura para que tomes tus propias decisiones con conocimiento.</p>
-                        </div>
-                    </div>
-                </section>
-
-                {/* Pricing Section */}
-                <section id="planes" className="py-32 px-4 relative">
+                {/* Pricing / Plans Section */}
+                <section id="planes" className="py-32 px-4 bg-slate-900/20 border-t border-white/5">
                     <div className="max-w-6xl mx-auto">
-                        <div className="text-center mb-20">
-                            <h2 className="text-4xl md:text-6xl font-black mb-6 tracking-tighter uppercase italic">
-                                Elige tu <span className="text-brand-500">Nivel de Formación</span>
+                        <div className="text-center mb-24">
+                            <h2 className="text-5xl md:text-7xl font-black mb-6 tracking-tighter uppercase italic leading-none">
+                                Planes de <span className="text-brand-500">Alto Rendimiento</span>
                             </h2>
-                            <p className="text-slate-400 max-w-2xl mx-auto">
-                                Selecciona el plan que mejor se adapte a tus objetivos actuales. Todos incluyen acceso instantáneo tras el pago.
+                            <p className="text-slate-400 max-w-2xl mx-auto text-lg">
+                                Inversión única con acceso vitalicio a nuestra plataforma de inteligencia educativa.
                             </p>
-                            <div className="mt-4 inline-block px-4 py-2 bg-slate-800 rounded-full text-xs font-bold text-slate-300 border border-slate-700">
-                                Cotización Dólar Crypto: {usdtPrice ? formatCurrency(usdtPrice) : 'Cargando...'}
-                            </div>
+                            {usdtPrice && (
+                                <div className="mt-8 inline-block px-6 py-3 bg-brand-500/10 border border-brand-500/20 rounded-2xl">
+                                    <span className="text-[10px] font-black uppercase tracking-widest text-brand-400">
+                                        Cotización USDT: {formatCurrency(usdtPrice)}
+                                    </span>
+                                </div>
+                            )}
                         </div>
 
-                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
                             {plans.map((plan) => (
-                                <div key={plan.name} className={`relative group bg-slate-900/40 border ${plan.popular ? 'border-brand-500' : 'border-white/5'} rounded-[40px] p-10 backdrop-blur-sm transition-all hover:translate-y-[-10px] shadow-2xl overflow-hidden`}>
+                                <div
+                                    key={plan.key}
+                                    className={`relative bg-slate-900 border ${plan.popular ? 'border-brand-500 scale-105 shadow-[0_0_50px_rgba(34,197,94,0.15)]' : 'border-white/5'} rounded-[48px] p-12 transition-all hover:border-brand-500/30 overflow-hidden group`}
+                                >
                                     {plan.popular && (
-                                        <div className="absolute top-0 right-0 bg-brand-500 text-white text-[10px] font-black uppercase tracking-widest px-8 py-2 rotate-45 translate-x-8 translate-y-4">
-                                            Recomendado
+                                        <div className="absolute top-8 right-8">
+                                            <div className="bg-brand-500 text-white text-[10px] font-black uppercase tracking-[0.2em] px-4 py-1.5 rounded-full shadow-lg shadow-brand-500/40">Popular</div>
                                         </div>
                                     )}
 
-                                    <div className="mb-8">
-                                        <h3 className="text-2xl font-black uppercase italic tracking-tighter mb-2">{plan.name}</h3>
-                                        <div className="flex flex-col">
-                                            <div className="flex items-baseline gap-2">
-                                                <span className="text-5xl font-black tracking-tighter">${plan.price.usd}</span>
-                                                <span className="text-slate-500 text-xs font-bold uppercase tracking-widest">USD</span>
-                                            </div>
-                                            <div className="text-sm font-bold text-brand-400 mt-1">
-                                                ≈ {usdtPrice ? formatCurrency(plan.price.usd * usdtPrice) : '...'} ARS
-                                            </div>
+                                    <div className="mb-12">
+                                        <div className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 mb-4">Módulo de Formación</div>
+                                        <h3 className="text-3xl font-black text-white uppercase italic tracking-tighter mb-8">{plan.name}</h3>
+
+                                        <div className="flex items-baseline gap-2 mb-2">
+                                            <span className="text-6xl font-black tracking-tighter">${plan.price.usd}</span>
+                                            <span className="text-slate-600 font-black text-xs uppercase tracking-widest">USD</span>
                                         </div>
-                                        <p className="text-slate-500 text-xs mt-4 flex items-center gap-2">
-                                            <Clock size={12} /> {plan.totalHours}
-                                        </p>
+                                        {usdtPrice && (
+                                            <div className="text-brand-500 font-bold uppercase text-[10px] tracking-widest">
+                                                ≈ {formatCurrency(plan.price.usd * usdtPrice)} Final
+                                            </div>
+                                        )}
                                     </div>
 
-                                    <ul className="space-y-4 mb-10">
+                                    <div className="space-y-5 mb-12">
                                         {plan.features.map((feat) => (
-                                            <li key={feat} className="flex items-start gap-3 group/item">
-                                                <div className="mt-1 w-5 h-5 rounded-full bg-brand-500/10 text-brand-500 flex items-center justify-center shrink-0">
-                                                    <Check size={12} />
+                                            <div key={feat} className="flex items-start gap-3">
+                                                <div className="w-5 h-5 bg-brand-500/10 rounded-full flex items-center justify-center shrink-0 mt-0.5">
+                                                    <Check size={12} className="text-brand-500" />
                                                 </div>
-                                                <span className="text-sm text-slate-400 group-hover/item:text-white transition-colors">
-                                                    {feat}
-                                                </span>
-                                            </li>
+                                                <span className="text-sm text-slate-400 leading-tight">{feat}</span>
+                                            </div>
                                         ))}
-                                    </ul>
+                                    </div>
 
                                     <Link
                                         href={`/pago/${plan.key}`}
-                                        className={`w-full py-5 rounded-2xl font-black uppercase tracking-widest text-sm transition-all shadow-xl block text-center ${plan.popular
-                                            ? 'bg-brand-500 hover:bg-brand-400 text-white shadow-brand-500/20'
-                                            : 'bg-white/5 hover:bg-white/10 text-white border border-white/10'
+                                        className={`w-full py-6 rounded-2xl font-black uppercase tracking-widest text-xs transition-all text-center block ${plan.popular
+                                                ? 'bg-brand-500 text-white hover:bg-brand-400 shadow-xl shadow-brand-500/20'
+                                                : 'border border-white/10 text-white hover:bg-white/5'
                                             }`}
                                     >
                                         {plan.cta}
                                     </Link>
+
+                                    <div className="mt-6 flex items-center justify-center gap-2 text-[10px] font-black text-slate-600 uppercase tracking-widest">
+                                        <Lock size={10} /> Pago Seguro SSL
+                                    </div>
                                 </div>
                             ))}
                         </div>
                     </div>
                 </section>
 
-                {/* FAQ Preview */}
-                <section className="py-24 px-4 bg-slate-900/10 border-t border-white/5">
-                    <div className="max-w-4xl mx-auto text-center">
-                        <h2 className="text-3xl font-black uppercase mb-12 italic">Preguntas Frecuentes</h2>
-                        <div className="space-y-8 text-left">
-                            <div className="bg-slate-900/30 p-8 rounded-3xl border border-white/5 transition-all hover:border-white/10">
-                                <h4 className="text-lg font-bold mb-3 uppercase tracking-tight text-brand-400 italic">¿Cómo recibo mis datos de acceso?</h4>
-                                <p className="text-slate-400 text-sm leading-relaxed">
-                                    El sistema es 100% automático. Una vez verificado el pago, recibirás un email de bienvenida con tu usuario y contraseña temporal al instante.
-                                </p>
-                            </div>
-                            <div className="bg-slate-900/30 p-8 rounded-3xl border border-white/5 transition-all hover:border-white/10">
-                                <h4 className="text-lg font-bold mb-3 uppercase tracking-tight text-brand-400 italic">¿Necesito conocimientos previos?</h4>
-                                <p className="text-slate-400 text-sm leading-relaxed">
-                                    No. El Plan Básico está diseñado para empezar desde cero absoluto, guiándote paso a paso por la interfaz de los exchanges y las billeteras.
-                                </p>
-                            </div>
-                            <div className="bg-slate-900/30 p-8 rounded-3xl border border-white/5 transition-all hover:border-white/10">
-                                <h4 className="text-lg font-bold mb-3 uppercase tracking-tight text-brand-400 italic">¿El pago es por única vez?</h4>
-                                <p className="text-slate-400 text-sm leading-relaxed">
-                                    Sí. Pagas una única vez y tienes acceso ilimitado de por vida al contenido de tu plan y todas sus actualizaciones futuras.
-                                </p>
-                            </div>
+                {/* FAQ High End */}
+                <section className="py-32 px-4 bg-slate-950">
+                    <div className="max-w-4xl mx-auto">
+                        <div className="text-center mb-20">
+                            <h2 className="text-3xl font-black uppercase italic tracking-tighter text-white mb-4">Garantía de Excelencia</h2>
+                            <p className="text-slate-500 uppercase tracking-widest text-[10px] font-black">Infraestructura Educativa Robusta</p>
+                        </div>
+                        <div className="space-y-6">
+                            {[
+                                { q: '¿Cuándo empieza el curso?', a: 'Acceso inmediato. El sistema procesa tu pago y te otorga credenciales automáticas en menos de 60 segundos.' },
+                                { q: '¿Hay mentorías personalizadas?', a: 'Sí, los planes PRO y MASTER incluyen acceso a nuestro canal de soporte técnico prioritario para resolver dudas específicas.' },
+                                { q: '¿Qué validez tiene el certificado?', a: 'Nuestros certificados están respaldados por CryptoAyuda Intelligence Lab y validan tus competencias técnicas en seguridad y operativa.' }
+                            ].map((item, i) => (
+                                <div key={i} className="bg-slate-900/30 border border-white/5 p-10 rounded-[40px] hover:border-white/10 transition-all">
+                                    <h4 className="text-lg font-black text-brand-400 uppercase italic mb-4">{item.q}</h4>
+                                    <p className="text-slate-400 leading-relaxed text-sm">{item.a}</p>
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </section>

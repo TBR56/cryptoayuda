@@ -6,7 +6,8 @@ const nextConfig = {
         unoptimized: true,
     },
     // This helps with large SSG builds
-    staticPageGenerationTimeout: 300,
+    staticPageGenerationTimeout: 1000,
+    output: 'standalone',
 }
 
 module.exports = nextConfig

@@ -220,18 +220,40 @@ export default function PaymentPage() {
                                                 <PayPalButtons
                                                     style={{ layout: "vertical", shape: "pill", label: "pay" }}
                                                     createOrder={(data, actions) => {
+                                                        console.log("Creating PayPal Order for:", planKey, usdPrice);
                                                         return fetch("/api/payments/paypal", {
                                                             method: "POST",
                                                             headers: { "Content-Type": "application/json" },
                                                             body: JSON.stringify({ plan: planKey, amount: usdPrice }),
                                                         })
-                                                            .then((res) => res.json())
-                                                            .then((order) => order.id);
+                                                            .then(async (res) => {
+                                                                if (!res.ok) {
+                                                                    const error = await res.json();
+                                                                    console.error("PayPal Create Order Error:", error);
+                                                                    throw new Error(error.message || "Failed to create order");
+                                                                }
+                                                                return res.json();
+                                                            })
+                                                            .then((order) => {
+                                                                console.log("Order created successfully:", order.id);
+                                                                return order.id;
+                                                            })
+                                                            .catch(err => {
+                                                                console.error("Fetch/PayPal Error:", err);
+                                                                alert("Error al iniciar el pago con PayPal. Por favor intenta de nuevo.");
+                                                                throw err;
+                                                            });
                                                     }}
                                                     onApprove={(data, actions) => {
+                                                        console.log("PayPal Payment Approved, capturing...");
                                                         return actions.order!.capture().then((details) => {
+                                                            console.log("Payment Captured:", details);
                                                             handlePayPalSuccess(details);
                                                         });
+                                                    }}
+                                                    onError={(err) => {
+                                                        console.error("PayPal SDK Error:", err);
+                                                        alert("Error crítico en el botón de PayPal. Verifica tu conexión o intenta con Crypto.");
                                                     }}
                                                 />
                                             </div>
