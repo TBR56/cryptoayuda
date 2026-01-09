@@ -33,17 +33,20 @@ export default function SeoHead({
     const currentMonth = new Intl.DateTimeFormat('es-ES', { month: 'long' }).format(new Date());
     const capitalizedMonth = currentMonth.charAt(0).toUpperCase() + currentMonth.slice(1);
 
-    let ctaTitle = title;
-    const lowerTitle = title.toLowerCase();
+    const safeTitle = title || 'CryptoAyuda Intelligence';
+    const safeDescription = description || 'Plataforma líder en auditoría y recuperación de activos digitales.';
+
+    let ctaTitle = safeTitle;
+    const lowerTitle = safeTitle.toLowerCase();
 
     if (lowerTitle.includes('guía') || lowerTitle.includes('cómo')) {
-        ctaTitle = `[GUÍA] ${title} (${capitalizedMonth} ${currentYear})`;
+        ctaTitle = `[GUÍA] ${safeTitle} (${capitalizedMonth} ${currentYear})`;
     } else if (lowerTitle.includes('review') || lowerTitle.includes('opiniones')) {
-        ctaTitle = `🛡️ ${title} - Análisis Real ${currentYear}`;
+        ctaTitle = `🛡️ ${safeTitle} - Análisis Real ${currentYear}`;
     } else if (lowerTitle.includes('alerta') || lowerTitle.includes('estafa')) {
-        ctaTitle = `⚠️ ALERTA: ${title} (Cuidado)`;
+        ctaTitle = `⚠️ ALERTA: ${safeTitle} (Cuidado)`;
     } else if (lowerTitle.includes('solución') || lowerTitle.includes('problema')) {
-        ctaTitle = `✅ Solución: ${title} - Paso a Paso`;
+        ctaTitle = `✅ Solución: ${safeTitle} - Paso a Paso`;
     }
 
     const siteTitle = `${ctaTitle.slice(0, 50)} | CryptoAyuda`;
@@ -141,7 +144,7 @@ export default function SeoHead({
     return (
         <Head>
             <title>{siteTitle}</title>
-            <meta name="description" content={description.slice(0, 155)} />
+            <meta name="description" content={safeDescription.slice(0, 155)} />
             <meta name="viewport" content="width=device-width, initial-scale=1" />
             <meta name="google-site-verification" content="google79d7506bdb76c169" />
             <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
@@ -151,7 +154,7 @@ export default function SeoHead({
             <meta property="og:type" content={type === 'article' ? 'article' : 'website'} />
             <meta property="og:url" content={url} />
             <meta property="og:title" content={siteTitle} />
-            <meta property="og:description" content={description.slice(0, 155)} />
+            <meta property="og:description" content={safeDescription.slice(0, 155)} />
             <meta property="og:image" content={image} />
             <meta property="og:site_name" content="CryptoAyuda" />
             <meta property="og:locale" content="es_ES" />
@@ -159,7 +162,7 @@ export default function SeoHead({
             {/* Twitter */}
             <meta name="twitter:card" content="summary_large_image" />
             <meta name="twitter:title" content={siteTitle} />
-            <meta name="twitter:description" content={description.slice(0, 155)} />
+            <meta name="twitter:description" content={safeDescription.slice(0, 155)} />
             <meta name="twitter:image" content={image} />
 
             {/* JSON-LD Structured Data */}
