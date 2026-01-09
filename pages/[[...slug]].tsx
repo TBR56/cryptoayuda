@@ -33,7 +33,8 @@ import {
     Layers,
     Activity,
     LockIcon,
-    AlertCircle
+    AlertCircle,
+    ArrowLeft
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCryptoPrice } from '../hooks/useCryptoPrice';
