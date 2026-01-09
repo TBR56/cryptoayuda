@@ -816,8 +816,8 @@ const HubCompareView = ({ data }: any) => (
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {data.exchanges?.slice(0, 6).map((ex1: string, i: number) => (
-                data.exchanges?.slice(i + 1, i + 2).map((ex2: string) => (
+            {(data.exchanges || []).slice(0, 6).map((ex1: string, i: number) => (
+                (data.exchanges || []).slice(i + 1, i + 2).map((ex2: string) => (
                     <Link href={`/comparar/${slugify(ex1)}-vs-${slugify(ex2)}`} key={`${ex1}-${ex2}`} className="bg-slate-900/40 backdrop-blur-xl border border-white/5 p-10 rounded-[40px] group hover:border-brand-500/30 transition-all relative overflow-hidden text-center">
                         <div className="flex items-center justify-center gap-4 mb-8">
                             <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center font-black text-lg italic text-white">{ex1[0]}</div>
@@ -848,8 +848,8 @@ const HubOpinionsView = ({ data }: any) => (
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {data.exchanges?.slice(0, 4).flatMap((ex: string) =>
-                data.paises?.slice(0, 4).map((pais: string) => (
+            {(data.exchanges || []).slice(0, 4).flatMap((ex: string) =>
+                (data.paises || []).slice(0, 4).map((pais: string) => (
                     <Link href={`/opiniones/${slugify(ex)}/${slugify(pais)}`} key={`${ex}-${pais}`} className="bg-slate-900/40 border border-white/5 p-8 rounded-[32px] group hover:border-brand-500/30 transition-all relative overflow-hidden">
                         <div className="flex items-center gap-4 mb-6">
                             <div className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center font-black text-sm italic text-slate-400 group-hover:text-white transition-colors uppercase">
@@ -908,8 +908,8 @@ const HubNewsView = ({ data }: any) => (
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {data.topics?.flatMap((topic: string, i: number) =>
-                data.coins?.slice(i, i + 3).map((coin: any, k: number) => (
+            {(data.topics || []).flatMap((topic: string, i: number) =>
+                (data.coins || []).slice(i, i + 3).map((coin: any, k: number) => (
                     <Link href={`/noticias/${slugify(coin.name)}/${slugify(topic)}`} key={coin.name + topic} className="bg-slate-900 border border-white/5 rounded-[40px] overflow-hidden group hover:border-blue-500/30 transition-all flex flex-col">
                         <div className="h-64 relative overflow-hidden">
                             <div className="absolute inset-0 bg-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity z-10" />
@@ -954,8 +954,8 @@ const HubGuidesView = ({ data }: any) => (
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {data.guides?.flatMap((guide: string, i: number) =>
-                data.coins?.slice(0, 15).flatMap((coin: any, j: number) => {
+            {(data.guides || []).flatMap((guide: string, i: number) =>
+                (data.coins || []).slice(0, 15).flatMap((coin: any, j: number) => {
                     const country = (j % 3 === 0) ? PAISES[j % PAISES.length] : null;
                     const href = country
                         ? `/guias/${slugify(guide)}/${slugify(coin.name)}/${slugify(country)}`
