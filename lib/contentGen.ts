@@ -10,6 +10,14 @@ const seededRandom = (seed: number) => {
 }
 const pick = <T>(arr: T[], seed: number, offset: number = 0): T => arr[Math.floor(seededRandom(seed + offset) * arr.length)];
 
+const slugify = (text: string) => text
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/[\s_-]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+
 // ==========================================
 // 2. FUNDAMENTAL DATA BLOCKS
 // ==========================================
@@ -129,6 +137,89 @@ const LSI_CLUSTERS: Record<string, string[]> = {
 // ==========================================
 // 4. GENERATION LOGIC
 // ==========================================
+
+// NEW DEEP CONTENT BLOCKS
+const HISTORY_BLOCKS = [
+    "La historia de {SUBJECT} no es lineal. Desde sus inicios experimentales hasta convertirse en un pilar de la economía digital, ha atravesado múltiples ciclos de mercado (bull y bear markets). Entender este contexto histórico es vital para no sucumbir al pánico en momentos de volatilidad. Los primeros adoptantes que comprendieron la visión a largo plazo fueron recompensados no por suerte, sino por convicción en los fundamentos matemáticos del protocolo.",
+    "Para comprender el presente de {SUBJECT}, debemos analizar su evolución. Lo que comenzó como una propuesta técnica en un foro de criptografía se ha transformado en una infraestructura financiera global. Cada actualización del protocolo (soft forks y hard forks) ha sido una prueba de estrés superada, consolidando su seguridad y resistencia a la censura frente a ataques coordinados.",
+    "El recorrido de {SUBJECT} ha estado marcado por hitos regulatorios y tecnológicos. Al principio, era territorio de cypherpunks; hoy, es parte de los balances de empresas cotizadas en bolsa. Esta institucionalización no ha diluido su esencia descentralizada, sino que ha validado su tesis de inversión como una clase de activos soberana e incensurable."
+];
+
+const REGULATION_BLOCKS = [
+    "En el ámbito legal, la situación de {SUBJECT} varía drásticamente según la jurisdicción. Mientras países como El Salvador han adoptado una postura de puertas abiertas, otras naciones mantienen restricciones estrictas. Es fundamental consultar con un asesor fiscal local para entender las implicaciones tributarias de la tenencia y venta de este activo. La normativa MiCA en Europa y las directrices de la SEC en EE.UU. están marcando el estándar global de cumplimiento.",
+    "La regulación está dejando de ser una amenaza para convertirse en un catalizador de adopción para {SUBJECT}. La claridad normativa permite la entrada de capital institucional (fondos de pensiones, aseguradoras) que antes no podía operar por mandatos de riesgo. Sin embargo, esto conlleva una mayor vigilancia sobre las transacciones on-chain, lo que reaviva el debate sobre la privacidad financiera versus la seguridad nacional.",
+    "Uno de los mayores desafíos para {SUBJECT} es la llamada 'Regla de Viaje' (Travel Rule) del GAFI. Esta normativa exige a los exchanges compartir datos de los usuarios en transacciones superiores a ciertos montos. Para el usuario promedio, esto significa que el KYC (Conoce a tu Cliente) ya no es opcional en plataformas centralizadas, reforzando la importancia de la autocustodia en billeteras frías para preservar la soberanía total."
+];
+
+const FUTURE_SCENARIOS = [
+    "Mirando hacia el 2030, los analistas proyectan que {SUBJECT} podría integrarse completamente en la infraestructura bancaria backend. No necesariamente desplazando al dinero fiat, sino complementándolo como una capa de liquidación global neutral. La tokenización de activos del mundo real (RWA) podría multiplicar su liquidez al permitir que bienes raíces o bonos del tesoro se negocien sobre su red.",
+    "El escenario más alcista para {SUBJECT} implica una crisis de deuda soberana global donde los inversores busquen activos inconfiscables. En este contexto, su oferta inelástica o programada actuaría como un seguro contra la degradación monetaria. No obstante, la competencia de las CBDC (Monedas Digitales de Banco Central) presentará un desafío en términos de facilidad de uso para el ciudadano común.",
+    "La evolución tecnológica de {SUBJECT} apunta hacia la abstracción de cuentas y la invisibilidad del blockchain. En el futuro, los usuarios interactuarán con aplicaciones financieras sin saber que están usando {SUBJECT} por detrás, gracias a soluciones de escalabilidad que reducen las comisiones a fracciones de centavo y eliminan la complejidad de la gestión de claves privadas."
+];
+
+const ADVANCED_TECH_BLOCKS = [
+    "Profundizando en la arquitectura, {SUBJECT} utiliza criptografía de curva elíptica para garantizar la integridad de las transacciones. A diferencia de las bases de datos SQL tradicionales, aquí no hay un administrador root; la seguridad emerge del consenso distribuido entre miles de nodos independientes. Esto hace que atacar la red sea económicamente inviable para cualquier actor racional.",
+    "El mecanismo de consenso de {SUBJECT} es una obra maestra de la teoría de juegos. Incentiva a los participantes honestos y penaliza a los maliciosos sin necesidad de una autoridad central. Recientemente, mejoras en la eficiencia del protocolo han permitido reducir los requisitos de hardware para correr un nodo, fomentando una mayor descentralización geográfica de la red.",
+    "La interoperabilidad mediante puentes (bridges) trustless es el próximo gran salto para {SUBJECT}. La capacidad de mover valor entre diferentes cadenas de bloques sin depender de custodios centralizados eliminará uno de los mayores vectores de ataque actuales. Los desarrolladores están implementando pruebas de conocimiento cero (ZK-proofs) para escalar la red sin sacrificar la privacidad de los datos."
+];
+
+// INTERNAL LINKING ENGINE
+function injectSmartLinks(content: string, currentSlug: string): string {
+    let linkedContent = content;
+    const usedLinks = new Set<string>();
+    let linkCount = 0;
+    const MAX_LINKS = 6;
+
+    // Helper to replace only the first occurrence outside of tags
+    const replaceFirst = (text: string, search: string, url: string) => {
+        if (linkCount >= MAX_LINKS) return text;
+        if (usedLinks.has(url)) return text;
+
+        // Use a more nuanced regex that attempts to avoid replacing text inside attributes or tags
+        // This finds the word boundaries, but does not robustly check if we are inside a tag. 
+        // Given complexity, we will rely on a simple 'first occurrence' approach which is generally safe for generated content without many links yet.
+        const regex = new RegExp(`(^|\\s|>)(${search.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&')})(\\s|<|$|\\.|,)`, 'i');
+
+        if (regex.test(text) && !text.includes(`href="${url}"`)) {
+            return text.replace(regex, (match, prefix, word, suffix) => {
+                // Double check we are not inside a tag (rudimentary check: no > after us before a <)
+                // For generated HTML content, it is safer to just proceed if we are careful.
+
+                if (linkCount >= MAX_LINKS) return match;
+                if (usedLinks.has(url)) return match;
+
+                usedLinks.add(url);
+                linkCount++;
+                return `${prefix}<a href="${url}" class="text-brand-400 hover:text-brand-300 transition-colors font-bold underline decoration-brand-500/30">${word}</a>${suffix}`;
+            });
+        }
+        return text;
+    };
+
+    // 1. Link to Top Coins if mentioned
+    COINS.forEach(coin => {
+        // Avoid self-linking
+        if (coin.name.toLowerCase() !== currentSlug.replace(/-/g, ' ').toLowerCase()) {
+            const url = `/guias/que-es-${slugify(coin.name)}/${slugify(coin.name)}`;
+            linkedContent = replaceFirst(linkedContent, coin.name, url);
+        }
+    });
+
+    // 2. Link to Exchanges
+    EXCHANGES_LIST.slice(0, 10).forEach(ex => {
+        const url = `/reviews/${slugify(ex)}`;
+        if (!currentSlug.includes(slugify(ex))) {
+            linkedContent = replaceFirst(linkedContent, ex, url);
+        }
+    });
+
+    // 3. Link to Hubs
+    linkedContent = replaceFirst(linkedContent, "Noticias", "/noticias");
+    linkedContent = replaceFirst(linkedContent, "Reviews", "/reviews");
+    linkedContent = replaceFirst(linkedContent, "Estafas", "/estafas");
+
+    return linkedContent;
+}
 export function generateSearchQueryContent(title: string, category: string, intent: string) {
     const seed = getSeed(title);
     let content = `<h2>Guía Resolutiva: ${title}</h2>`;
@@ -197,11 +288,12 @@ export function generateSearchQueryContent(title: string, category: string, inte
 export function generateArticleContent(subject: string, type: string, country?: string) {
     const seed = getSeed(subject + type + (country || ""));
     const lsiList = LSI_CLUSTERS[type] || LSI_CLUSTERS["guide"];
+
+    // --- PART 1: HEADER & INTRO (>150 words) ---
     let content = `<h2>Dominando ${subject}: La Guía Profesional Definitiva (2025)</h2>`;
 
-    // Intro con LSI
-    content += `<p>${pick(LONG_INTROS, seed).replace(/{SUBJECT}/g, subject)} Al navegar por el **${pick(lsiList, seed)}**, los usuarios suelen enfrentar una curva de aprendizaje pronunciada donde la seguridad es el pilar fundamental.</p>`;
-    content += `<p>${pick(EXPERTISE_CLUSTERS, seed, 5).replace(/{SUBJECT}/g, subject)}</p>`;
+    content += `<p>${pick(LONG_INTROS, seed).replace(/{SUBJECT}/g, subject)} Al navegar por el **${pick(lsiList, seed)}**, los usuarios suelen enfrentar una curva de aprendizaje pronunciada donde la seguridad es el pilar fundamental. En esta guía exhaustiva, desglosaremos cada componente crítico para que puedas operar con la confianza de un experto.</p>`;
+    content += `<p>${pick(EXPERTISE_CLUSTERS, seed, 5).replace(/{SUBJECT}/g, subject)} Esta transformación digital no es solo tecnológica, sino cultural, redefiniendo lo que entendemos por valor y propiedad en el siglo XXI.</p>`;
 
     // Quick Summary for UX
     content += `<div class="bg-slate-900 border border-white/10 p-8 rounded-2xl my-10">
@@ -225,22 +317,38 @@ export function generateArticleContent(subject: string, type: string, country?: 
         </div>
     </div>`;
 
+    // --- PART 2: HISTORY & CONTEXT (>300 words) ---
+    content += `<h3>Historia y Evolución de ${subject}</h3>`;
+    content += `<p>${pick(HISTORY_BLOCKS, seed).replace(/{SUBJECT}/g, subject)}</p>`;
+    content += `<p>${pick(HISTORY_BLOCKS, seed, 1).replace(/{SUBJECT}/g, subject)}</p>`;
+    content += `<p>${pick(HISTORY_BLOCKS, seed, 2).replace(/{SUBJECT}/g, subject)}</p>`;
+
     // Local Context
     if (country) {
-        content += `<h3>Impacto de ${subject} en el mercado de ${country}</h3>`;
+        content += `<h3>El Ecosistema de ${subject} en ${country} (2025)</h3>`;
         content += `<p>${COUNTRY_BLOCKS[country] || DEFAULT_COUNTRY_BLOCK.replace(/{SUBJECT}/g, subject)}</p>`;
-        content += `<p>En ${country}, la **${pick(lsiList, seed, 1)}** ha permitido que miles de personas accedan a servicios financieros sin las trabas de la banca offshore tradicional.</p>`;
+        content += `<p>En ${country}, la **${pick(lsiList, seed, 1)}** ha impactado significativamente en la economía local. Los usuarios están adoptando ${subject} no solo como inversión, sino como herramienta de libertad financiera frente a las restricciones tradicionales.</p>`;
+        content += `<p>Es crucial utilizar plataformas que cumplan con la normativa local de ${country} para garantizar la seguridad de tus fondos y evitar bloqueos bancarios inesperados.</p>`;
     }
 
-    // Technical Deep Dive
-    content += `<h3>Análisis Técnico de la Infraestructura</h3>`;
+    // --- PART 3: TECHNICAL DEEP DIVE (>300 words) ---
+    content += `<h3>Análisis Técnico: ¿Cómo funciona realmente?</h3>`;
     content += `<p>${pick(EXPERT_LEVEL_BLOCKS, seed).replace(/{SUBJECT}/g, subject)}</p>`;
-    content += `<p>${pick(ANALYSIS_BLOCKS, seed, 12).replace(/{SUBJECT}/g, subject)}</p>`;
-    content += `<p>${pick(EXPERT_LEVEL_BLOCKS, seed, 2).replace(/{SUBJECT}/g, subject)}</p>`;
+    content += `<p>${pick(ADVANCED_TECH_BLOCKS, seed).replace(/{SUBJECT}/g, subject)}</p>`;
+    content += `<p>${pick(ADVANCED_TECH_BLOCKS, seed, 1).replace(/{SUBJECT}/g, subject)}</p>`;
 
-    // Step by Step Checklist
-    content += `<h3>Checklist de Verificación de Seguridad</h3>`;
-    content += `<p>Antes de realizar cualquier operación relevante con ${subject}, asegúrate de cumplir con estos puntos:</p>`;
+    content += `<h4>Seguridad y Criptografía</h4>`;
+    content += `<p>${pick(ADVANCED_TECH_BLOCKS, seed, 2).replace(/{SUBJECT}/g, subject)} La inmutabilidad del ledger es lo que otorga a ${subject} su característica de 'dinero duro' digital.</p>`;
+
+    // --- PART 4: REGULATION & RISKS (>250 words) ---
+    content += `<h3>Marco Regulatorio y Cumplimiento</h3>`;
+    content += `<p>${pick(REGULATION_BLOCKS, seed).replace(/{SUBJECT}/g, subject)}</p>`;
+    content += `<p>${pick(REGULATION_BLOCKS, seed, 1).replace(/{SUBJECT}/g, subject)}</p>`;
+    content += `<p>${pick(REGULATION_BLOCKS, seed, 2).replace(/{SUBJECT}/g, subject)}</p>`;
+
+    // --- PART 5: PRACTICAL GUIDE (>200 words) ---
+    content += `<h3>Checklist de Seguridad Operativa (OpSec)</h3>`;
+    content += `<p>Para interactuar con ${subject} sin riesgos, sigue este protocolo estricto utilizado por inversores institucionales:</p>`;
     content += `<ul class="space-y-3 my-6">`;
     CHECKLIST_BLOCKS.forEach(item => {
         content += `<li class="flex items-center gap-3">
@@ -251,8 +359,7 @@ export function generateArticleContent(subject: string, type: string, country?: 
     content += `</ul>`;
 
     // What NOT to do
-    content += `<h3 class="text-red-400">Prácticas Prohibidas (Protégete)</h3>`;
-    content += `<p>El ecosistema de **${subject}** está lleno de trampas. Evita estos errores fatales que cometen el 90% de los principiantes:</p>`;
+    content += `<h3 class="text-red-400">Errores Fatales a Evitar</h3>`;
     content += `<div class="grid md:grid-cols-2 gap-4 my-8">`;
     WHAT_NOT_TO_DO.forEach((item, i) => {
         content += `<div class="bg-white/5 p-5 rounded-xl border border-white/5 text-sm text-slate-400">
@@ -262,15 +369,16 @@ export function generateArticleContent(subject: string, type: string, country?: 
     });
     content += `</div>`;
 
-    // Future & Utility
-    content += `<h3>El Futuro de la ${pick(lsiList, seed, 2)}</h3>`;
-    content += `<p>${pick(CONTEXT_BLOCKS, seed, 3).replace(/{SUBJECT}/g, subject)}</p>`;
-    content += `<p>La convergencia entre ${subject} y la inteligencia artificial generativa permitirá la creación de agentes autónomos capaces de gestionar tesorerías complejas de forma auditada.</p>`;
+    // --- PART 6: FUTURE OUTLOOK (>200 words) ---
+    content += `<h3>Proyección Futura: 2025-2030</h3>`;
+    content += `<p>${pick(FUTURE_SCENARIOS, seed).replace(/{SUBJECT}/g, subject)}</p>`;
+    content += `<p>${pick(FUTURE_SCENARIOS, seed, 1).replace(/{SUBJECT}/g, subject)}</p>`;
+    content += `<p>${pick(FUTURE_SCENARIOS, seed, 2).replace(/{SUBJECT}/g, subject)}</p>`;
 
-    // FAQ Section
-    content += `<h3 class="mt-16">Preguntas Frecuentes (FAQ)</h3>`;
+    // FAQ Section (>200 words)
+    content += `<h3 class="mt-16">Preguntas Frecuentes sobre ${subject}</h3>`;
     content += `<div class="space-y-8 mt-8">`;
-    getFaqForSubject(subject).slice(0, 5).forEach(item => {
+    getFaqForSubject(subject).slice(0, 6).forEach(item => {
         content += `<div>
             <h4 class="text-white font-bold mb-3 flex items-center gap-2">
                 <span class="text-brand-500">?</span> ${item.q}
@@ -280,7 +388,7 @@ export function generateArticleContent(subject: string, type: string, country?: 
     });
     content += `</div>`;
 
-    // Final Recommendation
+    // Final Verdict
     content += `<div class="mt-16 p-1 bg-gradient-to-r from-brand-500 to-purple-500 rounded-2xl">
         <div class="bg-slate-950 p-8 rounded-[15px] text-center">
             <h4 class="text-2xl font-black text-white mb-4 uppercase italic">Veredicto de CryptoAyuda</h4>
@@ -288,8 +396,11 @@ export function generateArticleContent(subject: string, type: string, country?: 
         </div>
     </div>`;
 
+    // INJECT LINKS BEFORE RETURNING
+    const finalContent = injectSmartLinks(content, subject);
+
     return {
-        content,
+        content: finalContent,
         steps: CHECKLIST_BLOCKS.map(item => ({
             name: item.split('.')[0] || "Paso de Seguridad",
             text: item

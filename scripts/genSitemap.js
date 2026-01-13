@@ -227,7 +227,7 @@ function generateSitemaps() {
     writeSitemap('sitemap-problemas.xml', problemaUrls, 0.5);
     sitemaps.push('sitemap-problemas.xml');
 
-    // 5. Smart Guides (Global & Local)
+    // 5. Smart Guides (Global & Local) - SPLIT INTO 20 PARTS
     const guiaUrls = [];
     COINS.forEach(coin => {
         // GLOBAL GUIDES
@@ -249,8 +249,23 @@ function generateSitemaps() {
             });
         });
     });
-    writeSitemap('sitemap-guias.xml', guiaUrls, 0.6);
-    sitemaps.push('sitemap-guias.xml');
+
+    // logic to split into 20 parts
+    const totalGuias = guiaUrls.length;
+    const parts = 20;
+    const chunkSize = Math.ceil(totalGuias / parts);
+
+    for (let i = 0; i < parts; i++) {
+        const start = i * chunkSize;
+        const end = start + chunkSize;
+        const chunk = guiaUrls.slice(start, end);
+
+        if (chunk.length > 0) {
+            const fileName = `sitemap-guias-${i + 1}.xml`;
+            writeSitemap(fileName, chunk, 0.8);
+            sitemaps.push(fileName);
+        }
+    }
 
     // 6. Estafas
     const scamUrls = SCAM_TOPICS.map(t => `/estafas/${slugify(t)}`);

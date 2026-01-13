@@ -72,19 +72,23 @@ export default function SeoHead({
         ]
     };
 
-    // 3. ENHANCED ARTICLE / AUTHOR SCHEMA
+    // 3. ENHANCED ARTICLE / SCHEMA
     const mainEntityLd = type === 'article' ? {
         "@context": "https://schema.org",
-        "@type": "NewsArticle",
-        "headline": title,
+        "@type": "Article",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": url
+        },
+        "headline": title.slice(0, 110),
         "image": [image],
         "datePublished": publishedTime,
         "dateModified": new Date().toISOString(),
-        "author": [{
-            "@type": "Person",
+        "author": {
+            "@type": "Organization",
             "name": author,
-            "url": "https://www.cryptoayuda.org/sobre-nosotros"
-        }],
+            "url": "https://www.cryptoayuda.org"
+        },
         "publisher": {
             "@type": "Organization",
             "name": "CryptoAyuda",
@@ -105,7 +109,7 @@ export default function SeoHead({
         "step": steps?.map((s, i) => ({
             "@type": "HowToStep",
             "position": i + 1,
-            "name": s.name,
+            "name": s.name || `Paso ${i + 1}`,
             "itemListElement": [{
                 "@type": "HowToDirection",
                 "text": s.text
