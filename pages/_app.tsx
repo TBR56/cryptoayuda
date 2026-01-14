@@ -26,12 +26,6 @@ export default function App({ Component, pageProps }: AppProps) {
 
     return (
         <>
-            <Script
-                async
-                src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8195088168040107"
-                crossOrigin="anonymous"
-                strategy="afterInteractive"
-            />
             <AnimatePresence mode="wait">
                 {isLoading && (
                     <motion.div
