@@ -39,6 +39,8 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCryptoPrice } from '../hooks/useCryptoPrice';
 import { EXCHANGES_LIST, PAISES, PROBLEMAS, COINS, TOPICS, GUIAS_TITLES, SCAM_TOPICS, SECURITY_GUIDES, BINANCE_AFFILIATE_LINK, LEGAL_TEXTS } from '../lib/data';
+import { ALL_PREMIUM_GUIDES } from '../lib/premiumGuidesData';
+import { generatePremiumGuide } from '../lib/premiumGen';
 import { SEARCH_QUERIES } from '../lib/searchQueries';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -1514,6 +1516,80 @@ const SearchQueryView = ({ data }: any) => (
     </div>
 );
 
+const PremiumGuideView = ({ data }: any) => (
+    <div className="bg-slate-950 min-h-screen">
+        <div className="max-w-6xl mx-auto px-4 py-24">
+            {/* Header / Hero */}
+            <div className="mb-20">
+                <div className="flex items-center gap-4 mb-8">
+                    <span className="px-4 py-1 rounded-full bg-brand-500/10 border border-brand-500/20 text-brand-400 text-[10px] font-black uppercase tracking-[0.3em]">
+                        Contenido Premium Certificado
+                    </span>
+                    <div className="h-px flex-grow bg-white/5" />
+                    <span className="text-slate-600 text-[10px] font-black uppercase tracking-widest">
+                        {data.data.updatedAt}
+                    </span>
+                </div>
+
+                <h1 className="text-6xl md:text-[84px] font-black text-white italic uppercase tracking-tighter leading-[0.9] mb-12">
+                    {data.data.title.split('|')[0]}
+                </h1>
+
+                <div className="flex flex-wrap items-center gap-10">
+                    <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 rounded-2xl bg-slate-900 border border-white/10 flex items-center justify-center">
+                            <ShieldCheck className="text-brand-500" size={24} />
+                        </div>
+                        <div>
+                            <div className="text-xs font-black text-white uppercase tracking-widest">YMYL Verified</div>
+                            <div className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-0.5">Nivel Institucional</div>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 rounded-2xl bg-slate-900 border border-white/10 flex items-center justify-center">
+                            <Clock className="text-purple-500" size={24} />
+                        </div>
+                        <div>
+                            <div className="text-xs font-black text-white uppercase tracking-widest">Lectura de 20 min</div>
+                            <div className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-0.5">Formato Largo</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div className="grid lg:grid-cols-12 gap-16">
+                <main className="lg:col-span-8">
+                    <div className="rounded-[40px] overflow-hidden mb-16 border border-white/5 aspect-[21/9]">
+                        <RobustImage
+                            src={data.hero.image}
+                            alt={data.hero.title}
+                            className="w-full h-full object-cover"
+                        />
+                    </div>
+                    <article className="prose prose-invert prose-2xl max-w-none 
+                        prose-headings:font-black prose-headings:uppercase prose-headings:italic prose-headings:tracking-tighter
+                        prose-p:text-slate-400 prose-p:leading-[1.8] prose-p:text-lg
+                        prose-strong:text-white prose-a:text-brand-400 prose-a:no-underline hover:prose-a:underline
+                        rich-content premium-article">
+                        <div dangerouslySetInnerHTML={{ __html: data.data.content }} />
+                    </article>
+                </main>
+                <aside className="lg:col-span-4 hidden lg:block">
+                    <div className="sticky top-32 space-y-8">
+                        <div className="p-8 bg-gradient-to-br from-brand-900/20 to-slate-950 border border-brand-500/20 rounded-[40px] text-center">
+                            <Award className="text-brand-500 mx-auto mb-6" size={48} />
+                            <h3 className="text-2xl font-black text-white uppercase italic tracking-tighter mb-4">¿Quieres Certificación?</h3>
+                            <Link href="/academia" className="block w-full bg-white text-slate-950 font-black py-4 rounded-2xl hover:bg-brand-500 hover:text-white transition-all uppercase tracking-widest text-xs">
+                                Iniciar Evaluación
+                            </Link>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </div>
+);
+
 import { logError } from '../lib/error-logger';
 
 // ... (imports remain)
@@ -1596,6 +1672,7 @@ export default function Page({ data }: { data: any }) {
                     </div>
                 )}
                 {(data.type === 'news' || data.type === 'guide') && <ArticleView data={data} />}
+                {data.type === 'premium_guide' && <PremiumGuideView data={data} />}
             </main>
             <Footer />
         </div>
@@ -1612,7 +1689,13 @@ export const getStaticPaths: GetStaticPaths = async () => {
         { params: { slug: ['noticias'] } },
         { params: { slug: ['estafas'] } },
         { params: { slug: ['comparar'] } },
+        { params: { slug: ['guias-premium'] } },
     ];
+
+    // Build critical premium guides for path validation (first 10)
+    ALL_PREMIUM_GUIDES.slice(0, 10).forEach(title => {
+        paths.push({ params: { slug: ['guias-premium', slugify(title)] } });
+    });
 
     return { paths, fallback: 'blocking' };
 };
@@ -1804,6 +1887,18 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
                             desc: `Descubre cómo solucionar problemas relacionados con ${query.title}. Guía paso a paso, análisis técnico y recomendaciones de seguridad.`
                         },
                         hero: { title: query.title, subtitle: query.category, image: getImage("SECURITY", getSeed(query.title)) }
+                    };
+                }
+            }
+            else if (section === 'guias-premium') {
+                const title = ALL_PREMIUM_GUIDES.find(g => slugify(g) === p1);
+                if (title) {
+                    const premiumData = generatePremiumGuide(title);
+                    pageData = {
+                        type: 'premium_guide',
+                        meta: { title: premiumData.title, desc: premiumData.description },
+                        hero: { title: premiumData.title, subtitle: 'Acceso de Alta Autoridad', image: getImage("ANALYSIS", getSeed(title)) },
+                        data: premiumData
                     };
                 }
             }
